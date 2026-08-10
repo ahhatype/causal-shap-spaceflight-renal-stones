@@ -32,5 +32,8 @@ data/interim/
 .vscode/
 .idea/
 
+# Claude
+CLAUDE.md
+
 # Logs
 *.log
