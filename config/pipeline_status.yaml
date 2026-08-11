@@ -1,0 +1,49 @@
+# Machine-readable mirror of docs/STATUS.md. Keep the two in sync.
+steps:
+  - step: 1
+    label: "Exposure/outcome specification"
+    status: done
+  - step: 2
+    label: "DAG construction and expert-guided augmentation"
+    status: done
+  - step: 3
+    label: "Synthetic data generation"
+    status: pending
+  - step: 4
+    label: "Baseline attribution with standard SHAP"
+    status: pending
+  - step: 5
+    label: "Complexity-aware reweighting (LumaWarp)"
+    status: deferred_external
+    owner: "Lexi Pasi / Andy Wilson"
+    note: "Runs in a separate repo, not built here."
+  - step: 6
+    label: "Causal SHAP comparison and human-in-the-loop iteration"
+    status: pending
+  - step: 7
+    label: "Complexity-aware reweighting of Step 6 outputs (LumaWarp)"
+    status: deferred_external
+    owner: "Lexi Pasi / Andy Wilson"
+    note: "Runs in a separate repo, not built here."
+  - step: 8
+    label: "Structural recovery comparison"
+    status: pending
+  - step: 9
+    label: "Robustness to the data-generating process"
+    status: pending
+    extension: true
+  - step: 10
+    label: "Robustness to spaceflight-epidemiological constraints"
+    status: pending
+    extension: true
+  - step: 11
+    label: "Generalization to out-of-distribution populations"
+    status: pending
+    own_section: true
+  - step: 12
+    label: "Longitudinal extension"
+    status: future_work
+  - step: 13
+    label: "Counterfactual recourse extension (DiCE)"
+    status: out_of_scope
+    owner: "Andy Wilson / Lexi Pasi"

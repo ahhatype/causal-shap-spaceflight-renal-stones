@@ -1,0 +1,121 @@
+# Structural-equation coefficients for Step 3 (simcausal data generation).
+#
+# These are the numeric placeholders that r/R/simcausal_helpers.R turns into
+# structural equations. They translate the qualitative evidence in
+# config/dag_spec.yaml into a starting-point number so simulation can run
+# before Robert's calibration pass. Every value here is a simulation design
+# parameter, not an empirical NASA effect estimate, and is explicitly marked
+# PLACEHOLDER until reviewed. Where the literature supports only a direction
+# and not a magnitude, the coefficient is left null and flagged
+# direction_only: the magnitude is an assumption to be varied in sensitivity
+# analysis, not a value to trust as-is.
+#
+# Edge identifiers (from/to) match config/dag_spec.yaml.
+
+status: PLACEHOLDER
+pending_review_by: "Robert Reynolds"
+
+sample_size:
+  default: 1000        # order of magnitude of the real astronaut cohort
+  note: "Larger generated samples available where estimator stability requires them."
+
+coefficients:
+  - from: duration
+    to: bone_resorption
+    coefficient: null
+    direction_only: false
+    magnitude_basis: "~2x baseline resorption markers, sustained through 6-month missions"
+    note: "Carried over from the bone track; same underlying mechanism."
+
+  - from: duration
+    to: bone_formation
+    coefficient: null
+    direction_only: false
+    magnitude_basis: "Near-zero to mildly decreased"
+
+  - from: bone_resorption
+    to: urine_chemistry
+    coefficient: null
+    direction_only: true
+    magnitude_basis: "Directional only; no magnitude found in the literature yet"
+
+  - from: duration
+    to: mineralized_renal_material
+    coefficient: null
+    direction_only: false
+    magnitude_basis: "Prevalence shift 25% pre-flight to 46% post-flight elevated CaOx supersaturation"
+
+  - from: sex
+    to: mineralized_renal_material
+    coefficient: null
+    direction_only: true
+    magnitude_basis: "Males more susceptible; astronaut cohorts are heavily male-skewed, limiting power"
+
+  - from: era_countermeasure
+    to: urine_chemistry
+    interacts_with: bone_resorption
+    coefficient: null
+    direction_only: true
+    magnitude_basis: "KCit-treated crew: decreased urinary calcium excretion vs. untreated controls (N=30, 29M/1F)"
+
+  - from: era_countermeasure
+    to: mineralized_renal_material
+    interacts_with: duration
+    coefficient: null
+    direction_only: true
+    magnitude_basis: "ARED (high-load resistive exercise) appears only marginally protective for renal stone risk, unlike its strong effect on bone mass"
+
+  - from: hydration_status
+    to: urine_chemistry
+    coefficient: null
+    direction_only: true
+    magnitude_basis: "Directional only; increased fluid intake is a potentially effective countermeasure"
+
+  - from: hydration_status
+    to: mineralized_renal_material
+    coefficient: null
+    direction_only: true
+
+  - from: vitamin_d_pre
+    to: urine_chemistry
+    coefficient: 0.44   # PLACEHOLDER: log(1.55) per SD, from the non-spaceflight Mendelian randomization estimate
+    direction_only: false
+    magnitude_basis: "OR 1.55 per SD increase in serum 25(OH)D, non-spaceflight literature, via increased intestinal calcium absorption"
+
+  - from: vitamin_d_inflight
+    to: urine_chemistry
+    coefficient: null
+    direction_only: true
+    magnitude_basis: "Assumed same mechanism as vitamin_d_pre -> urine_chemistry"
+
+  - from: nutrients_risk
+    to: urine_chemistry
+    coefficient: null
+    direction_only: true
+    magnitude_basis: "NASA narrative names the pathway without a magnitude"
+
+  - from: duration
+    to: vitamin_d_inflight
+    coefficient: -0.34  # PLACEHOLDER: 32-36% decline during long missions
+    direction_only: false
+    magnitude_basis: "32-36% decline in serum 25(OH)D3 during long missions (Mir cohort)"
+
+  - from: urine_chemistry
+    to: mineralized_renal_material
+    coefficient: null
+    direction_only: true
+    magnitude_basis: "Confirmed mechanism, no fitted magnitude yet"
+
+  - from: mineralized_renal_material
+    to: nephrolithiasis
+    coefficient: null
+    direction_only: true
+    magnitude_basis: "Confirmed mechanism, no fitted magnitude yet"
+
+honest_gap: >
+  Several edges here are directional-only, more so than in the bone track.
+  The downstream chain (Urine Chemistry -> Mineralized Renal Material ->
+  Nephrolithiasis) has a real quantitative anchor at the Mineralized Renal
+  Material step (25% -> 46%) but not yet at Urine Chemistry's individual
+  solute-level edges or the final Nephrolithiasis incidence step. Worth
+  prioritizing with Robert.

@@ -20,12 +20,24 @@ build/
 dist/
 *.egg-info/
 
-# Data & model artifacts
+# R / renv (renv.lock, renv/activate.R, renv/settings.json, .Rprofile ARE committed)
+renv/library/
+renv/staging/
+renv/sandbox/
+renv/local/
+renv/python/
+.Rhistory
+.RData
+.Rproj.user/
+
+# Data & model artifacts. raw/interim/simulated are regenerated from source
+# and a seed, not committed. frozen_truth holds small, deliberately frozen
+# artifacts and IS committed, see docs/methods "Reproducibility and provenance".
 data/raw/
 data/interim/
+data/simulated/
 *.h5
 *.pkl
-*.parquet
 
 # OS / editor
 .DS_Store

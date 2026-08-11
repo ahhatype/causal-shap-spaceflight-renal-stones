@@ -1,0 +1,52 @@
+[project]
+name = "causal-shap-renal"
+version = "0.1.0"
+description = "Python side of the Space SHAP renal-stone causal attribution pipeline."
+requires-python = ">=3.11,<3.13"
+dependencies = [
+    "numpy",
+    "pandas",
+    "pyarrow",
+    "pyyaml",
+    "scikit-learn",
+    "xgboost",
+    "shap",
+    # Pinned directly: shap's own constraint (numba<0.63 on darwin+x86_64)
+    # makes uv's cross-platform lock resolver fall back to numba==0.53.1 /
+    # llvmlite==0.36.0, both too old to build on any Python we use. Pinning
+    # a modern, still-compatible numba forces a sane llvmlite alongside it.
+    "numba>=0.60,<0.63",
+]
+
+[project.optional-dependencies]
+# Step 6: Shapley Flow
+shapley-flow = [
+    "shapflow",
+]
+# Step 8: causal discovery (NOTEARS excluded, no PyPI release, see the
+# note below)
+discovery = [
+    "causal-learn",
+    "lingam",
+]
+dev = [
+    "pytest",
+]
+
+[tool.uv]
+package = true
+
+# NOTEARS (Step 8, https://github.com/xunzheng/notears) is deliberately not
+# declared here. Its git dependency on python-igraph pulls uv's resolver
+# toward an ancient numba/llvmlite pin that cannot build on any Python we
+# actually use, poisoning the whole lockfile even when this extra isn't
+# installed. Install it into its own isolated venv when Step 8 needs it:
+#   uv venv .venv-notears && uv pip install --python .venv-notears \
+#     "notears @ git+https://github.com/xunzheng/notears.git"
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/causal_shap_renal"]
