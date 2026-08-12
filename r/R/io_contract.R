@@ -1,7 +1,6 @@
 # Read/write helpers for the R <-> Python interchange contract.
 #
-# See docs/decisions/002-data-interchange-contract.md for the schema this
-# file implements. Mirrors python/src/causal_shap_renal/io_contract.py -
+# Mirrors python/src/causal_shap_renal/io_contract.py -
 # keep the two in sync by hand.
 
 library(arrow)

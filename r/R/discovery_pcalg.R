@@ -3,9 +3,7 @@
 #   Step 8: DAG recovery comparison, reusing Step 6's PC/CPDAG rather than
 #           recomputing it (see docs/decisions, "Step 8 reuses Step 6's PC output")
 #
-# pcalg::ida() is R-only - causal-learn (Python) has PC but no IDA
-# equivalent, which is the other reason this repo is two-language
-# (see docs/decisions/001-two-language-repo.md).
+# pcalg::ida() is R-only - causal-learn (Python) has PC but no IDA equivalent.
 
 library(pcalg)
 library(graph)

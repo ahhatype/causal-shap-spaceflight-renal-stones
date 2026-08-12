@@ -1,0 +1,61 @@
+# Predictive engine assignment for Step 6 (Causal SHAP comparison).
+# See docs/decisions/004-xgboost-primary-engine.md for the reasoning.
+#
+# Every method uses the same primary engine so engine choice isn't a
+# second axis of variation alongside method choice. secondary_check_engine
+# (where set) is the engine named in that method's own originating paper,
+# run as a replication check, not the primary result. This file is read by
+# both r/R/engines.R and python/src/causal_shap_renal/engines.py - keep
+# them in sync by hand, same convention as config/dag_spec.yaml /
+# config/edge_coefficients.yaml (see ADR 002).
+#
+# Scope: Step 6 only. Step 4's KernelExplainer/PermutationExplainer +
+# SuperLearner pairing is a separate, deliberate design (testing whether
+# standard SHAP's failure is model-class-specific) and isn't affected by
+# this file.
+
+primary_engine: xgboost
+
+methods:
+  - method: causal_shapley_values
+    citation: "Heskes et al., NeurIPS 2020"
+    package: shapr
+    primary_engine: xgboost
+    fallback_engine: null
+    secondary_check_engine: null
+    note: "XGBoost is already this method's paper-native engine (NeurIPS reviewer commentary confirms XGBoost used on their bike-sharing dataset experiment), so no separate secondary check is needed."
+
+  - method: shapley_flow
+    citation: "Wang, Wiens & Lundberg, AISTATS 2021"
+    package: shapflow
+    primary_engine: xgboost
+    fallback_engine: null
+    secondary_check_engine: null
+    note: "XGBoost is already this method's paper-native engine (reference implementation flow.py uses xgboost in case studies). Not yet confirmed whether shapflow accepts a different engine cleanly - verify when this method is implemented; this is the one method flagged in ADR 004 as most likely to need adapter code if the engine ever changes."
+
+  - method: asv
+    citation: "Frye, Rowat & Feige, NeurIPS 2020"
+    package: shapr
+    primary_engine: xgboost
+    fallback_engine: null
+    secondary_check_engine: null
+    note: "Frye et al.'s paper does not specify a single engine, so there is no paper-native engine to check against either way."
+
+  - method: causal_shap_ng_et_al
+    citation: "Ng, Wang, Liu & Fan, IJCNN 2025 (arXiv:2509.00846)"
+    package: "custom implementation of the paper's Algorithm 1, using pcalg for PC + IDA"
+    primary_engine: xgboost
+    fallback_engine: null
+    secondary_check_engine: random_forest
+    note: "Ng et al.'s paper explicitly used Random Forest ('All experiments used the same Random Forest model as the black box'); run as a secondary replication check alongside the XGBoost primary comparison."
+
+# Status of each named engine in this project - not a per-method table,
+# just a quick reference for what's actually usable right now.
+engines:
+  xgboost:
+    status: "primary engine, all four Step 6 methods"
+  random_forest:
+    status: "secondary check engine, causal_shap_ng_et_al only"
+  superlearner:
+    status: "not used in Step 6 for v1"
+    note: "Considered as a uniform primary engine to remove engine as a confound, but its cross-validated candidate-library fitting and per-evaluation cost multiply substantially against the very high evaluation counts these methods already require, and no candidate library was ever defined for this project. Still used in Step 4 (KernelExplainer/PermutationExplainer + SuperLearner) - that pairing is unrelated to this file. Revisit for Step 6 only if reviewers want a flexible black-box ensemble arm - see docs/decisions/004-xgboost-primary-engine.md."

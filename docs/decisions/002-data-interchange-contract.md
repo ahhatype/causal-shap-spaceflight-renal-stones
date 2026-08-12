@@ -4,7 +4,7 @@
 Accepted
 
 ## Decision
-R and Python exchange data only through files on disk, in one of two formats depending on what's being exchanged. No cross-language runtime bridge (`reticulate`, `rpy2`) is used anywhere in the pipeline.
+R and Python exchange data only through files on disk, in one of two formats depending on what's being exchanged. No cross-language runtime bridge is used anywhere in the pipeline.
 
 ## Format choices
 - **DAG spec and coefficients** (`config/dag_spec.yaml`, `config/edge_coefficients.yaml`): YAML. Both `yaml::read_yaml()` (R) and `pyyaml` (Python) read it with no extra tooling, and it stays human-editable for Robert's review passes.

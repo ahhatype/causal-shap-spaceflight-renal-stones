@@ -50,15 +50,17 @@ data/             raw (source DAG files), interim (reconciled DAG), simulated
                    from a seed rather than committed
 results/          attributions, discovery, evaluation, figures
 notebooks/        exploratory work only, never the system of record
-docs/             methods draft, provenance notes, decision records, STATUS.md
+docs/             methods draft, provenance notes, decision records, STATUS.md,
+                   dag_README.md + renal_stone_working_subgraph.txt (DAGitty
+                   export of the working subgraph)
 ```
 
 ## Protocol
 
 This lists all 13 steps from the methods doc, in order, so the numbering stays legible against it. Steps 5 and 7 (LumaWarp) run in a separate repo, owned by Lexi Pasi and Andy Wilson, and are listed here only to keep the sequence intact.
 
-1. **Exposure and outcome specification.** Cumulative mission duration as exposure, nephrolithiasis as the primary outcome, CaOx supersaturation as a continuous secondary outcome.
-2. **DAG construction and expert-guided augmentation.** A 12-node working subgraph scoped from Robert Reynolds's 53-node source DAG.
+1. **Exposure and outcome specification.** Cumulative mission duration as exposure, nephrolithiasis (binary incidence) as the sole outcome. CaOx supersaturation (Mineralized Renal Material) remains in the graph as an internal mediator only, not a modeled outcome.
+2. **DAG construction and expert-guided augmentation.** An 11-node working subgraph scoped from Robert Reynolds's 53-node source DAG.
 3. **Synthetic data generation.** simcausal, seeded from the DAG, with literature-informed placeholder coefficients pending Robert's calibration.
 4. **Baseline attribution with standard SHAP.** Five explainer/model pairings, run once at full breadth to see whether standard SHAP fails consistently or only for some model classes.
 5. **Complexity-aware reweighting.** LumaWarp. Runs in a separate repo.

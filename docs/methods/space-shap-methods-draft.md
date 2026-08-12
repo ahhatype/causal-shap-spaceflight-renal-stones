@@ -138,14 +138,12 @@ resorption elevates circulating and urinary calcium in proportion to
 exposure, which in turn drives urinary supersaturation and stone risk.
 
 The outcome is nephrolithiasis, consistent with the target node of the
-published NASA DAG. Because symptomatic stone events in the astronaut
-corps are rare, and because the richest quantitative evidence attaches
-to the upstream supersaturation step rather than to incidence,
-calcium-oxalate relative supersaturation (an immediate precursor of
-stone formation) is additionally modeled as a continuous secondary
-outcome. Nephrolithiasis incidence serves as the clinically anchored
-primary target; supersaturation serves as the better-populated
-continuous proxy used in sensitivity analyses.
+published NASA DAG. Nephrolithiasis (binary incidence) is the sole
+modeled outcome; the model uses a logit link throughout. Calcium-oxalate
+relative supersaturation (an immediate precursor of stone formation,
+represented by the Mineralized Renal Material node) remains in the graph
+as an internal mediator feeding nephrolithiasis, not as a separate
+outcome.
 
 ## Step 2: Causal graph construction and expert-guided augmentation
 
@@ -157,17 +155,25 @@ agreed closely (Cohen\'s kappa 0.978; precision 1.000; recall 0.958;
 structural Hamming distance 3), with a small number of unmatched edges
 retained for expert adjudication.
 
-For tractability and interpretability, a twelve-node working subgraph
+For tractability and interpretability, an eleven-node working subgraph
 was defined around the principal mechanistic pathway, comprising the
-exposure (mission duration), demographic and behavioral confounders (age
-at launch, sex), a countermeasure-era effect modifier, pre-flight and
-in-flight vitamin D status, dietary nutrient intake, the two
-bone-remodeling mediators (bone formation and bone resorption),
-hydration status, a urine-chemistry composite, a
-mineralized-renal-material (supersaturation) mediator, and the
-nephrolithiasis outcome. Multi-marker nodes (bone formation, bone
+exposure (mission duration), a demographic confounder (sex), a
+urinary-calcium-excretion mediator sitting on the bone-resorption-to-
+urine-chemistry pathway, pre-flight and in-flight vitamin D status,
+dietary nutrient intake, the two bone-remodeling mediators (bone
+formation and bone resorption), hydration/fluid intake, a urine-chemistry
+composite, a mineralized-renal-material (supersaturation) mediator, and
+the nephrolithiasis outcome. Multi-marker nodes (bone formation, bone
 resorption, urine chemistry) are represented as principal-component
 composites of their constituent biomarkers.
+
+Age at launch and a countermeasure-era effect modifier were considered
+for inclusion and excluded: age at launch is weakly grounded (NASA's
+source narrative does not decompose age as a distinct factor), and the
+countermeasure-era effect modifier's exercise-countermeasure effect on
+renal stone risk is documented as marginal, unlike its strong effect on
+bone. The countermeasure-era question is instead represented as a Step
+10 sampling axis (era-range widening) rather than a causal graph node.
 
 Two structural distinctions are made explicit. First, variables that
 exert genuine causal influence on the mechanism are represented as DAG
@@ -240,9 +246,8 @@ sampled coalitions follows the standard heuristic, and a
 k-means-summarized background is used in place of the full sample to
 keep computation tractable; attribution stability is assessed by varying
 the background summary size and comparing the resulting importance
-rankings. The link function is chosen to match the outcome scale
-(identity for the continuous supersaturation outcome, logit for the
-binary incidence outcome). For the permutation estimator, the evaluation
+rankings. The link function is logit throughout, since nephrolithiasis is
+the sole (binary) outcome. For the permutation estimator, the evaluation
 budget is set to a multiple of its enforced minimum given the small
 feature count.
 
@@ -273,15 +278,17 @@ edges rather than nodes; asymmetric Shapley values, which require only a
 causal ordering rather than full edge structure; and a discovery-based
 causal SHAP method that infers a partially directed graph from data
 using a constraint-based algorithm and quantifies causal strength before
-computing attributions. Each method is paired with the predictive engine
-used in its originating publication where identifiable (gradient-boosted
-trees for causal Shapley values and Shapley Flow; a random forest for
-the discovery-based method), and with the stacked-ensemble fallback
-where the originating publication does not specify a single engine.
-Because pairing methods with heterogeneous engines confounds method with
-engine, at least one common-engine comparison is additionally run so
-that observed differences can be attributed to the method rather than to
-the learner.
+computing attributions. XGBoost is the primary engine for all four
+methods (ADR 004), held constant across the comparison so that engine
+choice is not a second axis of variation alongside method choice and any
+differences observed can be attributed to the causal-SHAP method itself
+rather than to the underlying predictive model. This already matches the
+originating publication's own engine for causal Shapley values and
+Shapley Flow (both gradient-boosted trees); as a secondary,
+replication-oriented check, the discovery-based method (Ng et al.) is
+additionally run on Random Forest, the engine explicitly named in its own
+paper, to confirm it behaves as its authors validated it before trusting
+its behavior on the primary comparison.
 
 The human-in-the-loop procedure exploits the fact that each method
 admits a different kind of expert input. For the graph-dependent
@@ -412,7 +419,11 @@ Claude working notebook on the methods
 
 **Status:** Living document, in progress. All effect sizes marked
 PLACEHOLDER are literature-informed starting points, not final, pending
-Robert Reynolds\'s review.
+Robert Reynolds\'s review. `config/dag_spec.yaml` and
+`config/edge_coefficients.yaml` are the canonical, machine-readable
+version of the graph and coefficients described in §2-§4 below - treat
+those YAML files as the source of truth if this document and they ever
+drift.
 
 **NOTE: Andy to supply proper DAG as supplied by Robert for the paper.**
 
@@ -450,193 +461,77 @@ central to the unloading mechanism.
 **Confirmed mechanism (NASA narrative, direct basis):** exposure to
 microgravity induces bone loss which increases circulating calcium,
 impacting renal stone risk. Excess blood calcium from Bone Remodeling
-feeds Urine Chemistry; Urine Chemistry determines whether Mineralized
-Renal Material precipitates; this determines Nephrolithiasis (kidney
-stone) risk, the outcome. Andy\'s repo confirms Nephrolithiasis as the
-target, with 28 pre-outcome ancestors in the full 51-node source graph
---- scoped down to 12 nodes below for tractability, matching the same
-rigor previously applied to bone.
+feeds Urine Chemistry via urinary calcium excretion; Urine Chemistry
+determines whether Mineralized Renal Material precipitates; this
+determines Nephrolithiasis (kidney stone) risk, the outcome. Andy\'s
+repo confirms Nephrolithiasis as the target, with 28 pre-outcome
+ancestors in the full 51-node source graph --- scoped down to 11 nodes
+below for tractability, matching the same rigor previously applied to
+bone.
 
-  ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-  **\#**      **Node**           **Type**                    **Measure(s)**       **Composite/split   **Source**
-                                                                                  decision**          
-  ----------- ------------------ --------------------------- -------------------- ------------------- ------------------------------------------------------------------------------------------------------
-  1           Duration           Exposure                    Cumulative mission   Single measure      NASA narrative; [[Gabel et al. 2021]{.underline}](https://pubmed.ncbi.nlm.nih.gov/33597120/)
-                                                             days                                     
+| # | Node | Type | Measure(s) | Composite/split decision | Source |
+|---|---|---|---|---|---|
+| 1 | Duration | Exposure | Cumulative mission days | Single measure | NASA narrative; [Gabel et al. 2021](https://pubmed.ncbi.nlm.nih.gov/33597120/) |
+| 2 | Sex | Confounder | Male/female | Single measure --- **stronger evidence here than for bone**: male astronauts and male analog cohorts show greater susceptibility to elevated urinary CaOx supersaturation than females | [Numerical characterization of astronaut CaOx renal stone risk, npj Microgravity 2022](https://www.nature.com/articles/s41526-021-00187-z) |
+| 3 | Urinary calcium excretion (hypercalciuria) | Mediator | 24-hr urinary calcium, mg/day | Single measure, making the resorption → urine-chemistry mechanism explicit as its own node rather than folding it into a single edge. Grounded thresholds: baseline ~240 mg/day; risk normalizes at <150 mg/day alone, or 190 mg/day combined with fluid intake >=2.5 L/day | Primary literature citation for the mg/day thresholds still pending |
+| 4a | Vitamin D (pre-flight) | Exogenous confounder | Serum 25(OH)D₃, baseline | Split from "Nutrients"; appears 2x in DAG | [Smith et al. 2012, JBMR](https://academic.oup.com/jbmr/article-abstract/27/9/1896/7598261) |
+| 4b | Vitamin D (in-flight) | Mediator, child of Duration, feeds Urine Chemistry via calcium absorption | Serum 25(OH)D₃, in-flight/post | Same split | [J. Nutrition, Mir cohort](https://jn.nutrition.org/article/S0022-3166(22)10077-5/fulltext) --- 32--36% decline during long missions |
+| 5 | Nutrients (Risk) | Confounder/countermeasure | Dietary oxalate, calcium, magnesium intake (broader than bone's calcium-only node, since oxalate/magnesium matter specifically for stone chemistry) | Single composite measure | NASA narrative: "Nutrients affect Urine Chemistry through the intake of... oxalate, calcium, magnesium" |
+| 6 | Bone formation | Mediator | P1NP, BSAP, osteocalcin | PCA composite (carried over from bone track) | [Gabel et al., Sci Adv 2024](https://www.science.org/doi/10.1126/sciadv.adq3632) |
+| 7 | Bone resorption | Mediator, **primary driver of this pathway** | NTX, CTX | PCA composite | "Bone resorption brought on by spaceflight elevates urinary calcium and the risk of renal stone formation" --- [Bone metabolism and renal stone risk during ISS missions, ScienceDirect](https://www.sciencedirect.com/science/article/abs/pii/S8756328215003658) |
+| 8 | Hydration / fluid intake | Mediator/countermeasure | 24-hr urine volume and fluid intake, L/day | Single measure. Grounded magnitudes: urine volume >2 L/day reduces risk; in-flight intake ~3.2 L/day needed to reach pre-flight risk level | NASA narrative + [OCHMO-MTB-003](https://www.nasa.gov/ochmo-mtb-003-urinary-health-2/); specific L/day thresholds pending primary citation |
+| 9 | Urine Chemistry | Mediator | PCA composite: calcium, citrate, oxalate, pH | PCA composite | NASA narrative and [OCHMO-MTB-003](https://www.nasa.gov/ochmo-mtb-003-urinary-health-2/) monitoring panel (calcium oxalate, uric acid, citrate, pH, sodium, sulfate, phosphorus, magnesium, potassium) |
+| 10 | Mineralized Renal Material (CaOx supersaturation) | Mediator | Relative supersaturation (RSS) score | Single measure. Internal mediator, not a modeled outcome | 25% of astronauts show elevated CaOx supersaturation pre-flight vs. 46% post-flight --- [Goodenow et al., npj Microgravity 2022](https://www.nature.com/articles/s41526-021-00187-z) |
+| 11 | Nephrolithiasis | Outcome | Kidney stone presence/incidence | Single measure. Sole modeled outcome | NASA narrative and Andy\'s repo confirm as target; kidney stone is the **2nd most likely reason for ISS emergency medical evacuation** per NASA\'s Integrated Medical Model --- [OCHMO-MTB-003](https://www.nasa.gov/ochmo-mtb-003-urinary-health-2/) |
 
-  2           Age at launch      Confounder, direction TBD   Age in years         Single measure,     ---
-                                                                                  **not NASA-named**  
-                                                                                  --- narrative uses  
-                                                                                  \"Individual        
-                                                                                  Factors\... genetic 
-                                                                                  predispositions\"   
-                                                                                  without decomposing 
-                                                                                  further; included   
-                                                                                  by analogy, flag to 
-                                                                                  Robert              
-
-  3           Sex                Confounder                  Male/female          Single measure ---  [[Numerical characterization of astronaut CaOx renal stone risk, npj Microgravity
-                                                                                  **stronger evidence 2022]{.underline}](https://www.nature.com/articles/s41526-021-00187-z)
-                                                                                  here than for       
-                                                                                  bone**: male        
-                                                                                  astronauts and male 
-                                                                                  analog cohorts show 
-                                                                                  greater             
-                                                                                  susceptibility to   
-                                                                                  elevated urinary    
-                                                                                  CaOx                
-                                                                                  supersaturation     
-                                                                                  than females        
-
-  4           Era /              Effect modifier, **weaker   Binary: pre/post     Single measure      Note below: high-load resistive exercise \"appears to have only a marginal effect\" on renal stone
-              countermeasure     than in bone**              ARED, or KCit                            risk specifically, unlike its strong effect on bone
-              protocol                                       availability                             
-
-  5a          Vitamin D          Exogenous confounder        Serum 25(OH)D₃,      Split from          [[Smith et al. 2012,
-              (pre-flight)                                   baseline             \"Nutrients\";      JBMR]{.underline}](https://academic.oup.com/jbmr/article-abstract/27/9/1896/7598261)
-                                                                                  appears 2x in DAG   
-
-  5b          Vitamin D          Mediator, child of          Serum 25(OH)D₃,      Same split          [[J. Nutrition, Mir
-              (in-flight)        Duration, feeds Urine       in-flight/post                           cohort]{.underline}](https://jn.nutrition.org/article/S0022-3166(22)10077-5/fulltext) --- 32--36%
-                                 Chemistry via calcium                                                decline during long missions
-                                 absorption                                                           
-
-  6           Nutrients (Risk)   Confounder/countermeasure   Dietary oxalate,     Single composite    NASA narrative: \"Nutrients affect Urine Chemistry through the intake of\... oxalate, calcium,
-                                                             calcium, magnesium   measure             magnesium\"
-                                                             intake (broader than                     
-                                                             bone\'s calcium-only                     
-                                                             node, since                              
-                                                             oxalate/magnesium                        
-                                                             matter specifically                      
-                                                             for stone chemistry)                     
-
-  7           Bone formation     Mediator                    P1NP, BSAP,          PCA composite       [[Gabel et al., Sci Adv 2024]{.underline}](https://www.science.org/doi/10.1126/sciadv.adq3632)
-                                                             osteocalcin          (carried over from  
-                                                                                  bone track)         
-
-  8           Bone resorption    Mediator, **primary driver  NTX, CTX             PCA composite       \"Bone resorption brought on by spaceflight elevates urinary calcium and the risk of renal stone
-                                 of this pathway**                                                    formation\" --- [[Bone metabolism and renal stone risk during ISS missions,
-                                                                                                      ScienceDirect]{.underline}](https://www.sciencedirect.com/science/article/abs/pii/S8756328215003658)
-
-  9           Hydration status   Mediator/countermeasure     24-hr urine volume,  Single measure      NASA narrative + [[OCHMO-MTB-003]{.underline}](https://www.nasa.gov/ochmo-mtb-003-urinary-health-2/):
-                                                             fluid intake                             \"increased fluid intake\... potentially effective countermeasure\"
-
-  10          Urine Chemistry    Mediator                    PCA composite:       PCA composite       NASA narrative and [[OCHMO-MTB-003]{.underline}](https://www.nasa.gov/ochmo-mtb-003-urinary-health-2/)
-                                                             calcium, citrate,                        monitoring panel (calcium oxalate, uric acid, citrate, pH, sodium, sulfate, phosphorus, magnesium,
-                                                             oxalate, pH                              potassium)
-
-  11          Mineralized Renal  Mediator                    Relative             Single measure      25% of astronauts show elevated CaOx supersaturation pre-flight vs. 46% post-flight --- [[Goodenow et
-              Material (CaOx                                 supersaturation                          al., npj Microgravity 2022]{.underline}](https://www.nature.com/articles/s41526-021-00187-z)
-              supersaturation)                               (RSS) score                              
-
-  12          Nephrolithiasis    Outcome                     Kidney stone         Single measure      NASA narrative and Andy\'s repo confirm as target; kidney stone is the **2nd most likely reason for
-                                                             presence/incidence                       ISS emergency medical evacuation** per NASA\'s Integrated Medical Model ---
-                                                                                                      [[OCHMO-MTB-003]{.underline}](https://www.nasa.gov/ochmo-mtb-003-urinary-health-2/)
-  ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+Age at launch and Era/countermeasure protocol were considered and are
+not represented as graph nodes here: age at launch is weakly grounded
+(NASA's narrative uses "Individual Factors... genetic predispositions"
+without decomposing further, and it has no edges into the mechanism),
+and Era/countermeasure protocol's exercise-countermeasure effect on
+renal stone risk is documented as marginal, unlike its strong effect on
+bone - it is instead handled as a Step 10 sampling axis (widened
+mission-era range, pre/post ARED, KCit availability).
 
 **Note on Astronaut Selection:** the NASA narrative names it directly
 (\"individuals with a high risk of renal stones would not be selected
 into the Astronaut Corps\"). Per our earlier structural distinction
 (§4), this is a selection mechanism, not a causal DAG node, so it
-belongs in step 10\'s sampling constraints, not this table.
+belongs in step 10\'s sampling constraints, not this table - the same
+treatment given to Era/countermeasure protocol above.
 
 ## 3. PLACEHOLDER edge effect sizes --- pending Robert\'s review
 
-  ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-  **Edge**                      **Placeholder           **Source**
-                                magnitude**             
-  ----------------------------- ----------------------- ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-  Duration → Resorption         \~2× baseline           [[Gabel et al.
-                                resorption markers,     preprint]{.underline}](https://www.researchgate.net/publication/387274968_Tracking_of_spaceflight-induced_bone_remodeling_reveals_a_limited_time_frame_for_recovery_of_resorption_sites_in_humans)
-                                sustained through 6-mo  
-                                missions (carried over  
-                                from bone track, same   
-                                mechanism)              
-
-  Duration → Formation          Near-zero to mildly     [[Smith, NASA NTRS review]{.underline}](https://ntrs.nasa.gov/api/citations/20100030546/downloads/20100030546.pdf)
-                                decreased               
-
-  Resorption → Urine Chemistry  Directional only, no    [[Bone metabolism and renal stone risk, ISS missions]{.underline}](https://www.sciencedirect.com/science/article/abs/pii/S8756328215003658)
-  (calcium)                     magnitude found yet:    
-                                \"bone resorption\...   
-                                elevates urinary        
-                                calcium and the risk of 
-                                renal stone formation\" 
-
-  Duration → Mineralized Renal  Prevalence of elevated  [[Goodenow et al., npj Microgravity 2022]{.underline}](https://www.nature.com/articles/s41526-021-00187-z)
-  Material (CaOx                CaOx supersaturation:   
-  supersaturation)              25% pre-flight → 46%    
-                                post-flight             
-
-  Sex → Mineralized Renal       Directional: males more [[Goodenow et al.]{.underline}](https://www.nature.com/articles/s41526-021-00187-z)
-  Material                      susceptible to elevated 
-                                CaOx supersaturation    
-                                than females; astronaut 
-                                cohorts are heavily     
-                                male-skewed (29M/1F in  
-                                the KCit trial below),  
-                                limiting power          
-
-  Era (KCit availability) ×     KCit-treated crew       [[NASA NTRS, KCit trial]{.underline}](https://ntrs.nasa.gov/citations/20080046171)
-  Resorption → Urine Chemistry  showed decreased        
-                                urinary calcium         
-                                excretion and           
-                                maintained preflight    
-                                CaOx supersaturation    
-                                risk level (vs.         
-                                untreated controls\'    
-                                increase); N=30         
-                                (29M/1F)                
-
-  Era (ARED) × Duration →       **Contrast with bone:** [[Goodenow et al.]{.underline}](https://www.nature.com/articles/s41526-021-00187-z)
-  Mineralized Renal Material    high-load resistive     
-                                exercise \"appears to   
-                                have only a marginal    
-                                effect as a renal stone 
-                                occurrence              
-                                countermeasure,\"       
-                                unlike its strong       
-                                effect on bone mass     
-
-  Hydration → Urine Chemistry / Directional only:       NASA narrative; [[OCHMO-MTB-003]{.underline}](https://www.nasa.gov/ochmo-mtb-003-urinary-health-2/)
-  Mineralized Renal Material    increased fluid         
-                                intake/urine volume is  
-                                a \"potentially         
-                                effective               
-                                countermeasure,\"       
-                                operationally           
-                                constrained by mission  
-                                resource limits         
-
-  Vitamin D → Urine Chemistry   General                 Mendelian randomization study, modifiable risk factors for kidney stones (PMC10116718)
-  (calcium)                     (non-spaceflight)       
-                                literature: OR 1.55 per 
-                                SD increase in serum    
-                                25(OH)D for kidney      
-                                stone risk, via         
-                                increased intestinal    
-                                calcium absorption      
-
-  Nutrients                     Directional only, NASA  NASA narrative
-  (oxalate/calcium/magnesium) → narrative names the     
-  Urine Chemistry               pathway without         
-                                magnitude               
-  ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+| Edge | Placeholder magnitude | Source |
+|---|---|---|
+| Duration → Resorption | ~2× baseline resorption markers, sustained through 6-mo missions (carried over from bone track, same mechanism) | [Gabel et al. preprint](https://www.researchgate.net/publication/387274968_Tracking_of_spaceflight-induced_bone_remodeling_reveals_a_limited_time_frame_for_recovery_of_resorption_sites_in_humans) |
+| Duration → Formation | Near-zero to mildly decreased | [Smith, NASA NTRS review](https://ntrs.nasa.gov/api/citations/20100030546/downloads/20100030546.pdf) |
+| Formation → Urine Chemistry | Intentional near-null distractor edge: tests whether SHAP methods over-attribute importance to a feature with almost no true downstream effect | Repo design choice |
+| Resorption → Urinary calcium excretion | Directional only, no magnitude found yet: "bone resorption... elevates urinary calcium and the risk of renal stone formation" | [Bone metabolism and renal stone risk, ISS missions](https://www.sciencedirect.com/science/article/abs/pii/S8756328215003658) |
+| Urinary calcium excretion → Urine Chemistry | Grounded: baseline ~240 mg/day urinary calcium. Main effect only - see the interaction row below for the combined threshold with hydration | Primary literature citation still pending |
+| Urinary calcium excretion × Hydration → Mineralized Renal Material | Interaction-only edge: risk normalizes at <150 mg/day urinary calcium alone, or 190 mg/day combined with fluid intake >=2.5 L/day - i.e. hydration modifies the calcium effect. Functional form: multiplicative effect-modification | Primary literature citation still pending |
+| Duration → Mineralized Renal Material (CaOx supersaturation) | Prevalence of elevated CaOx supersaturation: 25% pre-flight → 46% post-flight | [Goodenow et al., npj Microgravity 2022](https://www.nature.com/articles/s41526-021-00187-z) |
+| Sex → Mineralized Renal Material | Directional: males more susceptible to elevated CaOx supersaturation than females; astronaut cohorts are heavily male-skewed, limiting power | [Goodenow et al.](https://www.nature.com/articles/s41526-021-00187-z) |
+| Hydration/fluid intake → Urine Chemistry | Grounded: urine volume >2 L/day reduces risk via dilution | NASA narrative; [OCHMO-MTB-003](https://www.nasa.gov/ochmo-mtb-003-urinary-health-2/); threshold pending primary citation |
+| Hydration/fluid intake → Mineralized Renal Material | Grounded: in-flight fluid intake ~3.2 L/day needed to reach pre-flight risk level | NASA narrative; [OCHMO-MTB-003](https://www.nasa.gov/ochmo-mtb-003-urinary-health-2/); threshold pending primary citation |
+| Vitamin D → Urine Chemistry (calcium) | General (non-spaceflight) literature: OR 1.55 per SD increase in serum 25(OH)D for kidney stone risk, via increased intestinal calcium absorption | Mendelian randomization study, modifiable risk factors for kidney stones (PMC10116718) |
+| Nutrients (oxalate/calcium/magnesium) → Urine Chemistry | Directional only, NASA narrative names the pathway without magnitude | NASA narrative |
 
 **Honest gap:** several edges here are directional-only (no magnitude
 found), more so than the bone track. This DAG\'s downstream chain (Urine
 Chemistry → Mineralized Renal Material → Nephrolithiasis) has real
 quantitative anchors at the Mineralized Renal Material step (25%→46%)
 but not yet at Urine Chemistry\'s individual solute-level edges or the
-final Nephrolithiasis incidence step. Worth prioritizing with Robert.
+final Nephrolithiasis incidence step. Urinary calcium excretion and
+Hydration/fluid intake carry real numeric thresholds, but those
+thresholds are not yet tied to a primary literature citation, and none
+of the values in this table have been turned into an actual regression
+coefficient here - see `config/edge_coefficients.yaml` for the full set
+of standardized path coefficients used to make Step 3 runnable, and its
+own honest_gap note for the state of the citation gap. Worth
+prioritizing with Robert alongside the original coefficient gaps.
 
 ## 4. Open decisions log
-
--   **Age arrow:** unresolved for renal stone (unlike bone, where the
-    2007 BMD-loss-rate study gave a clear answer). NASA\'s narrative
-    doesn\'t decompose \"Individual Factors\" by age specifically ---
-    needs Robert\'s input on direction and whether it modifies the
-    Duration pathway or acts on baseline risk directly.
 
 -   **Sex:** kept as a direct effect (not Sex × Era interaction, unlike
     the bone track) given the more specific supporting evidence (male
@@ -645,14 +540,30 @@ final Nephrolithiasis incidence step. Worth prioritizing with Robert.
 
 -   **Astronaut Selection:** confirmed as a step-10 sampling constraint,
     not a DAG node (NASA\'s own narrative frames it as a selection
-    mechanism, consistent with our earlier structural distinction).
+    mechanism, consistent with our earlier structural distinction). The
+    Era/countermeasure question (§2) is handled the same way.
 
--   **Outcome measure:** Nephrolithiasis as binary incidence, vs.
-    Mineralized Renal Material\'s continuous CaOx supersaturation score
-    as a proxy outcome --- Andy\'s repo uses Nephrolithiasis as the
-    target; open whether we follow that or use the earlier, more
-    data-rich supersaturation measure given it has better-populated
-    evidence (25%/46% figures) than incidence itself.
+-   **Urinary calcium excretion × Hydration interaction:** functional
+    form set to multiplicative effect-modification on the Urinary
+    calcium excretion → Mineralized Renal Material edge (coefficient in
+    `config/edge_coefficients.yaml`). Needs Robert\'s input plus a
+    primary-literature citation for the 240/150/190 mg/day and 2.5 L/day
+    thresholds.
+
+-   **Hydration/fluid intake thresholds** (>2 L/day; ~3.2 L/day
+    in-flight): have provisional coefficients in
+    `config/edge_coefficients.yaml` but still need a primary citation
+    before they\'re literature-anchored rather than build placeholders.
+
+-   **Bone formation → Urine Chemistry distractor edge:** a deliberate
+    near-null effect (coefficient +0.05) to test whether SHAP methods
+    over-attribute importance to a feature with almost no true
+    downstream effect. Needs Robert\'s confirmation that near-zero,
+    rather than no edge at all, is the right characterization.
+
+-   **Outcome measure:** nephrolithiasis (binary incidence) is the sole
+    modeled outcome; Mineralized Renal Material / CaOx supersaturation
+    is an internal mediator only, not a secondary outcome.
 
 ## 4b. What Andy has already completed (per andystats/causal-shap-target-dags, repo review)
 
@@ -914,9 +825,8 @@ translational proxy: kidney stone incidence is diagnosed clinically
 (ultrasound, CT) and is what NASA\'s own DAG targets natively. The
 nearer-term mediator, Mineralized Renal Material (CaOx supersaturation),
 has the richest quantitative evidence (25%→46% pre/post-flight
-prevalence) and may be worth using as a secondary, better-populated
-outcome alongside Nephrolithiasis incidence itself (see §4 open
-decision).
+prevalence), but is modeled as an internal mediator only, not a
+secondary outcome (§4).
 
 **Mediator inclusion decision:** Mediators (Formation, Resorption, Bone
 mass, Trabecular architecture) ARE included alongside Duration in the
@@ -1011,37 +921,28 @@ attribution against step-4 DAG-derived baseline → revises input → rerun
 per round (metric borrowed directly from Ng et al.\'s own validation
 approach) plus rank-stability of attributions round over round.
 
-**Engine per method (step 6), matched to each foundational paper\'s own
-experiments:**
+**Engine per method (step 6):** XGBoost is the primary engine throughout,
+held constant across all four methods so engine choice is not a second
+axis of variation alongside method choice. See
+[ADR 004](../decisions/004-xgboost-primary-engine.md) for the reasoning
+(cost, and no candidate library ever having been defined for the
+SuperLearner alternative originally considered here) and
+`config/model_engines.yaml` for the machine-readable version of this
+table, read by both `r/R/engines.R` and
+`python/src/causal_shap_renal/engines.py`.
 
-  -----------------------------------------------------------------------
-  **Method**              **Engine**              **Source**
-  ----------------------- ----------------------- -----------------------
-  Causal Shapley Values   XGBoost                 NeurIPS reviewer
-  (Heskes et al.)                                 commentary confirms
-                                                  XGBoost used on their
-                                                  bike-sharing dataset
-                                                  experiment
+| Method | Primary engine | Paper-native engine (secondary check) | Source |
+|---|---|---|---|
+| Causal Shapley Values (Heskes et al.) | XGBoost | None needed - primary engine already matches | NeurIPS reviewer commentary confirms XGBoost used on their bike-sharing dataset experiment |
+| Shapley Flow (Wang et al.) | XGBoost | None needed - primary engine already matches | Reference implementation (flow.py) uses xgboost in case studies |
+| ASV (Frye et al.) | XGBoost | None - no single model type identifiable from their paper/examples | --- |
+| Causal SHAP (Ng et al.) | XGBoost | Random Forest | Explicitly stated in paper: "All experiments used the same Random Forest model as the black box" |
 
-  Shapley Flow (Wang et   XGBoost                 Reference
-  al.)                                            implementation
-                                                  (flow.py) uses xgboost
-                                                  in case studies
-
-  ASV (Frye et al.)       **SuperLearner          ---
-                          (fallback)** --- no     
-                          single model type       
-                          clearly identifiable    
-                          from their              
-                          paper/examples          
-
-  Causal SHAP (Ng et al.) Random Forest           Explicitly stated in
-                                                  paper: \"All
-                                                  experiments used the
-                                                  same Random Forest
-                                                  model as the black
-                                                  box\"
-  -----------------------------------------------------------------------
+Shapley Flow is flagged in ADR 004 as the one method not yet confirmed to
+accept a different engine cleanly if this ever changes - its reference
+implementation (`shapflow`) is only demonstrated with XGBoost, which is
+convenient here since XGBoost is already the primary engine, but worth
+verifying explicitly once this method is implemented.
 
 ## 10. Step 7 spec
 
@@ -1149,7 +1050,11 @@ genuinely unknown pending other decisions.
                                        shapr                                     background samples ×
                                                                                  features, shapr\'s
                                                                                  batching/parallelization
-                                                                                 should mitigate
+                                                                                 should mitigate. No
+                                                                                 secondary-check run needed
+                                                                                 (ADR 004): XGBoost is
+                                                                                 already this method\'s
+                                                                                 paper-native engine
 
   6              Causal SHAP           Shapley Flow, XGBoost    Medium--High     No published benchmark
                  comparison                                                      found; edge-level
@@ -1157,30 +1062,42 @@ genuinely unknown pending other decisions.
                                                                                  across the full graph rather
                                                                                  than per-node, expected to
                                                                                  exceed node-based causal
-                                                                                 Shapley cost
+                                                                                 Shapley cost. No
+                                                                                 secondary-check run needed
+                                                                                 (ADR 004): XGBoost is
+                                                                                 already this method\'s
+                                                                                 paper-native engine
 
-  6              Causal SHAP           ASV, SuperLearner        Medium           Restricts permutations to
-                 comparison            (fallback), via shapr                     causal-ordering-consistent
+  6              Causal SHAP           ASV, XGBoost, via shapr  Medium           Restricts permutations to
+                 comparison                                                      causal-ordering-consistent
                                                                                  orderings only, a subset of
                                                                                  full permutation space,
                                                                                  reducing cost relative to
                                                                                  unconstrained
-                                                                                 PermutationExplainer;
-                                                                                 SuperLearner\'s per-call
-                                                                                 cost still applies
+                                                                                 PermutationExplainer
 
   6              Causal SHAP           Causal SHAP (Ng et al.), High             Paper\'s own benchmark:
-                 comparison            Random Forest            **(grounded)**   366.13s for causal SHAP
-                                                                                 value computation alone
-                                                                                 (Monte Carlo-dominated), 31
+                 comparison            XGBoost (secondary       **(grounded for  366.13s for causal SHAP
+                                       check: Random Forest)    the Random       value computation alone
+                                                                Forest run)      (Monte Carlo-dominated), 31
                                                                                  features/294 training rows,
-                                                                                 AMD EPYC 7713. Our DAG has
-                                                                                 fewer features (\~9--10),
-                                                                                 likely reduces cost
-                                                                                 somewhat, but this was the
-                                                                                 single most expensive
+                                                                                 AMD EPYC 7713, using Random
+                                                                                 Forest (this method\'s
+                                                                                 paper-native engine, run
+                                                                                 here as the secondary
+                                                                                 check per ADR 004). Our DAG
+                                                                                 has fewer features
+                                                                                 (\~9--10), likely reduces
+                                                                                 cost somewhat, but this was
+                                                                                 the single most expensive
                                                                                  component the source paper
-                                                                                 measured
+                                                                                 measured. The XGBoost
+                                                                                 primary run's own cost is
+                                                                                 not yet benchmarked but
+                                                                                 expected lower per Monte
+                                                                                 Carlo draw than the
+                                                                                 Random-Forest secondary
+                                                                                 check
 
   6              Causal SHAP           × 3 human-in-the-loop    ×3 multiplier    Each method reruns fully per
                  comparison            iterations, all 4                         revision round; total step 6

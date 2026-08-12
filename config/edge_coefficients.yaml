@@ -1,121 +1,179 @@
 # Structural-equation coefficients for Step 3 (simcausal data generation).
 #
-# These are the numeric placeholders that r/R/simcausal_helpers.R turns into
+# These are the numeric estimates that r/R/simcausal_helpers.R turns into
 # structural equations. They translate the qualitative evidence in
-# config/dag_spec.yaml into a starting-point number so simulation can run
-# before Robert's calibration pass. Every value here is a simulation design
-# parameter, not an empirical NASA effect estimate, and is explicitly marked
-# PLACEHOLDER until reviewed. Where the literature supports only a direction
-# and not a magnitude, the coefficient is left null and flagged
-# direction_only: the magnitude is an assumption to be varied in sensitivity
-# analysis, not a value to trust as-is.
+# config/dag_spec.yaml into a starting-point number so simulation can run.
+# Every value here is an estimate for training and simulation purposes, not
+# an empirical NASA effect estimate.
 #
 # Edge identifiers (from/to) match config/dag_spec.yaml.
 
-status: PLACEHOLDER
-pending_review_by: "Robert Reynolds"
+purpose: training estimates
 
 sample_size:
   default: 1000        # order of magnitude of the real astronaut cohort
   note: "Larger generated samples available where estimator stability requires them."
 
+# All continuous nodes except the two raw-unit root nodes noted in
+# root_node_distributions (duration, hydration_fluid_intake) are generated
+# directly on a standardized (mean 0, SD 1) scale, so every coefficient in
+# `coefficients` below is a standardized path coefficient. duration and
+# hydration_fluid_intake are given real-world units for interpretability but
+# must be z-scored before their outgoing coefficients are applied. sex is
+# binary (coded male=1) and used directly, not standardized. nephrolithiasis
+# is the sole outcome, binary, logit link - see outcome_calibration.
+standardization_convention: >
+  Every continuous node other than duration and hydration_fluid_intake is
+  simulated directly on a standardized mean-0/SD-1 scale. duration and
+  hydration_fluid_intake are simulated in real-world units (days, L/day)
+  for interpretability and must be z-scored before applying their outgoing
+  path coefficients. sex is a binary indicator (male=1) used directly, not
+  standardized.
+
 coefficients:
   - from: duration
     to: bone_resorption
-    coefficient: null
+    coefficient: 0.60
     direction_only: false
-    magnitude_basis: "~2x baseline resorption markers, sustained through 6-month missions"
-    note: "Carried over from the bone track; same underlying mechanism."
+    magnitude_basis: "Strong (~2x baseline resorption markers)."
 
   - from: duration
     to: bone_formation
-    coefficient: null
+    coefficient: -0.10
     direction_only: false
-    magnitude_basis: "Near-zero to mildly decreased"
+    magnitude_basis: "Near-null/mildly decreased. Kept deliberately near-zero: bone_formation is a distractor node in this graph (see its outgoing edge below), not a strong pathway."
+
+  - from: bone_formation
+    to: urine_chemistry
+    coefficient: 0.05
+    direction_only: false
+    magnitude_basis: "Intentional near-null distractor edge: tests whether SHAP methods over-attribute importance to a feature with almost no true downstream effect, given bone_formation is included in the model alongside its near-zero true effect."
 
   - from: bone_resorption
+    to: urinary_calcium_excretion
+    coefficient: 0.60
+    direction_only: false
+    magnitude_basis: "Hypercalciuria described in the literature as the most important aggravating factor in this pathway."
+
+  - from: urinary_calcium_excretion
     to: urine_chemistry
-    coefficient: null
-    direction_only: true
-    magnitude_basis: "Directional only; no magnitude found in the literature yet"
+    coefficient: 0.50
+    direction_only: false
+    magnitude_basis: "The 150/190/240 mg/day thresholds motivate a moderate-to-strong main effect. Main effect only - the combined threshold with hydration_fluid_intake is captured separately as an interaction term, see below."
+
+  - from: urinary_calcium_excretion
+    to: mineralized_renal_material
+    interacts_with: hydration_fluid_intake
+    coefficient: 0.15
+    direction_only: false
+    functional_form: multiplicative   # product of the two nodes' standardized values, added on top of their separate main-effect edges
+    magnitude_basis: "Combined-threshold finding: risk normalizes at <150 mg/day urinary calcium alone, or 190 mg/day combined with fluid intake >=2.5 L/day - i.e. hydration modifies the calcium effect."
+    note: "Interaction-only term, additive on top of the main-effect edges urinary_calcium_excretion -> urine_chemistry and hydration_fluid_intake -> mineralized_renal_material, not a replacement for either."
 
   - from: duration
     to: mineralized_renal_material
-    coefficient: null
+    coefficient: 0.40
     direction_only: false
-    magnitude_basis: "Prevalence shift 25% pre-flight to 46% post-flight elevated CaOx supersaturation"
+    magnitude_basis: "Prevalence shift 25% pre-flight to 46% post-flight elevated CaOx supersaturation. Modeled as a partial direct effect (0.40); the remainder of duration's total effect on this node is mediated through bone_resorption -> urinary_calcium_excretion -> urine_chemistry and through vitamin_d_inflight."
 
   - from: sex
     to: mineralized_renal_material
-    coefficient: null
-    direction_only: true
-    magnitude_basis: "Males more susceptible; astronaut cohorts are heavily male-skewed, limiting power"
+    coefficient: 0.20
+    direction_only: false
+    magnitude_basis: "Males (coded male=1) more susceptible to elevated CaOx supersaturation; astronaut cohorts are heavily male-skewed, limiting power. Kept deliberately small."
 
-  - from: era_countermeasure
+  - from: hydration_fluid_intake
     to: urine_chemistry
-    interacts_with: bone_resorption
-    coefficient: null
-    direction_only: true
-    magnitude_basis: "KCit-treated crew: decreased urinary calcium excretion vs. untreated controls (N=30, 29M/1F)"
+    coefficient: -0.40
+    direction_only: false
+    magnitude_basis: "Urine volume >2 L/day reduces risk via dilution. Protective (negative) effect."
 
-  - from: era_countermeasure
+  - from: hydration_fluid_intake
     to: mineralized_renal_material
-    interacts_with: duration
-    coefficient: null
-    direction_only: true
-    magnitude_basis: "ARED (high-load resistive exercise) appears only marginally protective for renal stone risk, unlike its strong effect on bone mass"
-
-  - from: hydration_status
-    to: urine_chemistry
-    coefficient: null
-    direction_only: true
-    magnitude_basis: "Directional only; increased fluid intake is a potentially effective countermeasure"
-
-  - from: hydration_status
-    to: mineralized_renal_material
-    coefficient: null
-    direction_only: true
+    coefficient: -0.30
+    direction_only: false
+    magnitude_basis: "In-flight fluid intake ~3.2 L/day needed to reach pre-flight risk level. Protective (negative) effect."
 
   - from: vitamin_d_pre
     to: urine_chemistry
-    coefficient: 0.44   # PLACEHOLDER: log(1.55) per SD, from the non-spaceflight Mendelian randomization estimate
+    coefficient: 0.44   # log(1.55) per SD, from the non-spaceflight Mendelian randomization estimate
     direction_only: false
-    magnitude_basis: "OR 1.55 per SD increase in serum 25(OH)D, non-spaceflight literature, via increased intestinal calcium absorption"
+    magnitude_basis: "OR 1.55 per SD increase in serum 25(OH)D, non-spaceflight literature, via increased intestinal calcium absorption."
 
   - from: vitamin_d_inflight
     to: urine_chemistry
-    coefficient: null
-    direction_only: true
-    magnitude_basis: "Assumed same mechanism as vitamin_d_pre -> urine_chemistry"
+    coefficient: 0.30
+    direction_only: false
+    magnitude_basis: "Same calcium-absorption mechanism as vitamin_d_pre -> urine_chemistry."
 
   - from: nutrients_risk
     to: urine_chemistry
-    coefficient: null
-    direction_only: true
-    magnitude_basis: "NASA narrative names the pathway without a magnitude"
+    coefficient: 0.30
+    direction_only: false
+    magnitude_basis: "NASA narrative names the pathway (oxalate, calcium, magnesium intake) without a magnitude."
 
   - from: duration
     to: vitamin_d_inflight
-    coefficient: -0.34  # PLACEHOLDER: 32-36% decline during long missions
+    coefficient: -0.34  # 32-36% decline during long missions
     direction_only: false
-    magnitude_basis: "32-36% decline in serum 25(OH)D3 during long missions (Mir cohort)"
+    magnitude_basis: "32-36% decline in serum 25(OH)D3 during long missions (Mir cohort)."
 
   - from: urine_chemistry
     to: mineralized_renal_material
-    coefficient: null
-    direction_only: true
-    magnitude_basis: "Confirmed mechanism, no fitted magnitude yet"
+    coefficient: 0.70
+    direction_only: false
+    magnitude_basis: "Core precipitation step of the mechanism (confirmed_mechanism in dag_spec.yaml); given the strongest standardized coefficient in the graph accordingly."
 
   - from: mineralized_renal_material
     to: nephrolithiasis
-    coefficient: null
-    direction_only: true
-    magnitude_basis: "Confirmed mechanism, no fitted magnitude yet"
+    coefficient: 0.90   # on the log-odds (logit) scale, since nephrolithiasis is binary
+    direction_only: false
+    magnitude_basis: "Final incidence step (confirmed_mechanism); coefficient is on the log-odds scale since nephrolithiasis is a binary outcome with a logit link - see outcome_calibration for how the intercept is set alongside it."
 
-honest_gap: >
-  Several edges here are directional-only, more so than in the bone track.
-  The downstream chain (Urine Chemistry -> Mineralized Renal Material ->
-  Nephrolithiasis) has a real quantitative anchor at the Mineralized Renal
-  Material step (25% -> 46%) but not yet at Urine Chemistry's individual
-  solute-level edges or the final Nephrolithiasis incidence step. Worth
-  prioritizing with Robert.
+# Marginal distributions for the five exogenous/root nodes (no incoming
+# edges): duration, sex, vitamin_d_pre, nutrients_risk, hydration_fluid_intake.
+root_node_distributions:
+  - node: duration
+    distribution: "Normal(mean=180, sd=45) days, truncated to [14, 365]"
+    basis: "ISS long-duration missions run approximately 6 months"
+    note: "Raw units (days) for interpretability; z-score before applying duration's outgoing path coefficients, per standardization_convention."
+
+  - node: sex
+    distribution: "Bernoulli(P(male)=0.80)"
+    basis: "Astronaut corps is heavily male-skewed"
+    note: "Coded male=1; used directly (not standardized) by its outgoing coefficient."
+
+  - node: vitamin_d_pre
+    distribution: "Standardized Normal(0, 1)"
+    basis: "Raw population baseline approximately 30 +/- 8 ng/mL serum 25(OH)D3; already expressed on the standardized scale here."
+
+  - node: nutrients_risk
+    distribution: "Standardized Normal(0, 1), latent"
+    basis: "Composite dietary oxalate/calcium/magnesium intake index; no natural raw unit, modeled directly as a standardized latent."
+
+  - node: hydration_fluid_intake
+    distribution: "Normal(mean=2.3, sd=0.4) L/day, truncated to positive values"
+    basis: "Operational fluid-intake prescription of approximately 2.0-2.5 L/day"
+    note: "Raw units (L/day) for interpretability; z-score before applying hydration_fluid_intake's outgoing path coefficients, per standardization_convention."
+
+# bone_formation, bone_resorption, and urine_chemistry are declared
+# composite: pca_composite in dag_spec.yaml (each stands in for multiple
+# constituent biomarkers). Simulated directly as a single latent standardized
+# continuous variable rather than simulating the constituent biomarkers and
+# running PCA inside the simulation, since the composite - not its
+# constituent biomarkers - is what enters the SHAP models being compared, and
+# the latent avoids having to specify a full biomarker covariance structure
+# that nothing downstream needs.
+composite_node_parameterization:
+  applies_to: [bone_formation, bone_resorption, urine_chemistry]
+  decision: "Simulate directly as a single latent standardized (mean 0, total variance 1) continuous variable."
+  residual_rule: "Each node's residual/noise SD is set so its total variance equals 1 given the contribution of its incoming edges."
+
+# nephrolithiasis is the sole outcome (binary, logit link - see
+# outcome_type in dag_spec.yaml). The intercept is a free parameter not
+# implied by any of the path coefficients above and must be set separately.
+outcome_calibration:
+  node: nephrolithiasis
+  link: logit
+  target_marginal_prevalence: 0.10
+  basis: "Intercept set so P(nephrolithiasis=1) is approximately 0.10 in the default clean simulation regime (n=1000), yielding roughly 100 positive cases for estimator stability. This is a deliberate upward inflation relative to true astronaut kidney-stone incidence, chosen for tractability, not a claim about the real population rate - flag explicitly wherever prevalence is reported."

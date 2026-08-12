@@ -16,8 +16,6 @@ The methods doc names specific packages per step, and they split cleanly by lang
 - NOTEARS (Step 8) has a canonical Python reference implementation; R ports exist but are not well maintained.
 - PC and GES (Step 8) exist in both `pcalg` (R) and `causal-learn` (Python). Since PC is already produced in R for Step 6 (to feed IDA), Step 8 reuses that same R-produced CPDAG rather than recomputing it in Python.
 
-Forcing everything into one language would mean either losing IDA and native `shapr` support (Python-only) or losing `shap`, Shapley Flow, and `lingam`'s reference implementations (R-only). Neither substitution is worth the fidelity cost for a paper whose contribution is comparing these specific methods against their originating papers.
-
 ## Consequences
 - R handles: DAG ingestion, `simcausal` data generation, `shapr` (Heskes + ASV), PC/IDA, GES.
 - Python handles: out-of-box SHAP (Step 4), Shapley Flow, the structural Causal SHAP prototype, NOTEARS, LiNGAM, and the evaluation/metrics layer.

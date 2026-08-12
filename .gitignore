@@ -49,3 +49,8 @@ CLAUDE.md
 
 # Logs
 *.log
+
+# Docs
+docs/methods
+docs/decisions
+docs/STATUS.md

@@ -4,7 +4,7 @@
 Accepted
 
 ## Decision
-Steps 5 and 7 (complexity-aware reweighting, built on Lucidity Sciences' "Luma Warp" tool and its PSCI complexity score) are not built in this repo. They are tracked as external, owned by Lexi Pasi and Andy Wilson, and will run in a separate repo.
+Steps 5 and 7 (complexity-aware reweighting, built on Lucidity Sciences' LumaWarp tool and its PSCI complexity score) are not built in this repo. They are tracked as external, owned by Lexi Pasi and Andy Wilson, and will run in a separate repo (due to the proprietary nature of the tool).
 
 ## Context
 Per the methods doc, both steps are provisional at the time of writing: the interface between the complexity-scoring tool and the attribution outputs from Steps 4 and 6 has not been specified by the tool's developers, and the tool itself is not yet integrated into any pipeline. Building scaffolding for an unspecified interface would just create churn once the real interface lands.

@@ -1,21 +1,23 @@
 # DAG spec for the NASA HSRB Renal Stone Formation risk graph (SA-07566).
 #
 # Source: NASA's public SA-07566 "Risk of Renal Stone Formation" DAG, supplied
-# to Andy Wilson and Lexi Pasi by Robert Reynolds (DAGitty source, 2026-07-13
-# handoff; 53 nodes/83 edges per Robert's version, 51 nodes/75 edges in the
-# prior source-aligned reference, Cohen's kappa 0.978 after semantic mapping).
+# to Andy Wilson and Lexi Pasi by Robert Reynolds (DAGitty source;
+# 53 nodes/83 edges per Robert's version, 51 nodes/75 edges in the prior
+# source-aligned reference, Cohen's kappa 0.978 after semantic mapping).
 #
-# This file holds the 12-node working subgraph scoped down from the full
+# This file holds the 11-node working subgraph scoped down from the full
 # 51-node source graph for tractability (docs/methods, Step 2). Graph
 # topology is source-aligned to the published NASA DAG. All quantitative
-# values here are simulation design parameters informed by the literature,
-# not empirical NASA effect estimates, and remain subject to domain-expert
-# (Robert Reynolds) review before any substantive interpretation.
+# values here are estimates for training and simulation purposes, informed
+# by the literature where available, not empirical NASA effect estimates.
 #
-# Status: PLACEHOLDER pending Robert's review. Do not treat as final.
+# This is a subset and modification of the original DAG, scaled for
+# learning purposes; to be extended to the full DAG for the final paper.
 
 outcome: nephrolithiasis
-secondary_outcome: mineralized_renal_material   # continuous proxy (CaOx relative supersaturation), used in sensitivity analyses
+outcome_type: binary   # incidence, sole modeled outcome; logit link throughout.
+                        # Mineralized Renal Material / CaOx supersaturation is
+                        # an internal mediator node only, not a prediction target.
 
 nodes:
   - id: duration
@@ -25,15 +27,6 @@ nodes:
     composite: single_measure
     source: "NASA narrative; Gabel et al. 2021 (https://pubmed.ncbi.nlm.nih.gov/33597120/)"
 
-  - id: age_at_launch
-    label: "Age at launch"
-    type: confounder
-    direction: TBD   # unresolved; NASA narrative doesn't decompose "Individual Factors" by age specifically
-    measure: "Age in years"
-    composite: single_measure
-    note: "Not NASA-named as a distinct node; included by analogy to the bone track. Flag to Robert."
-    source: null
-
   - id: sex
     label: "Sex"
     type: confounder
@@ -42,14 +35,13 @@ nodes:
     note: "Stronger evidence here than for bone: male astronauts and male analog cohorts show greater susceptibility to elevated urinary CaOx supersaturation than females."
     source: "Numerical characterization of astronaut CaOx renal stone risk, npj Microgravity 2022 (https://www.nature.com/articles/s41526-021-00187-z)"
 
-  - id: era_countermeasure
-    label: "Era / countermeasure protocol"
-    type: effect_modifier
-    strength_note: "Weaker than in the bone track"
-    measure: "Binary: pre/post ARED, or KCit availability"
+  - id: urinary_calcium_excretion
+    label: "Urinary calcium excretion (hypercalciuria)"
+    type: mediator
+    measure: "24-hr urinary calcium, mg/day"
     composite: single_measure
-    note: "High-load resistive exercise appears to have only a marginal effect on renal stone risk specifically, unlike its strong effect on bone."
-    source: null
+    note: "Sits on the bone_resorption -> urine_chemistry pathway, making that mechanism explicit as its own node. Grounded thresholds: baseline ~240 mg/day; risk normalizes at <150 mg/day alone, or 190 mg/day combined with fluid intake >=2.5 L/day (interacts with hydration_fluid_intake)."
+    source: "Estimated thresholds for training purposes"
 
   - id: vitamin_d_pre
     label: "Vitamin D (pre-flight)"
@@ -91,12 +83,13 @@ nodes:
     composite: pca_composite
     source: "Bone metabolism and renal stone risk during ISS missions, ScienceDirect (https://www.sciencedirect.com/science/article/abs/pii/S8756328215003658)"
 
-  - id: hydration_status
-    label: "Hydration status"
+  - id: hydration_fluid_intake
+    label: "Hydration / fluid intake"
     type: mediator_countermeasure
-    measure: "24-hr urine volume, fluid intake"
+    measure: "24-hr urine volume and fluid intake, L/day"
     composite: single_measure
-    source: "NASA narrative; OCHMO-MTB-003 (https://www.nasa.gov/ochmo-mtb-003-urinary-health-2/): increased fluid intake is a potentially effective countermeasure"
+    note: "Grounded magnitudes: urine volume >2 L/day reduces risk; in-flight fluid intake ~3.2 L/day needed to reach pre-flight risk level."
+    source: "NASA narrative; OCHMO-MTB-003 (https://www.nasa.gov/ochmo-mtb-003-urinary-health-2/); L/day thresholds estimated for training purposes"
 
   - id: urine_chemistry
     label: "Urine Chemistry"
@@ -111,7 +104,7 @@ nodes:
     type: mediator
     measure: "Relative supersaturation (RSS) score"
     composite: single_measure
-    note: "25% of astronauts show elevated CaOx supersaturation pre-flight vs. 46% post-flight."
+    note: "25% of astronauts show elevated CaOx supersaturation pre-flight vs. 46% post-flight. Internal mediator, not a modeled outcome."
     source: "Goodenow et al., npj Microgravity 2022 (https://www.nature.com/articles/s41526-021-00187-z)"
 
   - id: nephrolithiasis
@@ -119,36 +112,55 @@ nodes:
     type: outcome
     measure: "Kidney stone presence/incidence"
     composite: single_measure
-    note: "2nd most likely reason for ISS emergency medical evacuation per NASA's Integrated Medical Model."
+    note: "2nd most likely reason for ISS emergency medical evacuation per NASA's Integrated Medical Model. Sole modeled outcome."
     source: "NASA narrative and Andy's repo confirm as target; OCHMO-MTB-003"
 
-# Directed edges. magnitude/direction fields mirror docs/methods §3
-# ("PLACEHOLDER edge effect sizes, pending Robert's review"). status flags:
+# Directed edges. magnitude/direction fields mirror docs/methods section 3.
+# status flags:
 #   confirmed_mechanism  - stated directly in the NASA narrative
-#   magnitude_placeholder - literature-informed magnitude, not a NASA estimate
-#   directional_only      - direction supported, no magnitude found yet
+#   magnitude_estimate    - literature-informed estimate, for training purposes
+#   directional_only      - direction estimated, no magnitude assigned
 edges:
   - from: duration
     to: bone_resorption
-    status: magnitude_placeholder
+    status: magnitude_estimate
     magnitude_note: "~2x baseline resorption markers, sustained through 6-month missions (carried over from bone track, same mechanism)"
     source: "Gabel et al. preprint (https://www.researchgate.net/publication/387274968_...)"
 
   - from: duration
     to: bone_formation
-    status: magnitude_placeholder
+    status: magnitude_estimate
     magnitude_note: "Near-zero to mildly decreased"
     source: "Smith, NASA NTRS review (https://ntrs.nasa.gov/api/citations/20100030546/downloads/20100030546.pdf)"
 
-  - from: bone_resorption
+  - from: bone_formation
     to: urine_chemistry
+    status: magnitude_estimate
+    magnitude_note: "Deliberate near-null distractor edge: intentionally near-zero true effect, used to test whether SHAP methods over-attribute importance to a feature with almost no downstream effect."
+    source: "Repo design choice: deliberate near-null distractor edge, estimated for training purposes"
+
+  - from: bone_resorption
+    to: urinary_calcium_excretion
     status: directional_only
-    magnitude_note: "Bone resorption elevates urinary calcium and the risk of renal stone formation; no magnitude found yet"
+    magnitude_note: "Bone resorption elevates urinary calcium"
     source: "Bone metabolism and renal stone risk, ISS missions (https://www.sciencedirect.com/science/article/abs/pii/S8756328215003658)"
+
+  - from: urinary_calcium_excretion
+    to: urine_chemistry
+    status: magnitude_estimate
+    magnitude_note: "Grounded threshold: baseline ~240 mg/day urinary calcium. Main effect only - the combined-threshold finding (risk normalizes at <150 mg/day alone, or 190 mg/day combined with fluid intake >=2.5 L/day) is represented separately below as an interaction term on urinary_calcium_excretion -> mineralized_renal_material."
+    source: "Estimated for training purposes"
+
+  - from: urinary_calcium_excretion
+    to: mineralized_renal_material
+    interacts_with: hydration_fluid_intake
+    status: magnitude_estimate
+    magnitude_note: "Interaction-only edge, additive on top of the main-effect edges urinary_calcium_excretion -> urine_chemistry and hydration_fluid_intake -> mineralized_renal_material: the combined-threshold finding where 190 mg/day urinary calcium and >=2.5 L/day fluid intake together normalize risk. Functional form: multiplicative effect-modification (product of the two nodes' standardized values)."
+    source: "Estimated for training purposes"
 
   - from: duration
     to: mineralized_renal_material
-    status: magnitude_placeholder
+    status: magnitude_estimate
     magnitude_note: "Prevalence of elevated CaOx supersaturation: 25% pre-flight to 46% post-flight"
     source: "Goodenow et al., npj Microgravity 2022"
 
@@ -158,34 +170,21 @@ edges:
     magnitude_note: "Males more susceptible to elevated CaOx supersaturation than females; astronaut cohorts are heavily male-skewed, limiting power"
     source: "Goodenow et al."
 
-  - from: era_countermeasure
+  - from: hydration_fluid_intake
     to: urine_chemistry
-    interacts_with: bone_resorption
-    status: directional_only
-    magnitude_note: "KCit-treated crew showed decreased urinary calcium excretion and maintained preflight CaOx supersaturation risk level vs. untreated controls; N=30 (29M/1F)"
-    source: "NASA NTRS, KCit trial (https://ntrs.nasa.gov/citations/20080046171)"
-
-  - from: era_countermeasure
-    to: mineralized_renal_material
-    interacts_with: duration
-    status: directional_only
-    magnitude_note: "Contrast with bone: high-load resistive exercise (ARED) appears to have only a marginal effect as a renal stone countermeasure, unlike its strong effect on bone mass"
-    source: "Goodenow et al."
-
-  - from: hydration_status
-    to: urine_chemistry
-    status: directional_only
-    magnitude_note: "Increased fluid intake/urine volume is a potentially effective countermeasure, operationally constrained by mission resource limits"
+    status: magnitude_estimate
+    magnitude_note: "Grounded: urine volume >2 L/day reduces risk"
     source: "NASA narrative; OCHMO-MTB-003"
 
-  - from: hydration_status
+  - from: hydration_fluid_intake
     to: mineralized_renal_material
-    status: directional_only
+    status: magnitude_estimate
+    magnitude_note: "Grounded: in-flight fluid intake ~3.2 L/day needed to reach pre-flight risk level"
     source: "NASA narrative; OCHMO-MTB-003"
 
   - from: vitamin_d_pre
     to: urine_chemistry
-    status: magnitude_placeholder
+    status: magnitude_estimate
     magnitude_note: "General (non-spaceflight) literature: OR 1.55 per SD increase in serum 25(OH)D for kidney stone risk, via increased intestinal calcium absorption"
     source: "Mendelian randomization study, modifiable risk factors for kidney stones (PMC10116718)"
 
@@ -227,7 +226,6 @@ selection_mechanisms:
     note: "Selects against high renal-stone risk at cohort entry. Applied during data generation and stressed in Step 10, not represented as a DAG node."
     source: "NASA narrative"
 
-open_decisions:
-  - "Age arrow: unresolved for renal stone (direction and whether it modifies the Duration pathway or acts on baseline risk directly). Needs Robert's input."
-  - "Sex kept as a direct effect (not a Sex x Era interaction, unlike the bone track), given the more specific supporting evidence. Revisit if Robert's DAG handles it differently."
-  - "Outcome measure: Nephrolithiasis as binary incidence vs. Mineralized Renal Material's continuous CaOx supersaturation score as a proxy outcome. Andy's repo uses Nephrolithiasis as the target; open whether we follow that or use the better-populated supersaturation measure."
+  - id: era_countermeasure_range
+    note: "Era / countermeasure protocol (pre/post ARED, KCit availability) is modeled as a Step 10 sampling axis (widened mission-era range) rather than a causal graph node: its exercise-countermeasure effect on renal stone risk is documented as marginal, unlike its strong effect on bone."
+    source: "NASA narrative; Goodenow et al."

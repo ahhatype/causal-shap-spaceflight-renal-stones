@@ -4,7 +4,7 @@
 # shapr is R-native (see docs/decisions/001-two-language-repo.md) - Heskes'
 # method uses the confounding argument in explain(), ASV uses the
 # asymmetric + causal_ordering arguments. Reference engine is XGBoost
-# (Heskes) and SuperLearner as a fallback (ASV), per docs/methods §9.
+# (Heskes) and SuperLearner as a fallback (ASV).
 
 library(shapr)
 
