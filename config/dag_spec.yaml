@@ -5,7 +5,7 @@
 # 53 nodes/83 edges per Robert's version, 51 nodes/75 edges in the prior
 # source-aligned reference, Cohen's kappa 0.978 after semantic mapping).
 #
-# This file holds the 11-node working subgraph scoped down from the full
+# This file holds the 12-node working subgraph scoped down from the full
 # 51-node source graph for tractability (docs/methods, Step 2). Graph
 # topology is source-aligned to the published NASA DAG. All quantitative
 # values here are estimates for training and simulation purposes, informed
@@ -43,12 +43,13 @@ nodes:
     note: "Sits on the bone_resorption -> urine_chemistry pathway, making that mechanism explicit as its own node. Grounded thresholds: baseline ~240 mg/day; risk normalizes at <150 mg/day alone, or 190 mg/day combined with fluid intake >=2.5 L/day (interacts with hydration_fluid_intake)."
     source: "Estimated thresholds for training purposes"
 
-  - id: vitamin_d_pre
-    label: "Vitamin D (pre-flight)"
+  - id: history_of_nephrolithiasis
+    label: "Personal/family history of nephrolithiasis"
     type: exogenous_confounder
-    measure: "Serum 25(OH)D3, baseline"
-    composite: "Split from Vitamin D, which appears twice in the DAG"
-    source: "Smith et al. 2012, JBMR (https://academic.oup.com/jbmr/article-abstract/27/9/1896/7598261)"
+    measure: "Personal or first/second-degree family history of stone disease (binary)"
+    composite: single_measure
+    note: "Baseline hypercalciuria/hyperoxaluria tendency is heritable; this stands in for that latent physiology as an exogenous confounder on the urine_chemistry pathway, distinct from vitamin_d_inflight's duration-driven depletion mechanism."
+    source: "Family history associated with 2- to 10-fold increased odds of stone disease across cohorts; SKIPOGH population-based cohort, Clin Kidney J 2026 (https://academic.oup.com/ckj/article/19/2/sfag002/8416448); Epidemiology of Stone Disease review (https://pmc.ncbi.nlm.nih.gov/articles/PMC2693870/)"
 
   - id: vitamin_d_inflight
     label: "Vitamin D (in-flight)"
@@ -56,7 +57,7 @@ nodes:
     parent: duration
     feeds: urine_chemistry   # via calcium absorption
     measure: "Serum 25(OH)D3, in-flight/post"
-    composite: same_split_as_vitamin_d_pre
+    composite: single_measure
     source: "J. Nutrition, Mir cohort (https://jn.nutrition.org/article/S0022-3166(22)10077-5/fulltext) - 32-36% decline during long missions"
 
   - id: nutrients_risk
@@ -182,16 +183,16 @@ edges:
     magnitude_note: "Grounded: in-flight fluid intake ~3.2 L/day needed to reach pre-flight risk level"
     source: "NASA narrative; OCHMO-MTB-003"
 
-  - from: vitamin_d_pre
+  - from: history_of_nephrolithiasis
     to: urine_chemistry
     status: magnitude_estimate
-    magnitude_note: "General (non-spaceflight) literature: OR 1.55 per SD increase in serum 25(OH)D for kidney stone risk, via increased intestinal calcium absorption"
-    source: "Mendelian randomization study, modifiable risk factors for kidney stones (PMC10116718)"
+    magnitude_note: "General (non-spaceflight) literature: family history associated with >2.5x increased odds of stone disease (one cohort reports OR 9.96), via baseline hypercalciuria/hyperoxaluria tendency. Wide range across studies - flag for domain review."
+    source: "SKIPOGH cohort (PMC12902508); Epidemiology of Stone Disease review (PMC2693870)"
 
   - from: vitamin_d_inflight
     to: urine_chemistry
     status: directional_only
-    magnitude_note: "Same mechanism as vitamin_d_pre -> urine_chemistry, via calcium absorption"
+    magnitude_note: "Duration-driven serum vitamin D depletion reduces intestinal calcium absorption, via calcium absorption"
     source: "J. Nutrition, Mir cohort"
 
   - from: nutrients_risk

@@ -1,6 +1,6 @@
 # Viewing the working DAG in DAGitty
 
-`renal_stone_working_subgraph.txt` is the 11-node working subgraph from
+`renal_stone_working_subgraph.txt` is the 12-node working subgraph from
 [`config/dag_spec.yaml`](../config/dag_spec.yaml), exported in DAGitty's
 native model syntax.
 

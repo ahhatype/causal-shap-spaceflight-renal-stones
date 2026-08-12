@@ -60,7 +60,7 @@ docs/             methods draft, provenance notes, decision records, STATUS.md,
 This lists all 13 steps from the methods doc, in order, so the numbering stays legible against it. Steps 5 and 7 (LumaWarp) run in a separate repo, owned by Lexi Pasi and Andy Wilson, and are listed here only to keep the sequence intact.
 
 1. **Exposure and outcome specification.** Cumulative mission duration as exposure, nephrolithiasis (binary incidence) as the sole outcome. CaOx supersaturation (Mineralized Renal Material) remains in the graph as an internal mediator only, not a modeled outcome.
-2. **DAG construction and expert-guided augmentation.** An 11-node working subgraph scoped from Robert Reynolds's 53-node source DAG.
+2. **DAG construction and expert-guided augmentation.** A 12-node working subgraph scoped from Robert Reynolds's 53-node source DAG.
 3. **Synthetic data generation.** simcausal, seeded from the DAG, with literature-informed placeholder coefficients pending Robert's calibration.
 4. **Baseline attribution with standard SHAP.** Five explainer/model pairings, run once at full breadth to see whether standard SHAP fails consistently or only for some model classes.
 5. **Complexity-aware reweighting.** LumaWarp. Runs in a separate repo.
@@ -70,7 +70,7 @@ This lists all 13 steps from the methods doc, in order, so the numbering stays l
 9. **Robustness to the data-generating process.** Extension. Re-runs Steps 4 through 8 on data from additional simulators.
 10. **Robustness to spaceflight-epidemiological constraints.** Extension. Re-runs the narrowed pipeline under sampling regimes that emulate small N, selection bias, and narrow demographic ranges.
 11. **Generalization to out-of-distribution populations.** Its own section, not a robustness pass. Commercial spaceflight participants, exploration-duration missions.
-12. **Longitudinal extension.** Future work, not undertaken in this paper. Vitamin D's dual role as pre-flight confounder and in-flight mediator is a treatment-confounder feedback case, the fix is g-methods.
+12. **Longitudinal extension.** Future work, not undertaken in this paper. A variable that's both a baseline confounder pre-flight and a duration-driven mediator in-flight is a treatment-confounder feedback case; the fix is g-methods.
 13. **Counterfactual recourse extension (cost-sensitive DiCE).** Out of scope. For Andy and Lexi to define and own.
 
 ## Implementation

@@ -94,17 +94,17 @@ coefficients:
     direction_only: false
     magnitude_basis: "In-flight fluid intake ~3.2 L/day needed to reach pre-flight risk level. Protective (negative) effect."
 
-  - from: vitamin_d_pre
+  - from: history_of_nephrolithiasis
     to: urine_chemistry
-    coefficient: 0.44   # log(1.55) per SD, from the non-spaceflight Mendelian randomization estimate
+    coefficient: 0.92   # log(2.5), the conservative end of the non-spaceflight epidemiology range
     direction_only: false
-    magnitude_basis: "OR 1.55 per SD increase in serum 25(OH)D, non-spaceflight literature, via increased intestinal calcium absorption."
+    magnitude_basis: "OR ~2.5 for stone disease with family history, non-spaceflight literature (individual cohorts report up to ~10x); via baseline hypercalciuria/hyperoxaluria tendency. Binary indicator (present=1), used directly like sex, not standardized."
 
   - from: vitamin_d_inflight
     to: urine_chemistry
     coefficient: 0.30
     direction_only: false
-    magnitude_basis: "Same calcium-absorption mechanism as vitamin_d_pre -> urine_chemistry."
+    magnitude_basis: "Calcium-absorption mechanism, driven by duration-linked serum vitamin D depletion (see duration -> vitamin_d_inflight below)."
 
   - from: nutrients_risk
     to: urine_chemistry
@@ -131,7 +131,8 @@ coefficients:
     magnitude_basis: "Final incidence step (confirmed_mechanism); coefficient is on the log-odds scale since nephrolithiasis is a binary outcome with a logit link - see outcome_calibration for how the intercept is set alongside it."
 
 # Marginal distributions for the five exogenous/root nodes (no incoming
-# edges): duration, sex, vitamin_d_pre, nutrients_risk, hydration_fluid_intake.
+# edges): duration, sex, history_of_nephrolithiasis, nutrients_risk,
+# hydration_fluid_intake.
 root_node_distributions:
   - node: duration
     distribution: "Normal(mean=180, sd=45) days, truncated to [14, 365]"
@@ -143,9 +144,10 @@ root_node_distributions:
     basis: "Astronaut corps is heavily male-skewed"
     note: "Coded male=1; used directly (not standardized) by its outgoing coefficient."
 
-  - node: vitamin_d_pre
-    distribution: "Standardized Normal(0, 1)"
-    basis: "Raw population baseline approximately 30 +/- 8 ng/mL serum 25(OH)D3; already expressed on the standardized scale here."
+  - node: history_of_nephrolithiasis
+    distribution: "Bernoulli(P(present)=0.25)"
+    basis: "Approximate general-population prevalence of a personal or first/second-degree family history of stone disease."
+    note: "Coded present=1; used directly (not standardized) by its outgoing coefficient, same convention as sex."
 
   - node: nutrients_risk
     distribution: "Standardized Normal(0, 1), latent"

@@ -100,17 +100,6 @@ dag_spec_to_dagitty <- function(spec) {
 #' Write a dagitty object to a file in DAGitty's native model syntax -
 #' suitable for pasting directly into the model editor at
 #' https://dagitty.net/dags.html (Model > Model code).
-#'
-#' Node positions are expected to already be set (dag_spec_to_dagitty() sets
-#' them via dag_spec_positions(), a deterministic layered layout computed in
-#' plain R). dagitty::graphLayout() was tried first instead, but it runs a
-#' randomized spring-embedder inside an embedded JavaScript engine (dagitty's
-#' core is a bundled JS library) whose RNG is invisible to R's set.seed() -
-#' so it produces a different-looking (though structurally identical) layout
-#' on every run, which defeats the point of a "for keeps" reference file.
-#' DAGitty's parser doesn't support comments in the model text, so no
-#' provenance header is written into the file itself - see docs/dag/README.md
-#' for that.
 write_dagitty <- function(dag, path) {
   dir.create(dirname(path), recursive = TRUE, showWarnings = FALSE)
   writeLines(as.character(dag), path)

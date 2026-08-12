@@ -155,15 +155,16 @@ agreed closely (Cohen\'s kappa 0.978; precision 1.000; recall 0.958;
 structural Hamming distance 3), with a small number of unmatched edges
 retained for expert adjudication.
 
-For tractability and interpretability, an eleven-node working subgraph
+For tractability and interpretability, a twelve-node working subgraph
 was defined around the principal mechanistic pathway, comprising the
 exposure (mission duration), a demographic confounder (sex), a
 urinary-calcium-excretion mediator sitting on the bone-resorption-to-
-urine-chemistry pathway, pre-flight and in-flight vitamin D status,
-dietary nutrient intake, the two bone-remodeling mediators (bone
-formation and bone resorption), hydration/fluid intake, a urine-chemistry
-composite, a mineralized-renal-material (supersaturation) mediator, and
-the nephrolithiasis outcome. Multi-marker nodes (bone formation, bone
+urine-chemistry pathway, an exogenous confounder for personal/family
+history of nephrolithiasis, in-flight vitamin D status, dietary nutrient
+intake, the two bone-remodeling mediators (bone formation and bone
+resorption), hydration/fluid intake, a urine-chemistry composite, a
+mineralized-renal-material (supersaturation) mediator, and the
+nephrolithiasis outcome. Multi-marker nodes (bone formation, bone
 resorption, urine chemistry) are represented as principal-component
 composites of their constituent biomarkers.
 
@@ -180,12 +181,21 @@ exert genuine causal influence on the mechanism are represented as DAG
 nodes with directed edges, whereas variables that restrict cohort
 membership (for example, astronaut selection screening) are represented
 not as nodes but as a selection mechanism applied during data generation
-and stressed in Step 10. Second, vitamin D is represented at two time
-points: a pre-flight instance acting as an exogenous confounder, and an
-in-flight instance that is itself a child of mission duration and
-therefore a mediator. This dual representation reflects the time-varying
-nature of vitamin D depletion over long missions and is revisited in the
-longitudinal extension (Step 12).
+and stressed in Step 10. Second, exogenous confounders that capture fixed
+or latent physiology - personal/family history of nephrolithiasis, standing
+in for heritable hypercalciuric/hyperoxaluric tendency - are represented as
+root nodes with no incoming edges, distinct from mediators such as
+in-flight vitamin D, which is itself a child of mission duration and
+carries the exposure's effect forward rather than acting as a baseline
+confounder.
+
+An earlier version of this graph represented vitamin D at two time points
+instead - a pre-flight instance acting as an exogenous confounder, and the
+in-flight instance retained here - specifically so that the dual
+representation could illustrate treatment-confounder feedback for the
+longitudinal extension (Step 12). That pre-flight instance was since
+replaced by the personal/family-history node above, so Step 12 no longer
+has a concrete example within this working graph; see Step 12 below.
 
 Candidate augmentations to the base graph, drawn from known limitations
 of spaceflight epidemiology, are annotated using NASA\'s own
@@ -372,14 +382,23 @@ treatment.
 
 ## Step 12: Longitudinal extension (future work)
 
-The dual representation of vitamin D as both a pre-flight confounder and
-an exposure-driven in-flight mediator is an instance of
-treatment-confounder feedback, for which the established remedy is the
-family of g-methods. Extending the static, single-time-point comparison
-of this paper to a longitudinal setting, and testing whether
-longitudinally aware attribution methods recover coherent importance for
-such time-varying confounder-mediators, is identified as the natural
-sequel and is not undertaken here.
+Treatment-confounder feedback - a variable that is simultaneously a
+baseline confounder and an exposure-driven mediator - is the motivating
+case for extending this paper's static, single-time-point comparison to a
+longitudinal setting, testing whether longitudinally aware attribution
+methods recover coherent importance for such time-varying
+confounder-mediators. The established remedy for treatment-confounder
+feedback is the family of g-methods. This remains identified as the
+natural sequel and is not undertaken here.
+
+This working graph does not currently contain a concrete example of
+treatment-confounder feedback: an earlier draft used vitamin D's dual
+pre-flight/in-flight representation for exactly this purpose, but the
+pre-flight instance was since replaced by a personal/family-history-of-
+nephrolithiasis node (a fixed, non-time-varying exogenous confounder, not
+a mediator). A time-varying confounder-mediator example would need to be
+reintroduced to the working graph before this step could be written up in
+full - flagged here rather than assumed.
 
 ## Step 13: Counterfactual recourse extension (out of scope)
 
@@ -465,7 +484,7 @@ feeds Urine Chemistry via urinary calcium excretion; Urine Chemistry
 determines whether Mineralized Renal Material precipitates; this
 determines Nephrolithiasis (kidney stone) risk, the outcome. Andy\'s
 repo confirms Nephrolithiasis as the target, with 28 pre-outcome
-ancestors in the full 51-node source graph --- scoped down to 11 nodes
+ancestors in the full 51-node source graph --- scoped down to 12 nodes
 below for tractability, matching the same rigor previously applied to
 bone.
 
@@ -474,15 +493,15 @@ bone.
 | 1 | Duration | Exposure | Cumulative mission days | Single measure | NASA narrative; [Gabel et al. 2021](https://pubmed.ncbi.nlm.nih.gov/33597120/) |
 | 2 | Sex | Confounder | Male/female | Single measure --- **stronger evidence here than for bone**: male astronauts and male analog cohorts show greater susceptibility to elevated urinary CaOx supersaturation than females | [Numerical characterization of astronaut CaOx renal stone risk, npj Microgravity 2022](https://www.nature.com/articles/s41526-021-00187-z) |
 | 3 | Urinary calcium excretion (hypercalciuria) | Mediator | 24-hr urinary calcium, mg/day | Single measure, making the resorption → urine-chemistry mechanism explicit as its own node rather than folding it into a single edge. Grounded thresholds: baseline ~240 mg/day; risk normalizes at <150 mg/day alone, or 190 mg/day combined with fluid intake >=2.5 L/day | Primary literature citation for the mg/day thresholds still pending |
-| 4a | Vitamin D (pre-flight) | Exogenous confounder | Serum 25(OH)D₃, baseline | Split from "Nutrients"; appears 2x in DAG | [Smith et al. 2012, JBMR](https://academic.oup.com/jbmr/article-abstract/27/9/1896/7598261) |
-| 4b | Vitamin D (in-flight) | Mediator, child of Duration, feeds Urine Chemistry via calcium absorption | Serum 25(OH)D₃, in-flight/post | Same split | [J. Nutrition, Mir cohort](https://jn.nutrition.org/article/S0022-3166(22)10077-5/fulltext) --- 32--36% decline during long missions |
-| 5 | Nutrients (Risk) | Confounder/countermeasure | Dietary oxalate, calcium, magnesium intake (broader than bone's calcium-only node, since oxalate/magnesium matter specifically for stone chemistry) | Single composite measure | NASA narrative: "Nutrients affect Urine Chemistry through the intake of... oxalate, calcium, magnesium" |
-| 6 | Bone formation | Mediator | P1NP, BSAP, osteocalcin | PCA composite (carried over from bone track) | [Gabel et al., Sci Adv 2024](https://www.science.org/doi/10.1126/sciadv.adq3632) |
-| 7 | Bone resorption | Mediator, **primary driver of this pathway** | NTX, CTX | PCA composite | "Bone resorption brought on by spaceflight elevates urinary calcium and the risk of renal stone formation" --- [Bone metabolism and renal stone risk during ISS missions, ScienceDirect](https://www.sciencedirect.com/science/article/abs/pii/S8756328215003658) |
-| 8 | Hydration / fluid intake | Mediator/countermeasure | 24-hr urine volume and fluid intake, L/day | Single measure. Grounded magnitudes: urine volume >2 L/day reduces risk; in-flight intake ~3.2 L/day needed to reach pre-flight risk level | NASA narrative + [OCHMO-MTB-003](https://www.nasa.gov/ochmo-mtb-003-urinary-health-2/); specific L/day thresholds pending primary citation |
-| 9 | Urine Chemistry | Mediator | PCA composite: calcium, citrate, oxalate, pH | PCA composite | NASA narrative and [OCHMO-MTB-003](https://www.nasa.gov/ochmo-mtb-003-urinary-health-2/) monitoring panel (calcium oxalate, uric acid, citrate, pH, sodium, sulfate, phosphorus, magnesium, potassium) |
-| 10 | Mineralized Renal Material (CaOx supersaturation) | Mediator | Relative supersaturation (RSS) score | Single measure. Internal mediator, not a modeled outcome | 25% of astronauts show elevated CaOx supersaturation pre-flight vs. 46% post-flight --- [Goodenow et al., npj Microgravity 2022](https://www.nature.com/articles/s41526-021-00187-z) |
-| 11 | Nephrolithiasis | Outcome | Kidney stone presence/incidence | Single measure. Sole modeled outcome | NASA narrative and Andy\'s repo confirm as target; kidney stone is the **2nd most likely reason for ISS emergency medical evacuation** per NASA\'s Integrated Medical Model --- [OCHMO-MTB-003](https://www.nasa.gov/ochmo-mtb-003-urinary-health-2/) |
+| 4 | Personal/family history of nephrolithiasis | Exogenous confounder | Personal or first/second-degree family history of stone disease (binary) | Single measure. Stands in for heritable hypercalciuric/hyperoxaluric tendency, distinct from vitamin D's duration-driven mechanism below | Family history associated with 2- to 10-fold increased odds of stone disease across cohorts; SKIPOGH population-based cohort, *Clin Kidney J* 2026; Epidemiology of Stone Disease review |
+| 5 | Vitamin D (in-flight) | Mediator, child of Duration, feeds Urine Chemistry via calcium absorption | Serum 25(OH)D₃, in-flight/post | Single measure | [J. Nutrition, Mir cohort](https://jn.nutrition.org/article/S0022-3166(22)10077-5/fulltext) --- 32--36% decline during long missions |
+| 6 | Nutrients (Risk) | Confounder/countermeasure | Dietary oxalate, calcium, magnesium intake (broader than bone's calcium-only node, since oxalate/magnesium matter specifically for stone chemistry) | Single composite measure | NASA narrative: "Nutrients affect Urine Chemistry through the intake of... oxalate, calcium, magnesium" |
+| 7 | Bone formation | Mediator | P1NP, BSAP, osteocalcin | PCA composite (carried over from bone track) | [Gabel et al., Sci Adv 2024](https://www.science.org/doi/10.1126/sciadv.adq3632) |
+| 8 | Bone resorption | Mediator, **primary driver of this pathway** | NTX, CTX | PCA composite | "Bone resorption brought on by spaceflight elevates urinary calcium and the risk of renal stone formation" --- [Bone metabolism and renal stone risk during ISS missions, ScienceDirect](https://www.sciencedirect.com/science/article/abs/pii/S8756328215003658) |
+| 9 | Hydration / fluid intake | Mediator/countermeasure | 24-hr urine volume and fluid intake, L/day | Single measure. Grounded magnitudes: urine volume >2 L/day reduces risk; in-flight intake ~3.2 L/day needed to reach pre-flight risk level | NASA narrative + [OCHMO-MTB-003](https://www.nasa.gov/ochmo-mtb-003-urinary-health-2/); specific L/day thresholds pending primary citation |
+| 10 | Urine Chemistry | Mediator | PCA composite: calcium, citrate, oxalate, pH | PCA composite | NASA narrative and [OCHMO-MTB-003](https://www.nasa.gov/ochmo-mtb-003-urinary-health-2/) monitoring panel (calcium oxalate, uric acid, citrate, pH, sodium, sulfate, phosphorus, magnesium, potassium) |
+| 11 | Mineralized Renal Material (CaOx supersaturation) | Mediator | Relative supersaturation (RSS) score | Single measure. Internal mediator, not a modeled outcome | 25% of astronauts show elevated CaOx supersaturation pre-flight vs. 46% post-flight --- [Goodenow et al., npj Microgravity 2022](https://www.nature.com/articles/s41526-021-00187-z) |
+| 12 | Nephrolithiasis | Outcome | Kidney stone presence/incidence | Single measure. Sole modeled outcome | NASA narrative and Andy\'s repo confirm as target; kidney stone is the **2nd most likely reason for ISS emergency medical evacuation** per NASA\'s Integrated Medical Model --- [OCHMO-MTB-003](https://www.nasa.gov/ochmo-mtb-003-urinary-health-2/) |
 
 Age at launch and Era/countermeasure protocol were considered and are
 not represented as graph nodes here: age at launch is weakly grounded
@@ -514,7 +533,8 @@ treatment given to Era/countermeasure protocol above.
 | Sex → Mineralized Renal Material | Directional: males more susceptible to elevated CaOx supersaturation than females; astronaut cohorts are heavily male-skewed, limiting power | [Goodenow et al.](https://www.nature.com/articles/s41526-021-00187-z) |
 | Hydration/fluid intake → Urine Chemistry | Grounded: urine volume >2 L/day reduces risk via dilution | NASA narrative; [OCHMO-MTB-003](https://www.nasa.gov/ochmo-mtb-003-urinary-health-2/); threshold pending primary citation |
 | Hydration/fluid intake → Mineralized Renal Material | Grounded: in-flight fluid intake ~3.2 L/day needed to reach pre-flight risk level | NASA narrative; [OCHMO-MTB-003](https://www.nasa.gov/ochmo-mtb-003-urinary-health-2/); threshold pending primary citation |
-| Vitamin D → Urine Chemistry (calcium) | General (non-spaceflight) literature: OR 1.55 per SD increase in serum 25(OH)D for kidney stone risk, via increased intestinal calcium absorption | Mendelian randomization study, modifiable risk factors for kidney stones (PMC10116718) |
+| Vitamin D (in-flight) → Urine Chemistry (calcium) | Duration-driven serum vitamin D depletion reduces intestinal calcium absorption; directional only | [J. Nutrition, Mir cohort](https://jn.nutrition.org/article/S0022-3166(22)10077-5/fulltext) |
+| Personal/family history of nephrolithiasis → Urine Chemistry | General (non-spaceflight) literature: family history associated with >2.5x increased odds of stone disease (one cohort reports OR 9.96), via baseline hypercalciuria/hyperoxaluria tendency. Wide range across studies - flag for domain review | SKIPOGH cohort (PMC12902508); Epidemiology of Stone Disease review (PMC2693870) |
 | Nutrients (oxalate/calcium/magnesium) → Urine Chemistry | Directional only, NASA narrative names the pathway without magnitude | NASA narrative |
 
 **Honest gap:** several edges here are directional-only (no magnitude
@@ -659,13 +679,21 @@ paper\'s distinct contributions are the human-in-the-loop iteration
 design, the full multi-method comparison, and the
 robustness/generalization sweeps --- none of which exist yet.
 
-**Step 12 --- Longitudinal causal SHAP.** The Vitamin D node\'s dual
-role (pre-flight confounder + in-flight mediator, caused by Duration
-itself) is a textbook case of treatment-confounder feedback. Standard
-adjustment risks bias; the established fix is g-methods (g-formula,
-marginal structural models via IPW). Canonical reference: Robins, Hernán
-& Brumback, \"Marginal Structural Models and Causal Inference in
-Epidemiology,\" *Epidemiology* 11(5), 2000.
+**Step 12 --- Longitudinal causal SHAP.** Treatment-confounder feedback -
+a variable that is both a baseline confounder and an exposure-driven
+mediator - is the general motivating case here. Standard adjustment risks
+bias; the established fix is g-methods (g-formula, marginal structural
+models via IPW). Canonical reference: Robins, Hernán & Brumback,
+\"Marginal Structural Models and Causal Inference in Epidemiology,\"
+*Epidemiology* 11(5), 2000.
+
+**Note:** the Vitamin D node\'s former dual role (pre-flight confounder +
+in-flight mediator, caused by Duration itself) used to be this graph\'s
+textbook example of treatment-confounder feedback. The pre-flight
+instance was since replaced by a personal/family-history-of-nephrolithiasis
+node (fixed, not time-varying), so this working graph no longer contains a
+concrete example - a replacement time-varying confounder-mediator would
+need to be identified before this step is written up for real.
 
 On the SHAP side specifically, longitudinal-aware variants exist and are
 worth testing against the static single-timepoint DAG used in this
@@ -682,8 +710,9 @@ paper:
     models, event/feature/cell-level attribution
 
 Natural sequel paper: does a longitudinal SHAP approach recover causally
-coherent importance for time-varying confounder-mediators like Vitamin D
-better than the static DAG comparison in this paper\'s main analysis?
+coherent importance for time-varying confounder-mediators better than the
+static DAG comparison in this paper\'s main analysis? (Pending a concrete
+example being reintroduced to the working graph - see the note above.)
 
 ## 6. Methods steps overview (cross-reference to full braindump)
 
