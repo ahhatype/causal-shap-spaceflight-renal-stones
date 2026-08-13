@@ -1,6 +1,6 @@
 # Viewing the working DAG in DAGitty
 
-`renal_stone_working_subgraph.txt` is the 12-node working subgraph from
+`renal_stone_working_subgraph.txt` is the 11-node working subgraph from
 [`config/dag_spec.yaml`](../config/dag_spec.yaml), exported in DAGitty's
 native model syntax.
 
@@ -51,7 +51,7 @@ avoid.
   here. The full typing lives in `config/dag_spec.yaml`.
 - **Edge coefficients, magnitudes, and the interaction term**
   (`urinary_calcium_excretion` x `hydration_fluid_intake` ->
-  `mineralized_renal_material`) - dagitty's graph model has no attribute for
+  `nephrolithiasis`) - dagitty's graph model has no attribute for
   a product-interaction term, so that edge appears as an ordinary directed
   edge here. The interaction itself lives in `config/edge_coefficients.yaml`.
 - **selection_mechanisms** (astronaut selection, the era/countermeasure

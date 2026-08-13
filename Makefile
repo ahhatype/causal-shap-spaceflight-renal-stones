@@ -19,6 +19,7 @@ step03:
 	cd pipeline && Rscript step03_simulate_data.R
 
 step04:
+	cd pipeline && Rscript step04a_ground_truth.R
 	cd python && uv run python ../pipeline/step04_baseline_shap.py
 
 step06:

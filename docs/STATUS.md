@@ -7,7 +7,7 @@ machine-readable mirror of this table.
 | Step | Label | Status | Notes |
 |---|---|---|---|
 | 1 | Exposure/outcome specification | done | Cumulative mission days as exposure; nephrolithiasis (binary incidence) as the sole outcome. CaOx supersaturation (Mineralized Renal Material) is an internal mediator only, not a modeled outcome. See `config/dag_spec.yaml`. |
-| 2 | DAG construction and expert-guided augmentation | done | 12-node working subgraph scoped from Robert's 53-node source DAG (SA-07566). See `config/dag_spec.yaml`. |
+| 2 | DAG construction and expert-guided augmentation | done | 11-node working subgraph scoped from Robert's 53-node source DAG (SA-07566). See `config/dag_spec.yaml`. |
 | 3 | Synthetic data generation | pending | simcausal structural equations drafted with placeholder coefficients (`config/edge_coefficients.yaml`), pending Robert's calibration sign-off. R implementation (`r/R/simcausal_helpers.R`) not yet written. |
 | 4 | Baseline attribution with standard SHAP | pending | Explainer x model pairings specced (TreeExplainer, LinearExplainer, KernelExplainer, PermutationExplainer). Not yet run. |
 | 5 | Complexity-aware reweighting | deferred, external | LumaWarp. Owned by Lexi/Andy, runs in a separate repo. Not built here. |

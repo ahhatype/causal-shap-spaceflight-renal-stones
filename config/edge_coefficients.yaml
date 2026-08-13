@@ -69,23 +69,23 @@ coefficients:
     magnitude_basis: "The 150/190/240 mg/day thresholds motivate a moderate-to-strong main effect. Main effect only - the combined threshold with hydration_fluid_intake is captured separately as an interaction term, see below."
 
   - from: urinary_calcium_excretion
-    to: mineralized_renal_material
+    to: nephrolithiasis
     interacts_with: hydration_fluid_intake
-    coefficient: 0.15
+    coefficient: 0.135   # 0.15 x 0.90, see this file's note on the collapsed Mineralized Renal Material intermediate below
     direction_only: false
     functional_form: multiplicative   # product of the two nodes' standardized values, added on top of their separate main-effect edges
     magnitude_basis: "Combined-threshold finding: risk normalizes at <150 mg/day urinary calcium alone, or 190 mg/day combined with fluid intake >=2.5 L/day - i.e. hydration modifies the calcium effect."
-    note: "Interaction-only term, additive on top of the main-effect edges urinary_calcium_excretion -> urine_chemistry and hydration_fluid_intake -> mineralized_renal_material, not a replacement for either."
+    note: "Interaction-only term, additive on top of the main-effect edges urinary_calcium_excretion -> urine_chemistry and hydration_fluid_intake -> nephrolithiasis, not a replacement for either."
 
   - from: duration
-    to: mineralized_renal_material
-    coefficient: 0.40
+    to: nephrolithiasis
+    coefficient: 0.36   # 0.40 x 0.90, see this file's note on the collapsed Mineralized Renal Material intermediate below
     direction_only: false
-    magnitude_basis: "Prevalence shift 25% pre-flight to 46% post-flight elevated CaOx supersaturation. Modeled as a partial direct effect (0.40); the remainder of duration's total effect on this node is mediated through bone_resorption -> urinary_calcium_excretion -> urine_chemistry and through vitamin_d_inflight."
+    magnitude_basis: "Prevalence shift 25% pre-flight to 46% post-flight elevated CaOx supersaturation. Modeled as a partial direct effect; the remainder of duration's total effect on this outcome is mediated through bone_resorption -> urinary_calcium_excretion -> urine_chemistry and through vitamin_d_inflight."
 
   - from: sex
-    to: mineralized_renal_material
-    coefficient: 0.20
+    to: nephrolithiasis
+    coefficient: 0.18   # 0.20 x 0.90, see this file's note on the collapsed Mineralized Renal Material intermediate below
     direction_only: false
     magnitude_basis: "Males (coded male=1) more susceptible to elevated CaOx supersaturation; astronaut cohorts are heavily male-skewed, limiting power. Kept deliberately small."
 
@@ -96,8 +96,8 @@ coefficients:
     magnitude_basis: "Urine volume >2 L/day reduces risk via dilution. Protective (negative) effect."
 
   - from: hydration_fluid_intake
-    to: mineralized_renal_material
-    coefficient: -0.30
+    to: nephrolithiasis
+    coefficient: -0.27   # -0.30 x 0.90, see this file's note on the collapsed Mineralized Renal Material intermediate below
     direction_only: false
     magnitude_basis: "In-flight fluid intake ~3.2 L/day needed to reach pre-flight risk level. Protective (negative) effect."
 
@@ -126,16 +126,11 @@ coefficients:
     magnitude_basis: "32-36% decline in serum 25(OH)D3 during long missions (Mir cohort)."
 
   - from: urine_chemistry
-    to: mineralized_renal_material
-    coefficient: 0.70
-    direction_only: false
-    magnitude_basis: "Core precipitation step of the mechanism (confirmed_mechanism in dag_spec.yaml); given the strongest standardized coefficient in the graph accordingly."
-
-  - from: mineralized_renal_material
     to: nephrolithiasis
-    coefficient: 0.90   # on the log-odds (logit) scale, since nephrolithiasis is binary
+    coefficient: 0.63   # 0.70 x 0.90, see the note directly below
     direction_only: false
-    magnitude_basis: "Final incidence step (confirmed_mechanism); coefficient is on the log-odds scale since nephrolithiasis is a binary outcome with a logit link - see outcome_calibration for how the intercept is set alongside it."
+    magnitude_basis: "Core precipitation step of the mechanism (confirmed_mechanism in dag_spec.yaml); given the strongest standardized coefficient among nephrolithiasis's direct edges accordingly. Coefficient is on the log-odds (logit) scale, since nephrolithiasis is a binary outcome with a logit link - see outcome_calibration for how the intercept is set alongside it."
+    note: "config/dag_spec.yaml collapses two NASA-confirmed mechanisms in sequence - urine_chemistry -> Mineralized Renal Material (originally 0.70) and Mineralized Renal Material -> nephrolithiasis (originally 0.90, logit scale) - into this single direct edge. Every coefficient elsewhere in this file that used to target Mineralized Renal Material is likewise scaled by that collapsed 0.90 (marked individually where it applies): duration 0.40->0.36, sex 0.20->0.18, hydration_fluid_intake -0.30->-0.27, the urinary_calcium_excretion x hydration_fluid_intake interaction 0.15->0.135, and this edge 0.70->0.63. This scaling is exact for the path-coefficient terms - a linear combination multiplied by a constant scales every term by that constant - but Mineralized Renal Material's own residual/noise variance (its empirical_residual_sd, see r/R/simcausal_helpers.R) no longer contributes a separate source of stochasticity to nephrolithiasis once collapsed; nephrolithiasis's own Bernoulli draw is the only randomness left on this pathway, which is a genuine (if secondary) simplification worth flagging alongside the training-purposes caveat on every other value in this file."
 
 # Marginal distributions for the five exogenous/root nodes (no incoming
 # edges): duration, sex, history_of_nephrolithiasis, nutrients_risk,

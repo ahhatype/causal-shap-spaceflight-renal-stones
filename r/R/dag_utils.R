@@ -15,6 +15,16 @@ library(igraph)
 read_dag_spec <- function(path = "../config/dag_spec.yaml") {
   yaml::read_yaml(path)
 }
+#' Node ids to use as model input features for attribution models (Step 4+):
+#' every node in config/dag_spec.yaml except the outcome (type: outcome).
+#' Single source of truth so the feature list is never hand-duplicated
+#' across driver scripts or languages - see model_features() in
+#' python/src/causal_shap_renal/io_contract.py for the Python mirror.
+model_features <- function(spec) {
+  ids <- vapply(spec$nodes, function(n) n$id, character(1))
+  is_outcome <- vapply(spec$nodes, function(n) identical(n$type, "outcome"), logical(1))
+  ids[!is_outcome]
+}
 
 #' Compute a deterministic left-to-right layered layout from a parsed
 #' dag_spec's nodes/edges: x = each node's longest-path distance from a root

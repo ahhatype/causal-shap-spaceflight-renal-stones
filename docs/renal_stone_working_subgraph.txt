@@ -4,8 +4,7 @@ bone_resorption [pos="1.000,0.000",label="Bone resorption"]
 duration [exposure,pos="0.000,-1.000",label="Duration"]
 history_of_nephrolithiasis [pos="0.000,-0.500",label="Personal/family history of nephrolithiasis"]
 hydration_fluid_intake [pos="0.000,0.000",label="Hydration / fluid intake"]
-mineralized_renal_material [pos="4.000,0.000",label="Mineralized Renal Material (CaOx supersaturation)"]
-nephrolithiasis [outcome,pos="5.000,0.000",label="Nephrolithiasis"]
+nephrolithiasis [outcome,pos="4.000,0.000",label="Nephrolithiasis"]
 nutrients_risk [pos="0.000,0.500",label="Nutrients (Risk)"]
 sex [pos="0.000,1.000",label="Sex"]
 urinary_calcium_excretion [pos="2.000,0.000",label="Urinary calcium excretion (hypercalciuria)"]
@@ -15,17 +14,16 @@ bone_formation -> urine_chemistry
 bone_resorption -> urinary_calcium_excretion
 duration -> bone_formation
 duration -> bone_resorption
-duration -> mineralized_renal_material
+duration -> nephrolithiasis
 duration -> vitamin_d_inflight
 history_of_nephrolithiasis -> urine_chemistry
-hydration_fluid_intake -> mineralized_renal_material
+hydration_fluid_intake -> nephrolithiasis
 hydration_fluid_intake -> urine_chemistry
-mineralized_renal_material -> nephrolithiasis
 nutrients_risk -> urine_chemistry
-sex -> mineralized_renal_material
-urinary_calcium_excretion -> mineralized_renal_material
+sex -> nephrolithiasis
+urinary_calcium_excretion -> nephrolithiasis
 urinary_calcium_excretion -> urine_chemistry
-urine_chemistry -> mineralized_renal_material
+urine_chemistry -> nephrolithiasis
 vitamin_d_inflight -> urine_chemistry
 }
 

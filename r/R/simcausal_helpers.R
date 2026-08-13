@@ -88,10 +88,10 @@ build_mean_formula <- function(node_id, coefs) {
 #' (composite_node_parameterization's residual_rule), computed empirically
 #' rather than as a sum of independent coefficient^2*parent_variance terms.
 #' The independent-paths assumption is wrong whenever a node's parents are
-#' themselves correlated - e.g. mineralized_renal_material reaches
-#' urinary_calcium_excretion both directly (the interaction term) and
-#' indirectly through urine_chemistry, so their contributions covary rather
-#' than adding independently. D_partial already contains every node up to
+#' themselves correlated - e.g. urinary_calcium_excretion reaches
+#' nephrolithiasis both directly (the interaction term) and indirectly
+#' through urine_chemistry, so their contributions covary rather than
+#' adding independently. D_partial already contains every node up to
 #' (not including) node_id, in topological order, so simulating it and
 #' evaluating node_id's own formula against that draw measures the
 #' explained variance exactly, correlations included, instead of
@@ -146,34 +146,42 @@ build_dag <- function(spec, coefs, seed = NULL) {
   D
 }
 
-calibrate_intercept <- function(driver_draws, coefficient, target_prevalence) {
-  f <- function(b0) mean(plogis(b0 + coefficient * driver_draws)) - target_prevalence
+#' Solve for the logistic intercept b0 so that mean(plogis(b0 + driver_draws))
+#' hits target_prevalence, where driver_draws is the outcome's full linear
+#' predictor (already summed across every incoming edge - see
+#' build_calibrated_dag()'s use of build_mean_formula()), not a single term.
+calibrate_intercept <- function(driver_draws, target_prevalence) {
+  f <- function(b0) mean(plogis(b0 + driver_draws)) - target_prevalence
   uniroot(f, interval = c(-10, 10))$root
 }
 
-#' Simulate data from config/dag_spec.yaml + config/edge_coefficients.yaml.
-#'
-#' Two-pass: a calibration-only draw (discarded) to solve for
-#' nephrolithiasis's intercept against outcome_calibration's target
-#' prevalence, then the real output draw of size n with the calibrated
-#' outcome node included. See vignette Sec. 3.2 (p.14) for sim()/rndseed.
-simulate_renal_stone_data <- function(n = NULL, seed = NULL) {
+#' nephrolithiasis has multiple incoming edges (duration, sex,
+#' hydration_fluid_intake, urine_chemistry, and the urinary_calcium_excretion
+#' x hydration_fluid_intake interaction - config/dag_spec.yaml collapses the
+#' Mineralized Renal Material intermediate directly onto this node, see its
+#' own note), so its driver is built the same way any generic node's mean
+#' formula is (build_mean_formula()), then calibrated as a whole rather than
+#' scaled from a single edge's coefficient.
+build_calibrated_dag <- function(seed = NULL) {
   spec  <- read_dag_spec("../config/dag_spec.yaml")
   coefs <- yaml::read_yaml("../config/edge_coefficients.yaml")
-  if (is.null(n)) n <- coefs$sample_size$default
 
   D0 <- build_dag(spec, coefs, seed = seed)   # everything except nephrolithiasis
-  D0set <- set.DAG(D0)                  
-  cal_data <- sim(DAG = D0set, n = max(20000, n), rndseed = seed)
+  D0set <- set.DAG(D0)
+  cal_data <- sim(DAG = D0set, n = max(20000, coefs$sample_size$default), rndseed = seed)
 
   oc <- coefs$outcome_calibration
-  neph_edge <- Filter(function(e) identical(e$to, oc$node), coefs$coefficients)[[1]]
-  intercept <- calibrate_intercept(
-    cal_data[[node_alias(neph_edge$from)]], neph_edge$coefficient, oc$target_marginal_prevalence
-  )
+  driver_formula <- build_mean_formula(oc$node, coefs)
+  driver_draws <- eval(str2lang(driver_formula), envir = as.list(cal_data))
+  intercept <- calibrate_intercept(driver_draws, oc$target_marginal_prevalence)
 
-  outcome_formula <- sprintf("plogis(%s + %s * %s)", intercept, neph_edge$coefficient, node_alias(neph_edge$from))
+  outcome_formula <- sprintf("plogis(%s + %s)", intercept, driver_formula)
   D1 <- D0 + do.call(node, list(name = node_alias(oc$node), distr = "rbern", prob = str2lang(outcome_formula)))
-  D1set <- set.DAG(D1)
-  dealias_columns(sim(DAG = D1set, n = n, rndseed = seed), spec)
+  list(D1 = D1, spec = spec, coefs = coefs)
+}
+
+simulate_renal_stone_data <- function(n = NULL, seed = NULL) {
+  built <- build_calibrated_dag(seed = seed)
+  if (is.null(n)) n <- built$coefs$sample_size$default
+  dealias_columns(sim(DAG = set.DAG(built$D1), n = n, rndseed = seed), built$spec)
 }

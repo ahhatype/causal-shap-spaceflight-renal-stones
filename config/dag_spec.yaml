@@ -5,7 +5,7 @@
 # 53 nodes/83 edges per Robert's version, 51 nodes/75 edges in the prior
 # source-aligned reference, Cohen's kappa 0.978 after semantic mapping).
 #
-# This file holds the 12-node working subgraph scoped down from the full
+# This file holds the 11-node working subgraph scoped down from the full
 # 51-node source graph for tractability (docs/methods, Step 2). Graph
 # topology is source-aligned to the published NASA DAG. All quantitative
 # values here are estimates for training and simulation purposes, informed
@@ -16,8 +16,6 @@
 
 outcome: nephrolithiasis
 outcome_type: binary   # incidence, sole modeled outcome; logit link throughout.
-                        # Mineralized Renal Material / CaOx supersaturation is
-                        # an internal mediator node only, not a prediction target.
 
 nodes:
   - id: duration
@@ -100,21 +98,13 @@ nodes:
     note: "Full monitoring panel: calcium oxalate, uric acid, citrate, pH, sodium, sulfate, phosphorus, magnesium, potassium."
     source: "NASA narrative and OCHMO-MTB-003"
 
-  - id: mineralized_renal_material
-    label: "Mineralized Renal Material (CaOx supersaturation)"
-    type: mediator
-    measure: "Relative supersaturation (RSS) score"
-    composite: single_measure
-    note: "25% of astronauts show elevated CaOx supersaturation pre-flight vs. 46% post-flight. Internal mediator, not a modeled outcome."
-    source: "Goodenow et al., npj Microgravity 2022 (https://www.nature.com/articles/s41526-021-00187-z)"
-
   - id: nephrolithiasis
     label: "Nephrolithiasis"
     type: outcome
     measure: "Kidney stone presence/incidence"
     composite: single_measure
-    note: "2nd most likely reason for ISS emergency medical evacuation per NASA's Integrated Medical Model. Sole modeled outcome."
-    source: "NASA narrative and Andy's repo confirm as target; OCHMO-MTB-003"
+    note: "2nd most likely reason for ISS emergency medical evacuation per NASA's Integrated Medical Model. Sole modeled outcome. This working subgraph collapses NASA's Mineralized Renal Material / CaOx supersaturation intermediate (25% pre-flight -> 46% post-flight elevated prevalence) directly onto this node: urine_chemistry's precipitation step and the precipitation-to-diagnosis step are each individually NASA-confirmed mechanisms, represented here as a single direct edge rather than as a separate mediator node."
+    source: "NASA narrative and Andy's repo confirm as target; OCHMO-MTB-003; Goodenow et al., npj Microgravity 2022 (https://www.nature.com/articles/s41526-021-00187-z) for the collapsed intermediate step"
 
 # Directed edges. magnitude/direction fields mirror docs/methods section 3.
 # status flags:
@@ -149,24 +139,24 @@ edges:
   - from: urinary_calcium_excretion
     to: urine_chemistry
     status: magnitude_estimate
-    magnitude_note: "Grounded threshold: baseline ~240 mg/day urinary calcium. Main effect only - the combined-threshold finding (risk normalizes at <150 mg/day alone, or 190 mg/day combined with fluid intake >=2.5 L/day) is represented separately below as an interaction term on urinary_calcium_excretion -> mineralized_renal_material."
+    magnitude_note: "Grounded threshold: baseline ~240 mg/day urinary calcium. Main effect only - the combined-threshold finding (risk normalizes at <150 mg/day alone, or 190 mg/day combined with fluid intake >=2.5 L/day) is represented separately below as an interaction term on urinary_calcium_excretion -> nephrolithiasis."
     source: "Estimated for training purposes"
 
   - from: urinary_calcium_excretion
-    to: mineralized_renal_material
+    to: nephrolithiasis
     interacts_with: hydration_fluid_intake
     status: magnitude_estimate
-    magnitude_note: "Interaction-only edge, additive on top of the main-effect edges urinary_calcium_excretion -> urine_chemistry and hydration_fluid_intake -> mineralized_renal_material: the combined-threshold finding where 190 mg/day urinary calcium and >=2.5 L/day fluid intake together normalize risk. Functional form: multiplicative effect-modification (product of the two nodes' standardized values)."
+    magnitude_note: "Interaction-only edge, additive on top of the main-effect edges urinary_calcium_excretion -> urine_chemistry and hydration_fluid_intake -> nephrolithiasis: the combined-threshold finding where 190 mg/day urinary calcium and >=2.5 L/day fluid intake together normalize risk. Functional form: multiplicative effect-modification (product of the two nodes' standardized values)."
     source: "Estimated for training purposes"
 
   - from: duration
-    to: mineralized_renal_material
+    to: nephrolithiasis
     status: magnitude_estimate
-    magnitude_note: "Prevalence of elevated CaOx supersaturation: 25% pre-flight to 46% post-flight"
+    magnitude_note: "Prevalence of elevated CaOx supersaturation: 25% pre-flight to 46% post-flight, via the collapsed Mineralized Renal Material intermediate (see nephrolithiasis's own note)"
     source: "Goodenow et al., npj Microgravity 2022"
 
   - from: sex
-    to: mineralized_renal_material
+    to: nephrolithiasis
     status: directional_only
     magnitude_note: "Males more susceptible to elevated CaOx supersaturation than females; astronaut cohorts are heavily male-skewed, limiting power"
     source: "Goodenow et al."
@@ -178,7 +168,7 @@ edges:
     source: "NASA narrative; OCHMO-MTB-003"
 
   - from: hydration_fluid_intake
-    to: mineralized_renal_material
+    to: nephrolithiasis
     status: magnitude_estimate
     magnitude_note: "Grounded: in-flight fluid intake ~3.2 L/day needed to reach pre-flight risk level"
     source: "NASA narrative; OCHMO-MTB-003"
@@ -207,15 +197,9 @@ edges:
     magnitude_note: "In-flight vitamin D is a mediator, child of Duration"
 
   - from: urine_chemistry
-    to: mineralized_renal_material
-    status: confirmed_mechanism
-    magnitude_note: "Urine Chemistry determines whether Mineralized Renal Material precipitates"
-    source: "NASA narrative (direct basis)"
-
-  - from: mineralized_renal_material
     to: nephrolithiasis
     status: confirmed_mechanism
-    magnitude_note: "Mineralized Renal Material determines Nephrolithiasis risk"
+    magnitude_note: "Urine Chemistry determines whether Mineralized Renal Material precipitates, which in turn determines Nephrolithiasis risk - two NASA-confirmed mechanisms in sequence, represented as a single direct edge (see nephrolithiasis's own note)."
     source: "NASA narrative (direct basis)"
 
 # Note on Astronaut Selection: the NASA narrative names it directly
