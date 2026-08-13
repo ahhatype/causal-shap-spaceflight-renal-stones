@@ -133,28 +133,42 @@ coefficients:
 # Marginal distributions for the five exogenous/root nodes (no incoming
 # edges): duration, sex, history_of_nephrolithiasis, nutrients_risk,
 # hydration_fluid_intake.
+#
+# Machine-readable: distr is the simcausal distribution function name
+# (rnorm_trunc / rnorm_trunc2 are custom, defined in
+# r/R/simcausal_helpers.R; rbern/rnorm are simcausal built-ins), params is
+# spliced directly into node()'s arguments. unit's presence marks a node as
+# raw-scale (needs z-scoring before its outgoing path coefficients apply,
+# per standardization_convention above) - its absence means the node is
+# already on the standardized scale.
 root_node_distributions:
   - node: duration
-    distribution: "Normal(mean=180, sd=45) days, truncated to [14, 365]"
+    distr: rnorm_trunc2
+    params: {mean: 180, sd: 45, minval: 14, maxval: 365}
+    unit: days
     basis: "ISS long-duration missions run approximately 6 months"
-    note: "Raw units (days) for interpretability; z-score before applying duration's outgoing path coefficients, per standardization_convention."
 
   - node: sex
-    distribution: "Bernoulli(P(male)=0.80)"
+    distr: rbern
+    params: {prob: 0.80}
     basis: "Astronaut corps is heavily male-skewed"
     note: "Coded male=1; used directly (not standardized) by its outgoing coefficient."
 
   - node: history_of_nephrolithiasis
-    distribution: "Bernoulli(P(present)=0.25)"
+    distr: rbern
+    params: {prob: 0.25}
     basis: "Approximate general-population prevalence of a personal or first/second-degree family history of stone disease."
     note: "Coded present=1; used directly (not standardized) by its outgoing coefficient, same convention as sex."
 
   - node: nutrients_risk
-    distribution: "Standardized Normal(0, 1), latent"
+    distr: rnorm
+    params: {mean: 0, sd: 1}
     basis: "Composite dietary oxalate/calcium/magnesium intake index; no natural raw unit, modeled directly as a standardized latent."
 
   - node: hydration_fluid_intake
-    distribution: "Normal(mean=2.3, sd=0.4) L/day, truncated to positive values"
+    distr: rnorm_trunc
+    params: {mean: 2.3, sd: 0.4, minval: 0}
+    unit: L/day
     basis: "Operational fluid-intake prescription of approximately 2.0-2.5 L/day"
     note: "Raw units (L/day) for interpretability; z-score before applying hydration_fluid_intake's outgoing path coefficients, per standardization_convention."
 
