@@ -19,16 +19,23 @@ sample_size:
 # directly on a standardized (mean 0, SD 1) scale, so every coefficient in
 # `coefficients` below is a standardized path coefficient. duration and
 # hydration_fluid_intake are given real-world units for interpretability but
-# must be z-scored before their outgoing coefficients are applied. sex is
-# binary (coded male=1) and used directly, not standardized. nephrolithiasis
-# is the sole outcome, binary, logit link - see outcome_calibration.
+# must be z-scored before their outgoing coefficients are applied. sex and
+# history_of_nephrolithiasis are binary, kept in raw 0/1 form in their own
+# column, but mean-centered (not scaled) wherever they enter another node's
+# formula, so a binary parent's own marginal prevalence doesn't shift a
+# downstream standardized node's mean away from 0. nephrolithiasis is the
+# sole outcome, binary, logit link - see outcome_calibration.
 standardization_convention: >
   Every continuous node other than duration and hydration_fluid_intake is
   simulated directly on a standardized mean-0/SD-1 scale. duration and
   hydration_fluid_intake are simulated in real-world units (days, L/day)
   for interpretability and must be z-scored before applying their outgoing
-  path coefficients. sex is a binary indicator (male=1) used directly, not
-  standardized.
+  path coefficients. sex and history_of_nephrolithiasis are binary
+  indicators, kept in their raw 0/1 form as their own column, but
+  mean-centered (subtract their root-node probability, not divided by SD)
+  wherever they enter another node's formula as a predictor, so their own
+  marginal prevalence doesn't shift a downstream standardized node's mean
+  away from 0.
 
 coefficients:
   - from: duration
@@ -152,13 +159,13 @@ root_node_distributions:
     distr: rbern
     params: {prob: 0.80}
     basis: "Astronaut corps is heavily male-skewed"
-    note: "Coded male=1; used directly (not standardized) by its outgoing coefficient."
+    note: "Coded male=1 in its own column. Mean-centered (subtract 0.80), not scaled by SD, wherever it enters a downstream node's formula, per standardization_convention."
 
   - node: history_of_nephrolithiasis
     distr: rbern
     params: {prob: 0.25}
     basis: "Approximate general-population prevalence of a personal or first/second-degree family history of stone disease."
-    note: "Coded present=1; used directly (not standardized) by its outgoing coefficient, same convention as sex."
+    note: "Coded present=1 in its own column. Mean-centered (subtract 0.25), not scaled by SD, wherever it enters a downstream node's formula, same convention as sex."
 
   - node: nutrients_risk
     distr: rnorm

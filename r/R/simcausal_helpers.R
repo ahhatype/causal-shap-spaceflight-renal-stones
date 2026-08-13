@@ -60,7 +60,13 @@ zterm <- function(node_id, coefs) {
   root <- root_lookup(coefs)[[node_id]]
   alias <- node_alias(node_id)
   if (!is.null(root) && !is.null(root$unit)) {
+    # raw-unit continuous root node: full z-score
     sprintf("((%s - %s) / %s)", alias, root$params$mean, root$params$sd)
+  } else if (!is.null(root) && identical(root$distr, "rbern")) {
+    # binary root node: mean-centered only (not scaled by SD) so it doesn't
+    # shift a downstream standardized node's mean away from 0 - its own
+    # column stays raw 0/1, only its use as a predictor elsewhere changes
+    sprintf("(%s - %s)", alias, root$params$prob)
   } else {
     alias
   }
