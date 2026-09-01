@@ -1,6 +1,6 @@
 # Causal SHAP: Spaceflight-Induced Renal Stones
 
-> This is a parallel project to Andy Wilson's [andystats/causal-shap-target-dags](https://github.com/andystats/causal-shap-target-dags), which already has a working end-to-end pipeline on the renal DAG (ingest, simulate, frozen truth, out-of-box SHAP, ASV, a structural-SHAP prototype). This repo does not depend on or vendor that code. It is standalone, and builds the parts of the paper that repo doesn't cover yet: the human-in-the-loop iteration design, the full 4-method comparison, and the robustness and generalization sweeps.
+> This is a parallel project to Andy Wilson's [andystats/causal-shap-target-dags](https://github.com/andystats/causal-shap-target-dags), which already has a working end-to-end pipeline on the renal DAG (ingest, simulate, frozen truth, out-of-box SHAP, ASV, a structural-SHAP prototype). This repo does not depend on or vendor that code. It is standalone, and builds the parts of the paper that repo doesn't cover yet: the human-in-the-loop iteration design, the 3-method causal SHAP comparison, and the robustness and generalization sweeps.
 
 ## What this is
 
@@ -17,7 +17,7 @@ This is a two-language repo, R and Python side by side. That split isn't a style
 - `pcalg::ida()`, the IDA half of Ng et al.'s Causal SHAP (Step 6). Python's `causal-learn` has PC but no IDA equivalent.
 
 **R native, thin Python wrapper only:**
-- `shapr`, for Heskes et al.'s Causal Shapley Values and Frye et al.'s Asymmetric Shapley Values (Step 6)
+- `shapr`, for Frye et al.'s Asymmetric Shapley Values (Step 6)
 
 **Python, the original authors' own implementations:**
 - `shap`, for the out-of-box explainers (Step 4): TreeExplainer, LinearExplainer, KernelExplainer, PermutationExplainer
@@ -64,7 +64,7 @@ This lists all 13 steps from the methods doc, in order, so the numbering stays l
 3. **Synthetic data generation.** simcausal, seeded from the DAG, with literature-informed placeholder coefficients pending Robert's calibration.
 4. **Baseline attribution with standard SHAP.** Five explainer/model pairings, run once at full breadth to see whether standard SHAP fails consistently or only for some model classes.
 5. **Complexity-aware reweighting.** LumaWarp. Runs in a separate repo.
-6. **Causal SHAP comparison and human-in-the-loop iteration.** Four methods (Heskes Causal Shapley Values, Shapley Flow, ASV, Ng et al.'s Causal SHAP), each revised by the domain expert over three rounds.
+6. **Causal SHAP comparison and human-in-the-loop iteration.** Three methods (Shapley Flow, ASV, Ng et al.'s Causal SHAP), each revised by the domain expert over three rounds.
 7. **Complexity-aware reweighting of Step 6 outputs.** LumaWarp. Runs in a separate repo.
 8. **Structural recovery comparison.** PC (reused from Step 6), GES, NOTEARS, LiNGAM, scored against the known generating structure.
 9. **Robustness to the data-generating process.** Extension. Re-runs Steps 4 through 8 on data from additional simulators.
@@ -214,7 +214,34 @@ the one scale exception (`tree_shap` + `random_forest` has no logit margin to si
 stays on the probability scale, unlike the other four pairings).
 
 ### Step 6: Causal SHAP comparison and human-in-the-loop iteration
-_write-up to come_
+
+Full results and interpretation: `docs/step06_results.md`.
+
+Three causally-informed SHAP methods, each run across 3 iteration rounds: round 1 uses
+a genuinely naive/uninformed version of that method's causal input; rounds 2-3 apply a
+scripted revision heuristic (documented per-method in `docs/step06_results.md`'s
+"LLM-made decisions" table) standing in for the methods doc's "Robert reviews and
+revises" step, since no real domain expert reviewed these rounds - every round-2/3
+number is explicitly flagged as such, not presented as real expert judgment.
+
+- **Asymmetric Shapley Values / ASV** (`shapr`) - runs on the same XGBoost model,
+  causal ordering from the DAG's topological depth layers.
+- **Ng et al.'s Causal SHAP** (custom implementation of the paper's Algorithm 1, PC +
+  IDA via `pcalg` in R feeding a Python Monte Carlo causal-value-function estimator) -
+  round 1 is genuinely all-zero: PC's skeleton pruning left the outcome with zero
+  discovered edges at this DAG's n=1,000/alpha=0.05 (a real, diagnosed finding, not a
+  bug - see `docs/step06_results.md`), so the method's own weighting mechanism
+  correctly degenerates. Once reconnected (round 2), this method reaches the best rank
+  agreement of anything run in this project so far (τ=0.71).
+- **Shapley Flow** (`shapflow`) - round 1 declares no inter-feature causal edges at
+  all (every feature a direct, independent model input); rounds 2-3 add back true
+  mediation edges one at a time.
+
+`results/attributions/step06_hitl_summary.parquet` (via `pipeline/step06_hitl_iteration.py`)
+scores every (method, engine, round) combination against Step 4's ground truth -
+Kendall's τ, Spearman's ρ, top-5 recovery, NDCG@5 - reading only already-written
+output per method's own driver script, since R and Python never call each other live
+(ADR-001).
 
 ### Step 8: Structural recovery comparison
 _write-up to come_

@@ -7,11 +7,11 @@ machine-readable mirror of this table.
 | Step | Label | Status | Notes |
 |---|---|---|---|
 | 1 | Exposure/outcome specification | done | Cumulative mission days as exposure; nephrolithiasis (binary incidence) as the sole outcome. CaOx supersaturation (Mineralized Renal Material) is an internal mediator only, not a modeled outcome. See `config/dag_spec.yaml`. |
-| 2 | DAG construction and expert-guided augmentation | done | 11-node working subgraph scoped from Robert's 53-node source DAG (SA-07566). See `config/dag_spec.yaml`. |
-| 3 | Synthetic data generation | pending | simcausal structural equations drafted with placeholder coefficients (`config/edge_coefficients.yaml`), pending Robert's calibration sign-off. R implementation (`r/R/simcausal_helpers.R`) not yet written. |
-| 4 | Baseline attribution with standard SHAP | pending | Explainer x model pairings specced (TreeExplainer, LinearExplainer, KernelExplainer, PermutationExplainer). Not yet run. |
+| 2 | DAG construction and expert-guided augmentation | done | 14-node working subgraph scoped from Robert's 53-node source DAG (SA-07566). See `config/dag_spec.yaml`. |
+| 3 | Synthetic data generation | done | simcausal structural equations (`config/edge_coefficients.yaml`), coefficients still training-purposes estimates pending Robert's calibration sign-off. See `docs/step03_simulation_review.md`. |
+| 4 | Baseline attribution with standard SHAP | done | 5 explainer x model pairings vs. interventional ground truth. See `docs/step04_results.md`. |
 | 5 | Complexity-aware reweighting | deferred, external | LumaWarp. Owned by Lexi/Andy, runs in a separate repo. Not built here. |
-| 6 | Causal SHAP comparison + human-in-the-loop | pending | 4-method comparison (Heskes Causal Shapley Values, Shapley Flow, ASV, Ng et al. Causal SHAP) and the 3-round expert-revision design. Not yet run. |
+| 6 | Causal SHAP comparison + human-in-the-loop | done | 3 methods run (ASV, Ng et al. Causal SHAP, Shapley Flow) across 3 scripted-revision rounds. Rounds 2-3 are a scripted heuristic, not real expert review. See `docs/step06_results.md`. |
 | 7 | Complexity-aware reweighting of Step 6 outputs | deferred, external | LumaWarp reassessment. Owned by Lexi/Andy, runs in a separate repo. Not built here. |
 | 8 | Structural recovery comparison | pending | PC (reused from Step 6), GES, NOTEARS, LiNGAM. Not yet run. |
 | 9 | Robustness to the data-generating process | pending, extension | May be reported in compressed form. |

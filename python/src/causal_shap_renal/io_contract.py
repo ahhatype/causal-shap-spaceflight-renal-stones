@@ -7,6 +7,9 @@ module implements. Mirrors r/R/io_contract.R - keep the two in sync by hand.
 from __future__ import annotations
 
 import os
+import subprocess
+import uuid
+from datetime import datetime, timezone
 
 import pandas as pd
 import yaml
@@ -48,6 +51,26 @@ def model_features(dag_spec: dict) -> list[str]:
     r/R/dag_utils.R for the R mirror.
     """
     return [n["id"] for n in dag_spec["nodes"] if n.get("type") != "outcome"]
+
+
+def attribution_provenance() -> dict:
+    """Provenance columns for an attribution table: run_id (uuid4),
+    git_sha (short git SHA, "unknown" if git isn't available), timestamp
+    (UTC ISO 8601). One call per driver script run, attached to every row
+    that run produces - was previously duplicated inline in
+    attribution_baseline.py's _git_sha()/uuid.uuid4() calls; centralized
+    here for the Step 6 Python drivers (step06b/step06c) too. Mirrors
+    r/R/io_contract.R's attribution_provenance().
+    """
+    try:
+        git_sha = subprocess.check_output(["git", "rev-parse", "--short", "HEAD"]).decode().strip()
+    except Exception:
+        git_sha = "unknown"
+    return {
+        "run_id": str(uuid.uuid4()),
+        "git_sha": git_sha,
+        "timestamp": datetime.now(timezone.utc).isoformat(),
+    }
 
 
 def write_attributions(df: pd.DataFrame, path: str) -> None:

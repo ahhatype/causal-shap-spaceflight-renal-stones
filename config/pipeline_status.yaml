@@ -8,10 +8,10 @@ steps:
     status: done
   - step: 3
     label: "Synthetic data generation"
-    status: pending
+    status: done
   - step: 4
     label: "Baseline attribution with standard SHAP"
-    status: pending
+    status: done
   - step: 5
     label: "Complexity-aware reweighting (LumaWarp)"
     status: deferred_external
@@ -19,7 +19,8 @@ steps:
     note: "Runs in a separate repo, not built here."
   - step: 6
     label: "Causal SHAP comparison and human-in-the-loop iteration"
-    status: pending
+    status: done
+    note: "3 methods run (ASV, Ng et al. Causal SHAP, Shapley Flow) across 3 scripted-revision rounds. Rounds 2-3 are a scripted heuristic, not real expert review."
   - step: 7
     label: "Complexity-aware reweighting of Step 6 outputs (LumaWarp)"
     status: deferred_external

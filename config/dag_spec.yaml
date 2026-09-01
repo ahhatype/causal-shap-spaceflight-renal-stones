@@ -5,7 +5,7 @@
 # 53 nodes/83 edges per Robert's version, 51 nodes/75 edges in the prior
 # source-aligned reference, Cohen's kappa 0.978 after semantic mapping).
 #
-# This file holds the 11-node working subgraph scoped down from the full
+# This file holds the 14-node working subgraph scoped down from the full
 # 51-node source graph for tractability (docs/methods, Step 2). Graph
 # topology is source-aligned to the published NASA DAG. All quantitative
 # values here are estimates for training and simulation purposes, informed
@@ -41,6 +41,22 @@ nodes:
     note: "Sits on the bone_resorption -> urine_chemistry pathway, making that mechanism explicit as its own node. Grounded thresholds: baseline ~240 mg/day; risk normalizes at <150 mg/day alone, or 190 mg/day combined with fluid intake >=2.5 L/day (interacts with hydration_fluid_intake)."
     source: "Estimated thresholds for training purposes"
 
+  - id: parathyroid_suppression
+    label: "Parathyroid hormone suppression"
+    type: mediator
+    measure: "Serum intact PTH, % suppression from baseline"
+    composite: single_measure
+    note: "Bone-released calcium suppresses PTH secretion via calcium-sensing feedback; splits bone_resorption's effect on urinary_calcium_excretion into a direct (non-hormonal) mechanism and this PTH-mediated one."
+    source: "Bone metabolism and renal stone risk during ISS missions, ScienceDirect (https://www.sciencedirect.com/science/article/abs/pii/S8756328215003658) - PTH declined ~48% over a 180-day mission; MDPI Space Flight Calcium review (https://www.mdpi.com/2072-6643/4/12/2047)"
+
+  - id: hypercalciuria_predisposition
+    label: "Hypercalciuria predisposition (genetic/metabolic)"
+    type: exogenous_confounder
+    measure: "Composite genetic/metabolic liability score (standardized latent)"
+    composite: single_measure
+    note: "Distinct from history_of_nephrolithiasis (personal/family stone HISTORY): this is the underlying absorptive/renal-leak calcium-handling phenotype itself. >52% of hypercalciuria variance estimated heritable (twin studies); present in 40-50% of recurrent stone formers vs. 5-10% of the general population."
+    source: "Idiopathic hypercalciuria review, Cleveland Clinic Journal of Medicine (https://www.ccjm.org/content/85/1/47); Genetics of hypercalciuric stone forming diseases, Kidney International (https://www.kidney-international.org/article/S0085-2538(15)52791-9/fulltext)"
+
   - id: history_of_nephrolithiasis
     label: "Personal/family history of nephrolithiasis"
     type: exogenous_confounder
@@ -65,6 +81,14 @@ nodes:
     composite: single_composite
     note: "Broader than bone's calcium-only node, since oxalate/magnesium matter specifically for stone chemistry."
     source: "NASA narrative: Nutrients affect Urine Chemistry through the intake of oxalate, calcium, magnesium"
+
+  - id: urinary_oxalate_excretion
+    label: "Urinary oxalate excretion"
+    type: mediator
+    measure: "24-hr urinary oxalate, mg/day"
+    composite: single_measure
+    note: "Splits nutrients_risk's effect on urine_chemistry into a residual (calcium/magnesium) mechanism and this oxalate-specific one. CaOx supersaturation is markedly more sensitive to urinary oxalate than urinary calcium per unit change."
+    source: "Curhan & Taylor, dietary oxalate and calcium oxalate kidney stone risk (https://pubmed.ncbi.nlm.nih.gov/8335871/); dietary oxalate and kidney stone formation review, AJP-Renal (https://journals.physiology.org/doi/full/10.1152/ajprenal.00373.2018)"
 
   - id: bone_formation
     label: "Bone formation"
@@ -133,8 +157,32 @@ edges:
   - from: bone_resorption
     to: urinary_calcium_excretion
     status: directional_only
-    magnitude_note: "Bone resorption elevates urinary calcium"
+    magnitude_note: "Bone resorption elevates urinary calcium via a direct (non-hormonal) mechanism - the PTH-mediated portion of this pathway is represented separately via parathyroid_suppression."
     source: "Bone metabolism and renal stone risk, ISS missions (https://www.sciencedirect.com/science/article/abs/pii/S8756328215003658)"
+
+  - from: bone_resorption
+    to: parathyroid_suppression
+    status: magnitude_estimate
+    magnitude_note: "PTH declined ~48% over a 180-day mission as bone-released calcium suppresses secretion via calcium-sensing feedback"
+    source: "ScienceDirect bone metabolism/renal stone risk; MDPI Space Flight Calcium review"
+
+  - from: parathyroid_suppression
+    to: urinary_calcium_excretion
+    status: magnitude_estimate
+    magnitude_note: "Reduced PTH lowers renal tubular calcium reabsorption, increasing urinary excretion"
+    source: "ScienceDirect bone metabolism/renal stone risk; MDPI Space Flight Calcium review"
+
+  - from: hypercalciuria_predisposition
+    to: bone_resorption
+    status: directional_only
+    magnitude_note: "Some hypercalciuria phenotypes (e.g. absorptive type) involve secondary effects on bone turnover"
+    source: "Idiopathic hypercalciuria pathogenesis literature"
+
+  - from: hypercalciuria_predisposition
+    to: urinary_calcium_excretion
+    status: magnitude_estimate
+    magnitude_note: "Defining renal-leak/absorptive mechanism; present in ~40-50% of recurrent stone formers vs. ~5-10% of the general population"
+    source: "Cleveland Clinic Journal of Medicine; Kidney International"
 
   - from: urinary_calcium_excretion
     to: urine_chemistry
@@ -188,8 +236,20 @@ edges:
   - from: nutrients_risk
     to: urine_chemistry
     status: directional_only
-    magnitude_note: "NASA narrative names the pathway (oxalate, calcium, magnesium intake) without a magnitude"
+    magnitude_note: "NASA narrative names the pathway (calcium, magnesium intake) without a magnitude - the oxalate-specific portion is represented separately via urinary_oxalate_excretion."
     source: "NASA narrative"
+
+  - from: nutrients_risk
+    to: urinary_oxalate_excretion
+    status: magnitude_estimate
+    magnitude_note: "Dietary oxalate intake drives urinary oxalate excretion; 3-4x relative stone risk reported across oxalate-excretion groups (Curhan & Taylor)"
+    source: "Curhan & Taylor"
+
+  - from: urinary_oxalate_excretion
+    to: urine_chemistry
+    status: magnitude_estimate
+    magnitude_note: "CaOx supersaturation up to 23x more sensitive to urinary oxalate than urinary calcium per unit change"
+    source: "AJP-Renal dietary oxalate review"
 
   - from: duration
     to: vitamin_d_inflight

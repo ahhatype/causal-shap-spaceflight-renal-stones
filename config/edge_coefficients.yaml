@@ -58,9 +58,33 @@ coefficients:
 
   - from: bone_resorption
     to: urinary_calcium_excretion
-    coefficient: 0.60
+    coefficient: 0.30   # was 0.60 - now the non-PTH-mediated residual (direct calcium load)
     direction_only: false
-    magnitude_basis: "Hypercalciuria described in the literature as the most important aggravating factor in this pathway."
+    magnitude_basis: "Hypercalciuria described in the literature as the most important aggravating factor in this pathway. Reduced from the pre-split value: the PTH-mediated portion is now parathyroid_suppression's own edge below."
+
+  - from: bone_resorption
+    to: parathyroid_suppression
+    coefficient: 0.55
+    direction_only: false
+    magnitude_basis: "PTH declined ~48% over a 180-day mission (ScienceDirect bone metabolism/renal stone risk review)."
+
+  - from: parathyroid_suppression
+    to: urinary_calcium_excretion
+    coefficient: 0.35
+    direction_only: false
+    magnitude_basis: "Reduced PTH lowers renal tubular calcium reabsorption, increasing excretion - standard renal calcium-handling physiology, magnitude estimated for training purposes."
+
+  - from: hypercalciuria_predisposition
+    to: bone_resorption
+    coefficient: 0.20
+    direction_only: false
+    magnitude_basis: "Secondary bone-turnover effect in some hypercalciuria phenotypes - directional evidence only, magnitude estimated for training purposes."
+
+  - from: hypercalciuria_predisposition
+    to: urinary_calcium_excretion
+    coefficient: 0.40
+    direction_only: false
+    magnitude_basis: "Defining renal-leak/absorptive mechanism; ~40-50% prevalence in recurrent stone formers vs. ~5-10% general population supports a moderate-strong effect."
 
   - from: urinary_calcium_excretion
     to: urine_chemistry
@@ -115,9 +139,21 @@ coefficients:
 
   - from: nutrients_risk
     to: urine_chemistry
-    coefficient: 0.30
+    coefficient: 0.10   # was 0.30 - now the residual (calcium/magnesium) mechanism
     direction_only: false
-    magnitude_basis: "NASA narrative names the pathway (oxalate, calcium, magnesium intake) without a magnitude."
+    magnitude_basis: "NASA narrative names the pathway (calcium, magnesium intake) without a magnitude. Reduced from the pre-split value: the oxalate-specific portion is now urinary_oxalate_excretion's own edge below."
+
+  - from: nutrients_risk
+    to: urinary_oxalate_excretion
+    coefficient: 0.55
+    direction_only: false
+    magnitude_basis: "3- to 4-fold relative stone risk across oxalate-excretion groups (Curhan & Taylor)."
+
+  - from: urinary_oxalate_excretion
+    to: urine_chemistry
+    coefficient: 0.45
+    direction_only: false
+    magnitude_basis: "CaOx supersaturation up to 23x more sensitive to urinary oxalate than urinary calcium per unit change (AJP-Renal); kept below that extreme ratio since this is a standardized-scale path coefficient, not a raw sensitivity ratio - training-purposes estimate."
 
   - from: duration
     to: vitamin_d_inflight
@@ -132,9 +168,9 @@ coefficients:
     magnitude_basis: "Core precipitation step of the mechanism (confirmed_mechanism in dag_spec.yaml); given the strongest standardized coefficient among nephrolithiasis's direct edges accordingly. Coefficient is on the log-odds (logit) scale, since nephrolithiasis is a binary outcome with a logit link - see outcome_calibration for how the intercept is set alongside it."
     note: "config/dag_spec.yaml collapses two NASA-confirmed mechanisms in sequence - urine_chemistry -> Mineralized Renal Material (originally 0.70) and Mineralized Renal Material -> nephrolithiasis (originally 0.90, logit scale) - into this single direct edge. Every coefficient elsewhere in this file that used to target Mineralized Renal Material is likewise scaled by that collapsed 0.90 (marked individually where it applies): duration 0.40->0.36, sex 0.20->0.18, hydration_fluid_intake -0.30->-0.27, the urinary_calcium_excretion x hydration_fluid_intake interaction 0.15->0.135, and this edge 0.70->0.63. This scaling is exact for the path-coefficient terms - a linear combination multiplied by a constant scales every term by that constant - but Mineralized Renal Material's own residual/noise variance (its empirical_residual_sd, see r/R/simcausal_helpers.R) no longer contributes a separate source of stochasticity to nephrolithiasis once collapsed; nephrolithiasis's own Bernoulli draw is the only randomness left on this pathway, which is a genuine (if secondary) simplification worth flagging alongside the training-purposes caveat on every other value in this file."
 
-# Marginal distributions for the five exogenous/root nodes (no incoming
-# edges): duration, sex, history_of_nephrolithiasis, nutrients_risk,
-# hydration_fluid_intake.
+# Marginal distributions for the six exogenous/root nodes (no incoming
+# edges): duration, sex, history_of_nephrolithiasis, hypercalciuria_predisposition,
+# nutrients_risk, hydration_fluid_intake.
 #
 # Machine-readable: distr is the simcausal distribution function name
 # (rnorm_trunc / rnorm_trunc2 are custom, defined in
@@ -161,6 +197,11 @@ root_node_distributions:
     params: {prob: 0.25}
     basis: "Approximate general-population prevalence of a personal or first/second-degree family history of stone disease."
     note: "Coded present=1 in its own column. Mean-centered (subtract 0.25), not scaled by SD, wherever it enters a downstream node's formula, same convention as sex."
+
+  - node: hypercalciuria_predisposition
+    distr: rnorm
+    params: {mean: 0, sd: 1}
+    basis: "No natural raw unit; modeled as a standardized latent liability score, same convention as nutrients_risk. >52% of hypercalciuria variance estimated heritable (twin studies)."
 
   - node: nutrients_risk
     distr: rnorm

@@ -41,13 +41,6 @@ def fit_engine(engine_name: str, X, y, **kwargs):
     Supported engine names: "xgboost", "random_forest". "superlearner" is
     deliberately not implemented here - see engines.superlearner.note in
     config/model_engines.yaml for why it isn't used in Step 6.
-
-    TODO: _fit_xgboost() / _fit_random_forest() are stubs. Wire up the
-    actual model-fitting calls (xgboost.XGBClassifier/XGBRegressor,
-    sklearn.ensemble.RandomForestClassifier/Regressor) once a Step 6 driver
-    script (step06b/step06c) is implemented and has real hyperparameter
-    choices to make - only the resolution/dispatch layer in this module is
-    meant to be usable now.
     """
     if engine_name == "xgboost":
         return _fit_xgboost(X, y, **kwargs)
@@ -65,13 +58,19 @@ def fit_engine(engine_name: str, X, y, **kwargs):
     )
 
 
-def _fit_xgboost(X, y, **kwargs):
-    raise NotImplementedError(
-        "wire up xgboost.XGBClassifier/XGBRegressor here when a Step 6 driver script is built"
-    )
+def _fit_xgboost(X, y, seed: int = 20260812, **kwargs):
+    """Same hyperparameters/enable_categorical fix as Step 4's
+    attribution_baseline.py - see that module's docstring for why
+    enable_categorical=False is required on xgboost>=3.
+    """
+    from xgboost import XGBClassifier
+
+    return XGBClassifier(
+        eval_metric="logloss", random_state=seed, enable_categorical=False, **kwargs
+    ).fit(X, y)
 
 
-def _fit_random_forest(X, y, **kwargs):
-    raise NotImplementedError(
-        "wire up sklearn.ensemble.RandomForestClassifier/Regressor here when a Step 6 driver script is built"
-    )
+def _fit_random_forest(X, y, seed: int = 20260812, **kwargs):
+    from sklearn.ensemble import RandomForestClassifier
+
+    return RandomForestClassifier(random_state=seed, **kwargs).fit(X, y)
