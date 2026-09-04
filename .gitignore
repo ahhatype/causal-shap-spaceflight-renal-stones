@@ -107,3 +107,6 @@ results/detector/
 # here, builds with `make manuscript`, and is exchanged with coauthors as PDF
 # exports into Box. Remove this line to publish it.
 manuscript/
+
+# Local project map with absolute machine paths; lives in each root, not in git
+PROJECT_MAP.md
