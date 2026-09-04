@@ -16,8 +16,8 @@ env/
 .env.*
 
 # Distribution / packaging
-build/
-dist/
+/build/
+/dist/
 *.egg-info/
 
 # R / renv (renv.lock, renv/activate.R, renv/settings.json, .Rprofile ARE committed)
