@@ -1,0 +1,297 @@
+"""The surgery theater: an inline-SVG DAG you can operate on.
+
+Pyvis renders into a sealed data-URI iframe with no channel back to Shiny, so
+the theater draws its own SVG in the parent document and reuses the one
+click-to-Shiny bridge this repo already trusts (the workbench schematic's
+``Shiny.setInputValue`` pattern). Every node and edge carries a ``data-id``;
+one delegated listener reports clicks as ``theater_pick``.
+
+Layout is deterministic: topological layers by longest path from the roots,
+the outcome pinned to the final layer, one barycenter pass to reduce edge
+crossings. No physics, so the graph never squirms between renders.
+"""
+
+from __future__ import annotations
+
+import html
+from itertools import count
+from typing import Mapping
+
+import networkx as nx
+
+from causal_shap.graph_state import GraphState
+
+# Every render gets its own marker ids. Two graphs on one page (the theater
+# plus the sealed answer key) sharing "#th-arrow" resolve to whichever defs
+# comes FIRST in the document - and when that one sits in a hidden tab pane,
+# browsers refuse to paint it and every arrowhead silently disappears.
+_MARKER_IDS = count()
+
+INK = "#111111"
+AMBER = "#b45309"
+AMBER_SOFT = "#fdf3e7"
+BLUE = "#1e4d8c"
+MUTED = "#94a3b8"
+
+HALO_COLORS = {"h0": AMBER, "h1": BLUE, "eig": MUTED}
+
+NODE_HEIGHT = 26
+LAYER_GAP = 168
+ROW_GAP = 16
+CHAR_WIDTH = 6.6
+PADDING = 14
+
+
+def layered_layout(graph: nx.DiGraph, outcome: str) -> dict[str, tuple[float, float]]:
+    """Longest-path layering; every edge flows strictly left to right.
+
+    The outcome is deliberately NOT pinned to the last layer: in the proxy
+    story the outcome has descendants, and pinning it past them would draw its
+    outgoing edges backwards — the one thing this layout must never do.
+    """
+    layer: dict[str, int] = {}
+    for node in nx.topological_sort(graph):
+        parents = list(graph.predecessors(node))
+        layer[node] = 1 + max((layer[p] for p in parents), default=-1)
+
+    columns: dict[int, list[str]] = {}
+    for node, depth in layer.items():
+        columns.setdefault(depth, []).append(node)
+
+    # One barycenter pass: order each layer by the mean row of its parents.
+    order: dict[str, float] = {}
+    for depth in sorted(columns):
+        nodes = sorted(columns[depth])
+        if depth > 0:
+            nodes.sort(
+                key=lambda n: (
+                    sum(order.get(p, 0.0) for p in graph.predecessors(n))
+                    / max(1, sum(1 for _ in graph.predecessors(n))),
+                    n,
+                )
+            )
+        for row, node in enumerate(nodes):
+            order[node] = float(row)
+        columns[depth] = nodes
+
+    positions: dict[str, tuple[float, float]] = {}
+    tallest = max(len(nodes) for nodes in columns.values())
+    for depth, nodes in columns.items():
+        span = len(nodes) * (NODE_HEIGHT + ROW_GAP)
+        offset = (tallest * (NODE_HEIGHT + ROW_GAP) - span) / 2.0
+        for row, node in enumerate(nodes):
+            positions[node] = (
+                60.0 + depth * LAYER_GAP,
+                40.0 + offset + row * (NODE_HEIGHT + ROW_GAP),
+            )
+    return positions
+
+
+def _label(name: str, display_names: Mapping[str, str]) -> str:
+    text = str(display_names.get(name, name))
+    return text if len(text) <= 22 else text[:20] + "…"
+
+
+def sorted_edges(state: GraphState) -> list[tuple[str, str]]:
+    """The canonical edge order shared by the renderer and the click handler.
+
+    Elements are addressed by index, never by name: uploaded column names are
+    untrusted text and must not travel through DOM attributes or be parsed
+    back out of a click payload.
+    """
+    return sorted(state.directed_edges)
+
+
+def _node_width(name: str, display_names: Mapping[str, str]) -> float:
+    return PADDING + CHAR_WIDTH * len(_label(name, display_names))
+
+
+def render_theater(
+    state: GraphState,
+    focus: str | None,
+    outcome: str,
+    *,
+    halos: Mapping[str, str] | None = None,
+    display_names: Mapping[str, str] | None = None,
+    tooltips: Mapping[str, str] | None = None,
+    selected: str = "",
+    height: int = 460,
+    interactive: bool = True,
+) -> str:
+    """Return the theater as self-contained HTML.
+
+    The SVG autofits its content through the viewBox; there is deliberately no
+    wheel zoom or drag pan, which fought the page scroll. ``interactive=False``
+    drops the click bridge entirely, for answer-key displays and reports.
+
+    ``display_names`` relabels nodes (short names only; labels wider than the
+    box clutter the plate); ``tooltips`` carries longer prose, e.g. data-
+    dictionary descriptions, into the hover title without touching the label.
+    """
+    halos = halos or {}
+    display_names = display_names or {}
+    tooltips = tooltips or {}
+    graph = state.digraph()
+    positions = layered_layout(graph, outcome)
+    unresolved = set(state.undirected_pairs)
+
+    widths = {node: _node_width(node, display_names) for node in graph.nodes}
+    max_x = max((x + widths[n] for n, (x, y) in positions.items()), default=400) + 60
+    max_y = max((y for _, y in positions.values()), default=200) + 60
+
+    mk = f"th{next(_MARKER_IDS)}"
+    parts: list[str] = []
+    parts.append(
+        f'<defs><marker id="{mk}-arrow" viewBox="0 0 10 10" refX="9" refY="5" '
+        'markerWidth="7" markerHeight="7" orient="auto-start-reverse">'
+        f'<path d="M 0 0 L 10 5 L 0 10 z" fill="{INK}"/></marker>'
+        f'<marker id="{mk}-arrow-sel" viewBox="0 0 10 10" refX="9" refY="5" '
+        'markerWidth="7" markerHeight="7" orient="auto-start-reverse">'
+        f'<path d="M 0 0 L 10 5 L 0 10 z" fill="{AMBER}"/></marker></defs>'
+    )
+
+    for index, (a, b) in enumerate(sorted_edges(state)):
+        xa, ya = positions[a]
+        xb, yb = positions[b]
+        x1, y1 = xa + widths[a] / 2, ya
+        x2, y2 = xb - widths[b] / 2 - 3, yb
+        bend = max(30.0, (x2 - x1) * 0.45)
+        path = f"M {x1:.0f} {y1:.0f} C {x1 + bend:.0f} {y1:.0f}, {x2 - bend:.0f} {y2:.0f}, {x2:.0f} {y2:.0f}"
+        is_selected = selected == f"edge:{index}"
+        dashed = tuple(sorted((a, b))) in unresolved
+        stroke = AMBER if is_selected else INK
+        width = 2.6 if is_selected else 1.4
+        dash = ' stroke-dasharray="6 4"' if dashed else ""
+        marker = f"{mk}-arrow-sel" if is_selected else f"{mk}-arrow"
+        tooltip = html.escape(f"{a} → {b}") + (
+            " (orientation chosen, not identified)" if dashed else ""
+        )
+        parts.append(
+            f'<g class="th-edge" data-id="edge:{index}" style="cursor:pointer">'
+            f'<path d="{path}" fill="none" stroke="transparent" stroke-width="12"/>'
+            f'<path d="{path}" fill="none" stroke="{stroke}" stroke-width="{width}"'
+            f'{dash} marker-end="url(#{marker})"/>'
+            f"<title>{tooltip}</title></g>"
+        )
+
+    for node_index, node in enumerate(state.nodes):
+        x, y = positions[node]
+        width = widths[node]
+        left, top = x - width / 2, y - NODE_HEIGHT / 2
+        is_selected = selected == f"node:{node_index}"
+        fill = AMBER_SOFT if node == outcome else "#ffffff"
+        border = AMBER if node == outcome else (BLUE if node == focus else INK)
+        border_width = 2.4 if node in (outcome, focus) or is_selected else 1.3
+        if is_selected:
+            border = AMBER
+        halo = ""
+        channel = halos.get(node)
+        if channel:
+            halo = (
+                f'<rect x="{left - 4:.0f}" y="{top - 4:.0f}" width="{width + 8:.0f}" '
+                f'height="{NODE_HEIGHT + 8}" rx="8" fill="none" '
+                f'stroke="{HALO_COLORS[channel]}" stroke-width="2" stroke-dasharray="3 3"/>'
+            )
+        parts.append(
+            f'<g class="th-node" data-id="node:{node_index}" style="cursor:pointer">{halo}'
+            f'<rect x="{left:.0f}" y="{top:.0f}" width="{width:.0f}" height="{NODE_HEIGHT}" '
+            f'rx="6" fill="{fill}" stroke="{border}" stroke-width="{border_width}"/>'
+            f'<text x="{x:.0f}" y="{y + 4:.0f}" text-anchor="middle" '
+            f'font-family="Georgia, serif" font-size="11.5" fill="{INK}">'
+            f"{html.escape(_label(node, display_names))}</text>"
+            f"<title>{html.escape(str(tooltips.get(node) or display_names.get(node, node)))}</title></g>"
+        )
+
+    svg_id = ' id="theater-svg"' if interactive else ""
+    svg = (
+        f'<svg{svg_id} viewBox="0 0 {max_x:.0f} {max_y:.0f}" '
+        f'style="width:100%;height:{height}px;background:#fdfcfa;border:1px solid #e2ddd6;'
+        f'border-radius:6px" xmlns="http://www.w3.org/2000/svg">{"".join(parts)}</svg>'
+    )
+
+    if not interactive:
+        return f'<div class="theater-static">{svg}</div>'
+
+    script = """
+<script>
+(function() {
+  const svg = document.getElementById('theater-svg');
+  if (!svg) return;
+  svg.addEventListener('click', function(event) {
+    const target = event.target.closest('[data-id]');
+    if (target && window.Shiny) {
+      Shiny.setInputValue('theater_pick', target.dataset.id, {priority: 'event'});
+    }
+  });
+})();
+</script>"""
+    return f'<div id="theater-wrap">{svg}{script}</div>'
+
+
+def apply_surgery(
+    state: GraphState,
+    action: str,
+    edge: tuple[str, str],
+    rationale: str,
+) -> GraphState:
+    """One operation on the current graph, with honest pair bookkeeping.
+
+    ``add`` asserts a brand-new edge; the other operations act on an existing
+    one. The rules encode the ``graph_state`` invariant that every unresolved
+    pair keeps a directed representative: touching an edge whose pair is
+    unresolved adjudicates that pair, so the pair leaves ``undirected_pairs``
+    and the ledger records what the human decided. A cycle-creating add or
+    flip raises from ``GraphState`` itself, naming the cycle.
+    """
+    from causal_shap.graph_state import ConstraintEntry
+
+    a, b = edge
+    pair = tuple(sorted(edge))
+    was_unresolved = pair in set(state.undirected_pairs)
+    directed = set(state.directed_edges)
+    pairs = tuple(p for p in state.undirected_pairs if p != pair)
+
+    if action == "add":
+        if a == b:
+            raise ValueError("An edge needs two different nodes")
+        if (a, b) in state.directed_edges:
+            raise ValueError(f"Edge already exists: {a} → {b}")
+        if (b, a) in state.directed_edges:
+            raise ValueError(
+                f"The reverse edge {b} → {a} exists; select it and Flip instead"
+            )
+        directed.add((a, b))
+        ledger = (ConstraintEntry((a, b), "required", "post_hoc", rationale),)
+        return state.with_constraints(frozenset(directed), tuple(state.undirected_pairs), ledger)
+
+    if (a, b) not in state.directed_edges:
+        raise ValueError(f"No such edge: {a} → {b}")
+
+    if action == "flip":
+        directed.discard((a, b))
+        directed.add((b, a))
+        ledger = (ConstraintEntry((b, a), "required", "post_hoc", rationale),)
+    elif action == "require":
+        ledger = (ConstraintEntry((a, b), "required", "post_hoc", rationale),)
+    elif action == "remove":
+        directed.discard((a, b))
+        ledger = (
+            ConstraintEntry((a, b), "forbidden", "post_hoc", rationale),
+            ConstraintEntry((b, a), "forbidden", "post_hoc", rationale),
+        )
+    elif action == "forbid":
+        # Forbidding the shown orientation of an unresolved pair resolves it
+        # the other way; forbidding a compelled edge removes it outright.
+        directed.discard((a, b))
+        if was_unresolved:
+            directed.add((b, a))
+            ledger = (
+                ConstraintEntry((a, b), "forbidden", "post_hoc", rationale),
+                ConstraintEntry((b, a), "required", "post_hoc", rationale),
+            )
+        else:
+            ledger = (ConstraintEntry((a, b), "forbidden", "post_hoc", rationale),)
+    else:
+        raise ValueError(f"Unknown surgery action: {action!r}")
+
+    return state.with_constraints(frozenset(directed), pairs, ledger)

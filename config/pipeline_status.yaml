@@ -1,4 +1,6 @@
 # Machine-readable mirror of docs/STATUS.md. Keep the two in sync.
+# Updated 2026-09-03 with the causal-shap-target-dags consolidation (ADR 007)
+# and the LumaWarp placeholders (ADR 008).
 steps:
   - step: 1
     label: "Exposure/outcome specification"
@@ -6,37 +8,42 @@ steps:
   - step: 2
     label: "DAG construction and expert-guided augmentation"
     status: done
+    note: "14-node working subgraph in config/dag_spec.yaml; full 51-node source DAG and Reynolds ingest under analysis/ and references/."
   - step: 3
     label: "Synthetic data generation"
     status: done
+    note: "Working subgraph from config/edge_coefficients.yaml (pipeline/step03); full DAG from the DAGitty text (analysis/generate.R)."
   - step: 4
     label: "Baseline attribution with standard SHAP"
     status: done
   - step: 5
-    label: "Complexity-aware reweighting (LumaWarp)"
-    status: deferred_external
+    label: "LumaWarp detector over Step 4 (complexity-aware reweighting)"
+    status: placeholder
     owner: "Lexi Pasi / Andy Wilson"
-    note: "Runs in a separate repo, not built here."
+    note: "Public interface contract and driver in the repo; provider gated on Lucidity sign-off (ADR 008)."
   - step: 6
     label: "Causal SHAP comparison and human-in-the-loop iteration"
     status: done
-    note: "3 methods run (ASV, Ng et al. Causal SHAP, Shapley Flow) across 3 scripted-revision rounds. Rounds 2-3 are a scripted heuristic, not real expert review."
+    note: "3 methods run (ASV, Ng et al. Causal SHAP, Shapley Flow) across 3 scripted-revision rounds. Rounds 2-3 are a scripted heuristic, not real expert review. The Heskes-style structural value function ported to apps/causal_shap/structural_value.py is the candidate fourth method (ADR 006 blocked the shapr path)."
   - step: 7
-    label: "Complexity-aware reweighting of Step 6 outputs (LumaWarp)"
-    status: deferred_external
+    label: "LumaWarp detector over Step 6"
+    status: placeholder
     owner: "Lexi Pasi / Andy Wilson"
-    note: "Runs in a separate repo, not built here."
+    note: "Same contract and gate as Step 5."
   - step: 8
     label: "Structural recovery comparison"
     status: pending
+    note: "Discovery wrappers (PC/GES with CPDAG extension) and M1-M5 evaluation ported to apps/causal_shap; LiNGAM/NOTEARS wrappers in python/src. Runs not yet done on the working subgraph. Add MGM PC-Stable (causalMGM) alongside plain PC: the outcome is binary and the Gaussian CI test pruned every edge into it."
   - step: 9
     label: "Robustness to the data-generating process"
     status: pending
     extension: true
+    note: "Credence-style validation scaffolding ported (apps/causal_shap/validation). Add a nonlinear-edge generator to price the linearity assumption."
   - step: 10
     label: "Robustness to spaceflight-epidemiological constraints"
     status: pending
     extension: true
+    note: "One selection regime exists (NASA-like v4, full DAG). Add mediator measurement noise for E3."
   - step: 11
     label: "Generalization to out-of-distribution populations"
     status: pending
@@ -45,6 +52,7 @@ steps:
     label: "Longitudinal extension"
     status: future_work
   - step: 13
-    label: "Counterfactual recourse extension (DiCE)"
+    label: "Counterfactual recourse extension (DiCE / price and dice)"
     status: out_of_scope
     owner: "Andy Wilson / Lexi Pasi"
+    note: "Budget-constrained action selection scaffolded in apps/causal_shap/policy.py."

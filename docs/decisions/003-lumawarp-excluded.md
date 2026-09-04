@@ -1,7 +1,7 @@
 # ADR 003: LumaWarp (Steps 5 and 7) excluded from this repo
 
 ## Status
-Accepted
+Superseded by [ADR 008](008-lumawarp-detector-placeholders.md) on 2026-09-03. Kept for the record.
 
 ## Decision
 Steps 5 and 7 (complexity-aware reweighting, built on Lucidity Sciences' LumaWarp tool and its PSCI complexity score) are not built in this repo. They are tracked as external, owned by Lexi Pasi and Andy Wilson, and will run in a separate repo (due to the proprietary nature of the tool).

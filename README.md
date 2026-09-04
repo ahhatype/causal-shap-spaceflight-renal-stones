@@ -1,262 +1,176 @@
 # Causal SHAP: Spaceflight-Induced Renal Stones
 
-> This is a parallel project to Andy Wilson's [andystats/causal-shap-target-dags](https://github.com/andystats/causal-shap-target-dags), which already has a working end-to-end pipeline on the renal DAG (ingest, simulate, frozen truth, out-of-box SHAP, ASV, a structural-SHAP prototype). This repo does not depend on or vendor that code. It is standalone, and builds the parts of the paper that repo doesn't cover yet: the human-in-the-loop iteration design, the 3-method causal SHAP comparison, and the robustness and generalization sweeps.
+[![Python tests](https://github.com/ahhatype/causal-shap-spaceflight-renal-stones/actions/workflows/python-tests.yml/badge.svg)](https://github.com/ahhatype/causal-shap-spaceflight-renal-stones/actions/workflows/python-tests.yml)
+[![Site](https://img.shields.io/badge/GitHub%20Pages-open%20site-2563eb)](https://ahhatype.github.io/causal-shap-spaceflight-renal-stones/)
+
+**Prediction is the default playbook. Intervention casts a wider net, then prunes.**
+
+This is the hub for the Space SHAP paper. It consolidates
+[andystats/causal-shap-target-dags](https://github.com/andystats/causal-shap-target-dags)
+(the full 51-node source DAG, the teaching DAGs, the structural value
+function, the Shiny apps) with the 14-node working-subgraph pipeline built
+here. Lineage: the [ACIC 2026 Causal SHAP project](https://www.tao-rwd.com/acic-2026/causal-shap)
+established the attribution problem; [Target DAGs](https://andystats.github.io/causal-shap-target-dags/)
+asked which upstream node to change; this hub asks how to find the deeper
+nodes the prediction playbook washes out, and how to prune them honestly.
+See [ADR 007](docs/decisions/007-target-dags-consolidation.md) for what moved
+where.
 
 ## What this is
 
-Understanding the causal pathways between spaceflight hazards and health outcomes is a key need for deep space travel, and NASA's Human System Risk Board maintains expert-built directed acyclic graphs (DAGs) for its known risks. SHAP (SHapley Additive exPlanations) is a popular way to explain what a predictive model learned, but out of the box it has no notion of causal structure. It can identify spurious relationships and underweight downstream effects, which risks incorrect causal conclusions if its output is read as if it were causal. Causally informed variants of SHAP are aware of the causal structure and should recover feature importance with more fidelity.
+NASA's Human System Risk Board maintains expert-built directed acyclic
+graphs (DAGs) for its known spaceflight risks. SHAP (SHapley Additive
+exPlanations) is the standard way to explain a predictive model, and out of
+the box it has no notion of causal structure. On a causal graph a mediator
+can screen off its ancestors for prediction while still transmitting their
+intervention effects, so predictive credit pools near the outcome and the
+upstream nodes an intervention would have to touch drop out of the ranking.
 
-This project runs a systematic comparison of standard, causality-blind SHAP against several causally informed variants, scored against a known ground truth. The primary case study is NASA's Risk of Renal Stone Formation DAG (SA-07566), with nephrolithiasis as the outcome. Data is synthetic, generated from a specified causal structure, so the true feature importance is defined by construction and every method can be scored against it. The comparison also studies whether iterative expert revision of the causal structure improves recovery as the data are degraded toward the constraints typical of spaceflight epidemiology (small samples, selection bias, narrow demographic ranges).
+The paper's reframing ([framing memo](docs/framing/prediction-vs-intervention.md))
+follows Harrell's *Regression Modeling Strategies* in treating prediction
+and intervention as different goals with different recipes. The prediction
+recipe is the default in explainable AI and is fine for prediction. The
+intervention recipe has to cast a wider net, re-admitting candidates the
+predictor discarded, and then prune with structure. Deeper nodes make that
+hard: their total effects shrink with every hop (product of path
+coefficients), measurement noise attenuates them further, and
+constraint-based discovery recovers them worse. The methods under test are
+the instruments for that job: a detector for depth (LumaWarp), a two-channel
+filter for noise (dichromatic sensitivity gating, proposed by Lexi Pasi), and
+structural propagation for pruning, all working under the assumption that
+direct relationships tend to be linear.
 
-## Tech stack
+Everything is synthetic, generated from NASA's SA-07566 renal-stone
+topology with coefficients we chose, so the true total effect of every node
+is known by construction and every method is scored against it. Say
+"NASA-topology simulation", never "NASA effect".
 
-This is a two-language repo, R and Python side by side. That split isn't a style choice, it's forced by the packages each method needs:
+## Two lines of work
 
-**R only, no real Python substitute:**
-- `simcausal`, the sole default data generator (Step 3)
-- `pcalg::ida()`, the IDA half of Ng et al.'s Causal SHAP (Step 6). Python's `causal-learn` has PC but no IDA equivalent.
+| | Working subgraph | Full source DAG |
+| --- | --- | --- |
+| Nodes | 14, scoped from the source graph | 51 nodes, 75 edges, source-exact |
+| Where | `config/`, `pipeline/`, `r/`, `python/src/causal_shap_renal/`, `results/`, `docs/step0N_results.md` | `analysis/`, `apps/`, `docs/full_dag/` |
+| Generator | `simcausal` from `config/edge_coefficients.yaml` | `simcausal` from the DAGitty text |
+| Frozen truth | do(hi) vs do(lo), common random numbers, n = 50,000 | Same recipe, 28 ancestors |
+| Headline so far | Four of five predictive pairings invert a two-hop mediation chain; PC pruned every edge into the outcome at n = 1,000; Ng et al.'s method reaches τ 0.714 once the outcome is reconnected | Ordering-only SHAP tied with ordinary SHAP (τ 0.528 vs 0.506); structural propagation τ 0.794, top-five recovery 1.00 (32×32×32 prototype) |
+| Record | `docs/step04_results.md`, `docs/step06_results.md` | `docs/full_dag/RESEARCH_RECORD.md` |
 
-**R native, thin Python wrapper only:**
-- `shapr`, for Frye et al.'s Asymmetric Shapley Values (Step 6)
-
-**Python, the original authors' own implementations:**
-- `shap`, for the out-of-box explainers (Step 4): TreeExplainer, LinearExplainer, KernelExplainer, PermutationExplainer
-- `shapflow`, for Shapley Flow (Step 6)
-- `lingam`, for LiNGAM causal discovery (Step 8)
-
-**Python, canonical reference implementation:**
-- NOTEARS (Step 8). R ports exist but aren't well maintained.
-
-**Either language, R is used here:**
-- PC and GES (Step 8) exist in both `pcalg` (R) and `causal-learn` (Python). Since PC is already produced in R for Step 6 (to feed IDA), Step 8 reuses that same CPDAG instead of recomputing it in Python.
-
-R and Python never talk to each other at runtime (no `reticulate`, no `rpy2`). They exchange files: YAML for the DAG spec and coefficients, Parquet for simulated data and attribution output. See `docs/decisions/` for the full reasoning.
-
-## Folder structure
-
-```
-config/           DAG spec, edge coefficients, pipeline status, all YAML
-r/                R package code (renv-managed): DAG utilities, simcausal
-                   helpers, pcalg wrappers, shapr wrappers, the R side of
-                   the file interchange contract
-python/           Python package code (uv-managed): the attribution methods,
-                   discovery methods, evaluation metrics, the Python side of
-                   the file interchange contract
-pipeline/         Thin, numbered driver scripts, one per step or sub-step,
-                   traceable 1:1 to the step numbers in docs/methods
-data/             raw (source DAG files), interim (reconciled DAG), simulated
-                   (Step 3 output), frozen_truth (Step 4 baseline ground
-                   truth). Mostly gitignored, large files are regenerated
-                   from a seed rather than committed
-results/          attributions, discovery, evaluation, figures
-notebooks/        exploratory work only, never the system of record
-docs/             methods draft, provenance notes, decision records, STATUS.md,
-                   dag_README.md + renal_stone_working_subgraph.txt (DAGitty
-                   export of the working subgraph)
-```
+The working subgraph is the paper's primary case study. The full DAG carries
+the ordering-only null and the propagation result, and is the scale the
+paper extends to. They share one Python distribution and one evaluation
+vocabulary.
 
 ## Protocol
 
-This lists all 13 steps from the methods doc, in order, so the numbering stays legible against it. Steps 5 and 7 (LumaWarp) run in a separate repo, owned by Lexi Pasi and Andy Wilson, and are listed here only to keep the sequence intact.
+The 13 steps of the methods doc, each pointing at the code that implements
+it. Status is tracked in `config/pipeline_status.yaml` (and the gitignored
+`docs/STATUS.md`).
 
-1. **Exposure and outcome specification.** Cumulative mission duration as exposure, nephrolithiasis (binary incidence) as the sole outcome. CaOx supersaturation (Mineralized Renal Material), NASA's own intermediate step toward stone formation, is collapsed directly onto the outcome rather than modeled as a separate node - see Step 1 below.
-2. **DAG construction and expert-guided augmentation.** An 11-node working subgraph scoped from Robert Reynolds's 53-node source DAG.
-3. **Synthetic data generation.** simcausal, seeded from the DAG, with literature-informed placeholder coefficients pending Robert's calibration.
-4. **Baseline attribution with standard SHAP.** Five explainer/model pairings, run once at full breadth to see whether standard SHAP fails consistently or only for some model classes.
-5. **Complexity-aware reweighting.** LumaWarp. Runs in a separate repo.
-6. **Causal SHAP comparison and human-in-the-loop iteration.** Three methods (Shapley Flow, ASV, Ng et al.'s Causal SHAP), each revised by the domain expert over three rounds.
-7. **Complexity-aware reweighting of Step 6 outputs.** LumaWarp. Runs in a separate repo.
-8. **Structural recovery comparison.** PC (reused from Step 6), GES, NOTEARS, LiNGAM, scored against the known generating structure.
-9. **Robustness to the data-generating process.** Extension. Re-runs Steps 4 through 8 on data from additional simulators.
-10. **Robustness to spaceflight-epidemiological constraints.** Extension. Re-runs the narrowed pipeline under sampling regimes that emulate small N, selection bias, and narrow demographic ranges.
-11. **Generalization to out-of-distribution populations.** Its own section, not a robustness pass. Commercial spaceflight participants, exploration-duration missions.
-12. **Longitudinal extension.** Future work, not undertaken in this paper. A variable that's both a baseline confounder pre-flight and a duration-driven mediator in-flight is a treatment-confounder feedback case; the fix is g-methods.
-13. **Counterfactual recourse extension (cost-sensitive DiCE).** Out of scope. For Andy and Lexi to define and own.
+| Step | What | Where | Status |
+| --- | --- | --- | --- |
+| 1 | Exposure and outcome: cumulative mission days; nephrolithiasis (binary) | `config/dag_spec.yaml` | done |
+| 2 | DAG construction and expert-guided augmentation | `config/dag_spec.yaml`, `r/R/dag_utils.R`, `analysis/10_ingest_robert_dags.R` | done |
+| 3 | Synthetic data (simcausal) | `pipeline/step03_simulate_data.R`, `analysis/generate.R` | done |
+| 4 | Baseline attribution with standard SHAP, five pairings | `pipeline/step04*`, `python/src/causal_shap_renal/attribution_baseline.py` | done |
+| 5 | LumaWarp detector over Step 4 | `pipeline/step05_lumawarp_detector.py`, `python/src/causal_shap_renal/lumawarp_contract.py` | placeholder, provider gated |
+| 6 | Causal SHAP comparison with an expert in the loop | `pipeline/step06*`, `apps/causal_shap/structural_value.py` | done (3 of 4 methods; rounds 2-3 scripted) |
+| 7 | LumaWarp detector over Step 6 | `pipeline/step07_lumawarp_reweight.py` | placeholder, provider gated |
+| 8 | Structural recovery: PC, GES, NOTEARS, LiNGAM | `pipeline/step08*`, `apps/causal_shap/discovery.py`, `apps/causal_shap/evaluation.py` (M1-M5) | library ported, runs pending |
+| 9 | Robustness to the data-generating process | `apps/causal_shap/validation/` (Credence-style) | scaffolded, pending |
+| 10 | Robustness to spaceflight-epidemiological constraints | `analysis/R/renal_stone_source_aligned_simcausal.R` (NASA-like v4 selection regime) | one regime exists, sweep pending |
+| 11 | Generalization to out-of-distribution populations | own section | pending |
+| 12 | Longitudinal extension (g-methods) | future work | not undertaken |
+| 13 | Cost-constrained recourse ("price and dice") | `apps/causal_shap/policy.py`, `action_costs.py`, `shift_estimation.py` | scaffolded, out of the paper's scope |
 
-## Implementation
+Detail for Steps 1 to 6 on the working subgraph is in
+`docs/step03_simulation_review.md`, `docs/step04_results.md`, and
+`docs/step06_results.md`. The full-DAG methods and results are in
+`docs/full_dag/RESEARCH_RECORD.md`. The LumaWarp placeholders and what is
+gated are in `docs/lumawarp/README.md` and [ADR 008](docs/decisions/008-lumawarp-detector-placeholders.md).
 
-What exists right now is the environment and the folder scaffolding, not the step logic itself. Set up both environments like this:
+## Repository map
 
-```bash
-# R
-cd r
-Rscript -e 'renv::restore(prompt = FALSE)'
-
-# Python
-cd python
-uv sync --extra discovery --extra shapley-flow --extra dev
+```
+config/           DAG spec, edge coefficients, model engines, pipeline status (YAML)
+pipeline/         Numbered driver scripts for the working subgraph, one per step
+r/                R package for the working subgraph (renv): DAG utilities,
+                   simcausal helpers, ground truth, pcalg and shapr wrappers
+python/src/       causal_shap_renal: attribution methods, discovery wrappers,
+                   evaluation, the file interchange contract, the LumaWarp contract
+python/tests/     pytest suite for causal_shap_renal
+apps/             Ported from Target DAGs. causal_shap library (teaching DAGs,
+                   discovery, PSCI v0 complexity seam, structural value function,
+                   validation, M1-M5, action selection, figures); the guided hub,
+                   the M1-M5 Workbench, the six-rung ladder app; frozen bundles; tests
+analysis/         Ported from Target DAGs. R pipeline on the full 51-node DAG and
+                   its frozen result record under analysis/output/
+references/       NASA SA-07566 DAGitty text; Robert Reynolds's 2026-07-13 files
+dag-candidates/   Core-graph node and edge CSVs
+data/             raw, interim, simulated (gitignored, regenerated from a seed);
+                   frozen_truth (committed)
+results/          attributions, discovery, evaluation, figures; detector/ (gitignored)
+site/             Quarto single-page site, deployed to GitHub Pages
+docs/             framing memo, notes, references, LumaWarp placeholder, decisions,
+                   step results, full-DAG record. Index: docs/README.md
 ```
 
-Or from the repo root: `make setup`.
+## Quickstart
 
-Below is a placeholder for each step, to be filled in as it's built.
+One Python environment for both packages (pip and a venv; ADR 007). R is
+managed by renv for the working subgraph and by `analysis/install_dependencies.R`
+for the full DAG.
 
-### Step 1: Exposure and outcome specification
+```bash
+py -3.13 -m venv .venv
+.venv/Scripts/python -m pip install -e ".[discovery,workbench,dev]"
+.venv/Scripts/python -m pytest
+```
 
-Exposure is `duration`, cumulative mission days. Outcome is `nephrolithiasis`, binary
-kidney-stone incidence - NASA's own DAG target, and the 2nd most likely reason for ISS
-emergency medical evacuation per NASA's Integrated Medical Model. Unlike the bone track
-(which needed a rodent-mechanical-testing proxy to translate to human outcomes),
-nephrolithiasis is directly, clinically observable in humans (ultrasound, CT), so no
-translational proxy is needed - a single binary outcome, logit link throughout (see
-`config/dag_spec.yaml`'s `outcome`/`outcome_type` fields). Mineralized Renal Material
-(CaOx supersaturation) has the richest quantitative evidence in the source DAG (25%
-pre-flight -> 46% post-flight elevated prevalence) and is NASA's own confirmed
-intermediate step toward stone formation, but this working subgraph collapses it
-directly onto `nephrolithiasis` rather than modeling it as a separate node - see Step 2
-below for why.
+Or `make setup-py` and `make test-py`. On macOS or Linux use `python3.13`
+and `.venv/bin/python`.
 
-### Step 2: DAG construction and expert-guided augmentation
+Working-subgraph pipeline, step by step:
 
-`config/dag_spec.yaml` is the 11-node working subgraph scoped down from Robert
-Reynolds's 53-node source DAG (SA-07566), source-aligned to the published NASA graph.
-Every node carries a `type` (`exposure`, `outcome`, `confounder`, `mediator`,
-`exogenous_confounder`, `confounder_countermeasure`, `mediator_countermeasure`), a
-`measure`, and a `source` citation; every edge carries a `status`
-(`confirmed_mechanism` / `magnitude_estimate` / `directional_only`) and its evidence
-basis. `bone_formation`/`bone_resorption` carry over from an earlier bone-fracture DAG
-track (dropped as a separate direction; they sit directly upstream in NASA's renal
-reference graph). `history_of_nephrolithiasis` (personal/family history) is the
-exogenous confounder on the `urine_chemistry` pathway - a well-established,
-independent stone-risk predictor in its own right, and a cleaner fit for this paper's
-static-DAG scope than modeling in-flight Vitamin D dynamics, which would need the
-treatment-confounder-feedback machinery (g-methods) deferred to Step 12.
+```bash
+make step02 step03 step04 step06
+```
 
-Mineralized Renal Material (CaOx supersaturation) is NASA's own confirmed intermediate
-step between `urine_chemistry` and `nephrolithiasis`, but is not a separate node here:
-it was `nephrolithiasis`'s *only* parent in the DAG, so every downstream node reached
-the outcome exclusively through it - a real problem for a repo whose whole point is
-comparing feature-attribution methods, since any method (causal or not) would correctly
-collapse 100% of the outcome's variance onto that one feature and 0% onto everything
-else. `nephrolithiasis`'s own `note` field in `config/dag_spec.yaml` and the `note` on
-the `urine_chemistry -> nephrolithiasis` edge in `config/edge_coefficients.yaml` record
-exactly how the two collapsed steps' coefficients (0.70 and 0.90) combine, and which of
-the DAG's other coefficients were rescaled by the same factor as a result.
+Full-DAG record, validation, and the apps:
 
-`r/R/dag_utils.R` turns the spec into a `dagitty` object (`dag_spec_to_dagitty()`) with
-a deterministic, reproducible layered layout (`dag_spec_positions()` - longest-path
-depth from a root, no `dagitty::graphLayout()` randomness). `pipeline/step02_dag_construction.R`
-writes it to `data/interim/renal_stone_working_dag.txt`; a browsable copy lives at
-`docs/renal_stone_working_subgraph.txt` (regenerate both together, see `docs/dag_README.md`
-for the exact `make step02` + copy commands and for pasting into https://dagitty.net/dags.html).
+```bash
+make full-dag-validate      # R validator + frozen-output hash gate
+make hub                    # guided discovery hub, http://localhost:8002
+make workbench              # M1-M5 Workbench, http://localhost:8001
+make ladder                 # six-rung teaching app, http://localhost:8000
+make site                   # quarto render site
+```
 
-### Step 3: Synthetic data generation
+The apps run locally by design; a hosted instance cannot pin the environment
+behind the published results.
 
-`r/R/simcausal_helpers.R` turns `config/dag_spec.yaml` (topology) + `config/edge_coefficients.yaml`
-(path coefficients, root-node distributions, the `urinary_calcium_excretion` x
-`hydration_fluid_intake` interaction term, outcome calibration target) into a `simcausal`
-structural equation model, entirely config-driven - a coefficient changing in the YAML
-never requires touching the R code. `pipeline/step03_simulate_data.R` writes
-`data/simulated/renal_stone_simulated.parquet` (gitignored - regenerated from a seed,
-n = 1,000 default, seed fixed at 20260812 for byte-identical reruns).
+## The site
 
-Three things worth knowing if you're reading the code: `simcausal::node()` rejects any
-name containing `_`, so every snake_case id is aliased to an underscore-free name
-internally and mapped back on the output columns (`node_alias()`/`dealias_columns()`).
-Binary root nodes (`sex`, `history_of_nephrolithiasis`) are mean-centered - not scaled -
-wherever they enter another node's formula, so they don't shift a downstream
-standardized node's mean away from 0 (`zterm()`). Residual/noise SD per node is
-calibrated empirically (`empirical_residual_sd()` - simulate the DAG built so far and
-measure the actual variance of the new node's formula against it) rather than assumed
-independent, since some nodes' parents reach them through more than one path.
-`nephrolithiasis`'s logit intercept is likewise calibrated empirically against
-`outcome_calibration`'s target prevalence (`calibrate_intercept()`, via `uniroot()`).
-See `docs/step03_simulation_review.md` for a full run review: coefficient recovery
-(every node's generating formula refit via `lm()`/`glm()` against the simulated data and
-compared back to the YAML), root-node and outcome marginals, and per-node distributions.
+<https://ahhatype.github.io/causal-shap-spaceflight-renal-stones/> is the
+single-page argument: two playbooks, why deeper nodes wash out, the six-rung
+intervention playbook with its two placeholder rungs, the evidence from both
+testbeds, the detector and filter placeholders, and what the hub can claim.
+It deploys from `site/` through `.github/workflows/publish-site.yml`; enable
+Pages with "GitHub Actions" as the source. The root `index.html` redirects
+there.
 
-### Step 4: Baseline attribution with standard SHAP
+## What is gated
 
-Two parts: a DAG-derived ground truth (R, `pipeline/step04a_ground_truth.R`), computed
-independently of and before any attribution method so there's no leakage; and the five
-explainer/model pairings themselves (Python, `pipeline/step04_baseline_shap.py`). The
-model's feature set is every non-outcome node in `config/dag_spec.yaml`
-(`model_features()` in `r/R/dag_utils.R` / `python/src/causal_shap_renal/io_contract.py`
-- read once from the DAG spec, not hand-listed in either language, so it can never drift
-out of sync between the ground truth and the attribution models). Five genuine mediators
-sit in that feature set (`bone_formation`, `bone_resorption`, `vitamin_d_inflight`,
-`urinary_calcium_excretion`, `urine_chemistry`), so the mediation-testing question - does
-a causally faithful method split `duration`'s effect between `duration` and its
-mediators, rather than double-counting it on `duration` - has somewhere real to land.
-
-**Ground truth (`data/frozen_truth/ground_truth_total_effects.parquet`).** For each of
-the 10 candidate features, `r/R/ground_truth.R` computes a standardized total effect as
-an interventional (`do()`-style) risk difference, not a correlation or a fitted model's
-coefficient:
-
-1. Two levels are defined per feature - `hi` and `lo` - depending on what kind of node
-   it is: binary root nodes (`sex`, `history_of_nephrolithiasis`) use 1 vs. 0;
-   raw-unit continuous roots (`duration`, `hydration_fluid_intake`) use their own
-   mean + SD vs. mean − SD, in real-world units; every other (already-standardized)
-   continuous node uses +1 vs. −1.
-2. `simcausal`'s `action()` mechanism forces the feature to each constant in turn,
-   severing its normal causal parents (`do(feature = hi)` / `do(feature = lo)`), and
-   simulates the rest of the calibrated 11-node DAG forward from there.
-3. Both counterfactual draws come from a single `sim()` call sharing one seed - common
-   random numbers - so every other node's noise term is identical between the two
-   scenarios; only what the intervention itself changes differs. n = 50,000 per
-   scenario, matching the sibling repo's own precedent for this exact computation.
-4. `true_total_effect = mean(nephrolithiasis | do(feature = hi)) - mean(nephrolithiasis | do(feature = lo))`
-   - the change in P(nephrolithiasis = 1) from moving the feature from its low level to
-     its high level, marginalized over the rest of the DAG's randomness.
-   `true_total_effect_abs` is also stored.
-
-Because this comes directly from `config/edge_coefficients.yaml`'s known structural
-equations rather than from any fitted model or SHAP output, it's a fixed target every
-attribution method (Step 4 onward) can be scored against, computed once and frozen.
-
-**Attributions (`results/attributions/step04_baseline_shap.parquet`).** TreeExplainer x
-{Random Forest, XGBoost} (interventional), LinearExplainer x logistic regression
-(empirical covariance masker), and KernelExplainer/PermutationExplainer x XGBoost as a
-black box (SuperLearner deferred - see `docs/decisions/005-superlearner-deferred.md`).
-Link function is logit throughout; see `attribution_baseline.py`'s module docstring for
-the one scale exception (`tree_shap` + `random_forest` has no logit margin to sit on and
-stays on the probability scale, unlike the other four pairings).
-
-### Step 6: Causal SHAP comparison and human-in-the-loop iteration
-
-Full results and interpretation: `docs/step06_results.md`.
-
-Three causally-informed SHAP methods, each run across 3 iteration rounds: round 1 uses
-a genuinely naive/uninformed version of that method's causal input; rounds 2-3 apply a
-scripted revision heuristic (documented per-method in `docs/step06_results.md`'s
-"LLM-made decisions" table) standing in for the methods doc's "Robert reviews and
-revises" step, since no real domain expert reviewed these rounds - every round-2/3
-number is explicitly flagged as such, not presented as real expert judgment.
-
-- **Asymmetric Shapley Values / ASV** (`shapr`) - runs on the same XGBoost model,
-  causal ordering from the DAG's topological depth layers.
-- **Ng et al.'s Causal SHAP** (custom implementation of the paper's Algorithm 1, PC +
-  IDA via `pcalg` in R feeding a Python Monte Carlo causal-value-function estimator) -
-  round 1 is genuinely all-zero: PC's skeleton pruning left the outcome with zero
-  discovered edges at this DAG's n=1,000/alpha=0.05 (a real, diagnosed finding, not a
-  bug - see `docs/step06_results.md`), so the method's own weighting mechanism
-  correctly degenerates. Once reconnected (round 2), this method reaches the best rank
-  agreement of anything run in this project so far (τ=0.71).
-- **Shapley Flow** (`shapflow`) - round 1 declares no inter-feature causal edges at
-  all (every feature a direct, independent model input); rounds 2-3 add back true
-  mediation edges one at a time.
-
-`results/attributions/step06_hitl_summary.parquet` (via `pipeline/step06_hitl_iteration.py`)
-scores every (method, engine, round) combination against Step 4's ground truth -
-Kendall's τ, Spearman's ρ, top-5 recovery, NDCG@5 - reading only already-written
-output per method's own driver script, since R and Python never call each other live
-(ADR-001).
-
-### Step 8: Structural recovery comparison
-_write-up to come_
-
-### Step 9: Robustness to the data-generating process
-_write-up to come_
-
-### Step 10: Robustness to spaceflight-epidemiological constraints
-_write-up to come_
-
-### Step 11: Generalization to out-of-distribution populations
-_write-up to come_
-
-Steps 5 and 7 (LumaWarp) live in a separate repo. Steps 12 and 13 are future work and out of scope, respectively, see the Protocol section above.
+LumaWarp is a proprietary Lucidity Sciences tool. The public interface
+(channels, flags, provenance) is in the repository; the runtime, the bridge
+that reproduces its Explain reduction, block-level results, and the working
+paper are not, and stay out until Lucidity signs off. The paths are listed
+in `.gitignore` under the LumaWarp boundary.
 
 ## License
 
-This project is licensed under the [GNU General Public License v3.0](LICENSE), share and share alike: you're free to use, modify, and distribute this work, provided derivative works remain open under the same license.
+GPL-3.0-or-later (`LICENSE`), for the whole repository. The code ported from
+Target DAGs was originally released under MIT by the same author and was
+relicensed under GPL-3.0-or-later on consolidation; `THIRD_PARTY_NOTICES.md`
+records the origin. External source material remains subject to its original
+terms.

@@ -53,3 +53,52 @@ CLAUDE.md
 # Docs
 docs/methods
 docs/STATUS.md
+
+# --- Added with the causal-shap-target-dags consolidation (ADR 007) ---
+
+# Quarto site render output (site/_site is built by CI; never committed)
+site/_site/
+site/.quarto/
+.pytest_cache/
+Thumbs.db
+/build/
+/dist/
+.scratch/
+
+# Local launcher configuration (detector paths, provider env) is machine-specific.
+run_hub.local.bat
+
+# PNG and CSV outputs are the canonical checked artifacts under analysis/output;
+# duplicate PDFs stay local.
+analysis/output/**/*.pdf
+
+# Battery pilots stay local until a pinned full run receives scientific review.
+analysis/output/battery_v1/
+analysis/output/battery_v2/
+
+# --- LumaWarp boundary (ADR 008). The detector runtime, the bridge that
+# reproduces Lucidity's Explain reduction, block-level results, and the
+# working paper stay outside git until Lucidity Sciences signs off. ---
+analysis/output/lumawarp_v1/
+apps/bundles/lumawarp_v1/
+apps/bundles/hapri_demo/
+apps/causal_shap/lumawarp.py
+apps/private_lumawarp.py
+apps/lw_studio.py
+apps/tests/test_lumawarp.py
+apps/private_workbench_build_app.py
+apps/workbench/build_app.py
+docs/LUMAWARP_EXPLAIN_GUIDE.md
+paper/
+
+# Clinical-row inputs never enter the public Workbench bundle.
+apps/workbench/data/sample_train.csv
+apps/workbench/data/mimic_expert_dag.csv
+train.impute.csv
+test.impute.csv
+
+# Detector outputs are produced locally by a private provider (Steps 5 and 7).
+results/detector/
+
+# Local Claude Code session config (launch.json etc.)
+.claude/

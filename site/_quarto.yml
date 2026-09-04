@@ -1,0 +1,57 @@
+project:
+  type: website
+  output-dir: _site
+  render:
+    - index.qmd
+
+execute:
+  freeze: true
+
+website:
+  title: "Space SHAP"
+  description: "Two playbooks for a NASA renal-stone DAG: prediction is the default; intervention casts a wider net, then prunes."
+  site-url: https://ahhatype.github.io/causal-shap-spaceflight-renal-stones/
+  favicon: favicon.svg
+  search: false
+  page-navigation: false
+  navbar:
+    background: light
+    collapse: true
+    left:
+      - text: "Playbooks"
+        href: index.qmd#playbooks
+      - text: "Depth"
+        href: index.qmd#depth
+      - text: "Pipeline"
+        href: index.qmd#pipeline
+      - text: "Evidence"
+        href: index.qmd#evidence
+      - text: "Detector"
+        href: index.qmd#detector
+      - text: "Status"
+        href: index.qmd#status
+    right:
+      - icon: github
+        aria-label: "GitHub repository"
+        href: https://github.com/ahhatype/causal-shap-spaceflight-renal-stones
+  page-footer:
+    left: "ACIC 2026 Causal SHAP → Target DAGs → Spaceflight renal stones"
+    right:
+      - text: "Original ACIC project"
+        href: https://www.tao-rwd.com/acic-2026/causal-shap
+      - text: "Target DAGs site"
+        href: https://andystats.github.io/causal-shap-target-dags/
+      - text: "Research record"
+        href: https://github.com/ahhatype/causal-shap-spaceflight-renal-stones/tree/main/docs
+
+format:
+  html:
+    theme:
+      - cosmo
+      - theme.scss
+    toc: false
+    anchor-sections: false
+    smooth-scroll: true
+    grid:
+      body-width: 1180px
+      gutter-width: 1.5rem

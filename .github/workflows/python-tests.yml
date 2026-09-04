@@ -1,0 +1,42 @@
+name: Python tests
+
+on:
+  push:
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+          cache: pip
+          cache-dependency-path: pyproject.toml
+      - name: Install both packages with discovery and Workbench extras
+        run: python -m pip install -e ".[discovery,workbench,dev]"
+      - name: Compile
+        run: python -m compileall -q apps/causal_shap apps/stages apps/tests apps/workbench apps/hub apps/app.py python/src pipeline
+      - name: Test (working-subgraph package and ported library)
+        run: python -m pytest -q
+      - name: Smoke-test the Shiny apps
+        run: |
+          (cd apps/workbench && python -c "import app")
+          (cd apps && python -c "import hub.app")
+      - name: Smoke-test the M1-M5 battery runner
+        run: python analysis/run_m1_m5_battery.py --example toy --output-dir "${{ runner.temp }}/battery-smoke"
+      - name: Validate bundles and frozen full-DAG output
+        working-directory: apps
+        run: python -m causal_shap.build validate
+      - name: Step 5 placeholder exits with the gated-provider message
+        run: |
+          set +e
+          python pipeline/step05_lumawarp_detector.py --attributions apps/bundles/manifest.json 2>/dev/null
+          code=$?
+          set -e
+          echo "exit $code (non-zero expected: no provider / not a parquet)"
+          test "$code" -ne 0

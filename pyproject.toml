@@ -1,0 +1,67 @@
+[build-system]
+requires = ["setuptools>=77"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "causal-shap-spaceflight-renal-stones"
+version = "0.2.0"
+description = "Causal SHAP for spaceflight renal-stone risk: the working-subgraph pipeline (causal_shap_renal) and the full-DAG library and apps (causal_shap) consolidated from causal-shap-target-dags."
+readme = "README.md"
+license = "GPL-3.0-or-later"
+requires-python = ">=3.11,<3.14"
+# One dependency set for both Python packages (ADR 007). Pins follow the
+# stricter of the two source projects wherever they overlapped.
+dependencies = [
+    "numpy>=2.0,<3",
+    "pandas>=2.2,<3",
+    "scipy>=1.14,<2",
+    "scikit-learn>=1.6,<2",
+    "networkx>=3.3,<4",
+    "matplotlib>=3.9,<4",
+    "shap>=0.48,<0.53",
+    "xgboost>=3.0,<4",
+    # shap's own numba constraint resolves to an ancient numba/llvmlite on some
+    # platforms; a modern, still-compatible numba forces a sane llvmlite.
+    "numba>=0.60,<0.63",
+    "pyarrow",
+    "pyyaml>=6.0,<7",
+    "shiny>=1.4,<2",
+]
+
+[project.optional-dependencies]
+# Step 8 discovery and the hub's live PC/GES path (causal-learn pinned: 0.x API).
+discovery = ["causal-learn==0.1.4.8", "lingam"]
+# Standalone M1-M5 Workbench: live discovery plus graph visualization.
+workbench = ["causal-learn==0.1.4.8", "pyvis>=0.3.2,<0.4"]
+# Step 6: Shapley Flow.
+shapley-flow = ["shapflow"]
+# Local build scripts only (CVAE validation generator, NOTEARS via gcastle).
+heavy = ["torch>=2.4,<3", "gcastle>=1.0.3"]
+# Quarto site execution environment; the site renders with no code execution.
+site = ["jupyter>=1.1,<2"]
+dev = ["pytest"]
+
+# NOTEARS (Step 8, https://github.com/xunzheng/notears) is deliberately not
+# declared. Its git dependency on python-igraph drags the resolver toward an
+# ancient numba/llvmlite pin. Install it into its own isolated venv when
+# Step 8 needs it, or use the gcastle implementation from the `heavy` extra:
+#   py -3.13 -m venv .venv-notears
+#   .venv-notears/Scripts/python -m pip install "notears @ git+https://github.com/xunzheng/notears.git"
+
+[tool.setuptools.packages.find]
+# Two package roots, one distribution: apps/ holds the library and Shiny apps
+# ported from causal-shap-target-dags; python/src holds the working-subgraph
+# pipeline package. Flat-layout auto-discovery would fail at the repo root.
+where = ["apps", "python/src"]
+include = ["causal_shap*", "stages*", "workbench*", "hub*", "causal_shap_renal*"]
+
+[tool.setuptools.package-data]
+workbench = [
+    "data/simcausal_train.csv",
+    "data/ground_truth_edges.csv",
+    "data/true_total_effects.json",
+    "data/README.md",
+]
+
+[tool.pytest.ini_options]
+testpaths = ["python/tests", "apps/tests"]

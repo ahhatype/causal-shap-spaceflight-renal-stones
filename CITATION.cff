@@ -1,0 +1,13 @@
+cff-version: 1.2.0
+message: "If you use this research software, please cite the repository and the method papers listed in docs/references and docs/full_dag."
+title: "Causal SHAP: Spaceflight-Induced Renal Stones"
+type: software
+authors:
+  - family-names: Wilson
+    given-names: Andy
+repository-code: "https://github.com/ahhatype/causal-shap-spaceflight-renal-stones"
+url: "https://ahhatype.github.io/causal-shap-spaceflight-renal-stones/"
+license: GPL-3.0-or-later
+version: 0.2.0
+date-released: 2026-09-03
+notes: "Consolidates andystats/causal-shap-target-dags (MIT, 2026-07-11) per docs/decisions/007-target-dags-consolidation.md. Author order for the paper is unconfirmed; see docs/full_dag/RESEARCH_RECORD.md."

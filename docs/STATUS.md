@@ -2,20 +2,33 @@
 
 Tracks the same 13 steps as the methods doc (docs/methods), step by step.
 Update this file as work lands. `config/pipeline_status.yaml` is the
-machine-readable mirror of this table.
+machine-readable mirror of this table. Updated 2026-09-03 with the
+causal-shap-target-dags consolidation (ADR 007) and the LumaWarp
+placeholders (ADR 008).
 
 | Step | Label | Status | Notes |
 |---|---|---|---|
-| 1 | Exposure/outcome specification | done | Cumulative mission days as exposure; nephrolithiasis (binary incidence) as the sole outcome. CaOx supersaturation (Mineralized Renal Material) is an internal mediator only, not a modeled outcome. See `config/dag_spec.yaml`. |
-| 2 | DAG construction and expert-guided augmentation | done | 14-node working subgraph scoped from Robert's 53-node source DAG (SA-07566). See `config/dag_spec.yaml`. |
-| 3 | Synthetic data generation | done | simcausal structural equations (`config/edge_coefficients.yaml`), coefficients still training-purposes estimates pending Robert's calibration sign-off. See `docs/step03_simulation_review.md`. |
+| 1 | Exposure/outcome specification | done | Cumulative mission days as exposure; nephrolithiasis (binary incidence) as the sole outcome. See `config/dag_spec.yaml`. |
+| 2 | DAG construction and expert-guided augmentation | done | 14-node working subgraph in `config/dag_spec.yaml`. Full 51-node source DAG, the Reynolds ingest, and the concordance record now live under `analysis/` and `references/`. |
+| 3 | Synthetic data generation | done | Working subgraph from `config/edge_coefficients.yaml`; full DAG from the DAGitty text via `analysis/generate.R`. Coefficients still pending Robert's calibration sign-off. |
 | 4 | Baseline attribution with standard SHAP | done | 5 explainer x model pairings vs. interventional ground truth. See `docs/step04_results.md`. |
-| 5 | Complexity-aware reweighting | deferred, external | LumaWarp. Owned by Lexi/Andy, runs in a separate repo. Not built here. |
-| 6 | Causal SHAP comparison + human-in-the-loop | done | 3 methods run (ASV, Ng et al. Causal SHAP, Shapley Flow) across 3 scripted-revision rounds. Rounds 2-3 are a scripted heuristic, not real expert review. See `docs/step06_results.md`. |
-| 7 | Complexity-aware reweighting of Step 6 outputs | deferred, external | LumaWarp reassessment. Owned by Lexi/Andy, runs in a separate repo. Not built here. |
-| 8 | Structural recovery comparison | pending | PC (reused from Step 6), GES, NOTEARS, LiNGAM. Not yet run. |
-| 9 | Robustness to the data-generating process | pending, extension | May be reported in compressed form. |
-| 10 | Robustness to spaceflight-epidemiological constraints | pending, extension | Selection and sampling degradation regimes. |
+| 5 | LumaWarp detector over Step 4 | placeholder | Public contract (`python/src/causal_shap_renal/lumawarp_contract.py`) and driver (`pipeline/step05_lumawarp_detector.py`) in the repo; the provider stays outside until Lucidity signs off. See `docs/lumawarp/README.md`. |
+| 6 | Causal SHAP comparison + human-in-the-loop | done | 3 methods run (ASV, Ng et al. Causal SHAP, Shapley Flow) across 3 scripted-revision rounds. Rounds 2-3 are a scripted heuristic, not real expert review. Next: run the ported Heskes-style structural value function (`apps/causal_shap/structural_value.py`) as the fourth method. See `docs/step06_results.md`. |
+| 7 | LumaWarp detector over Step 6 | placeholder | Same contract and gate as Step 5; driver `pipeline/step07_lumawarp_reweight.py`. |
+| 8 | Structural recovery comparison | pending | PC (reused from Step 6), GES, NOTEARS, LiNGAM. Discovery wrappers and the M1-M5 battery are ported (`apps/causal_shap/discovery.py`, `evaluation.py`, `analysis/run_m1_m5_battery.py`); not yet run on the working subgraph. Add recovery-by-depth and run MGM PC-Stable (causalMGM) alongside plain PC, since the outcome is binary and the Gaussian test pruned every edge into it. |
+| 9 | Robustness to the data-generating process | pending, extension | Credence-style validation scaffolding ported (`apps/causal_shap/validation/`). Add a nonlinear-edge generator to price the linearity assumption. |
+| 10 | Robustness to spaceflight-epidemiological constraints | pending, extension | One selection regime exists on the full DAG (NASA-like v4). Add mediator measurement noise for E3. |
 | 11 | Generalization to out-of-distribution populations | pending, own section | Distinct generalization question, not a robustness pass. |
-| 12 | Longitudinal extension | future work | Treatment-confounder feedback (g-methods for time-varying confounder-mediators); not undertaken in this paper. No concrete example currently in the working graph - see `docs/methods` §12/Step 12. |
-| 13 | Counterfactual recourse extension (DiCE) | out of scope | For Andy/Lexi to define and own. |
+| 12 | Longitudinal extension | future work | Treatment-confounder feedback (g-methods); no concrete example in the working graph. |
+| 13 | Counterfactual recourse extension (DiCE / price and dice) | out of scope | Budget-constrained action selection scaffolded in `apps/causal_shap/policy.py`; for Andy/Lexi to define. |
+
+## Framing and placeholders (2026-09-03)
+
+- Reframing memo: `docs/framing/prediction-vs-intervention.md`. Whiteboard
+  transcription: `docs/notes/2026-09-01-whiteboard-transcription.md`.
+- Verified citations for the reframing's claims, with gaps:
+  `docs/references/claims-to-citations.md`.
+- LumaWarp expanded treatment and dichromatic sensitivity filter:
+  `docs/lumawarp/README.md` (placeholder outline; results gated).
+- Experiments E1 to E3 (two- and three-layer trees, noise on deep layers)
+  are specified, not run.

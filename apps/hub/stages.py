@@ -1,0 +1,719 @@
+"""Pure compute behind every hub stage: no Shiny, safe on a worker thread.
+
+Each ``run_*`` function takes plain values, returns plain values, and raises on
+failure; the app wraps them in extended tasks and turns exceptions into error
+cards. Two rules inherited from the program's review history are enforced here
+rather than in the UI: the attribution model is always fit on exactly the
+feature tuple being attributed (a stage-2 model fed a stage-6 subset raises a
+sklearn feature mismatch), and the policy stage always abducts from the full
+SCM frame, never from a feature subset.
+"""
+
+from __future__ import annotations
+
+import base64
+import io
+from dataclasses import dataclass
+from pathlib import Path
+from typing import Mapping, Sequence
+
+import networkx as nx
+import numpy as np
+import pandas as pd
+
+from causal_shap.action_costs import ActionSpec, CostModel
+from causal_shap.calibrate import CalibratedSCM, fit_linear_logistic_scm
+from causal_shap.discovery import identify_adjustment_sets, run_ges, run_pc
+from causal_shap.evaluation import m1_concordance, m3_sufficiency_transfer
+from causal_shap.graph_state import GraphProvenance, GraphState
+from causal_shap.policy import ActionRanking, InterventionProblem, abduct, rank_actions
+from causal_shap.seeds import SEED_ACTION_ABDUCTION, SEED_HUB_DEMO
+from causal_shap.shift_estimation import ShiftEstimate, estimate_shift_effect, estimates_frame
+from causal_shap.structural_value import compute_structural_asymmetric_shap
+from workbench.attribution import (
+    _causal_shap_engine,
+    compare_shap_rankings,
+    compute_standard_shap,
+    fit_conditional_models,
+    mean_abs_shap,
+    prediction_callable,
+)
+
+INK = "#111111"
+AMBER = "#b45309"
+MUTED = "#94a3b8"
+
+
+# ---------------------------------------------------------------------------
+# Outcome model: the ladder, factored once
+# ---------------------------------------------------------------------------
+@dataclass(frozen=True)
+class ModelFit:
+    model: object
+    task: str                    # "binary" | "continuous"
+    features: tuple[str, ...]
+    stat_name: str               # "holdout AUC" | "holdout R2"
+    stat_value: float
+    model_type: str
+    seed: int
+
+
+def fit_outcome_model(
+    data: pd.DataFrame,
+    features: Sequence[str],
+    outcome: str,
+    *,
+    model_type: str = "gbm",
+    seed: int = SEED_HUB_DEMO,
+) -> ModelFit:
+    """Fit the predictor and report an honest held-out statistic.
+
+    AUC for a binary outcome, R2 for a continuous one — a continuous outcome
+    has no AUC, and pretending otherwise was a documented plan defect.
+    """
+    from sklearn.metrics import r2_score, roc_auc_score
+    from sklearn.model_selection import train_test_split
+
+    frame = data[list(features) + [outcome]].dropna()
+    X, y = frame[list(features)], frame[outcome]
+    is_binary = len(y.unique()) <= 2
+    model_class, kwargs = _model_class(model_type, is_binary)
+
+    # Stratify when we can: an unstratified split of a rare binary outcome can
+    # hand the trainer a single class and crash it mid-demo.
+    can_split = len(frame) >= 8 and (not is_binary or y.value_counts().min() >= 2)
+    if can_split:
+        stratify = y if is_binary else None
+        X_train, X_hold, y_train, y_hold = train_test_split(
+            X, y, test_size=0.25, random_state=seed, stratify=stratify
+        )
+        probe = model_class(**kwargs).fit(X_train, y_train)
+        if is_binary:
+            if len(y_hold.unique()) == 2:
+                stat = float(roc_auc_score(y_hold, probe.predict_proba(X_hold)[:, 1]))
+            else:
+                stat = float("nan")
+            stat_name = "holdout AUC"
+        else:
+            stat = float(r2_score(y_hold, probe.predict(X_hold)))
+            stat_name = "holdout R2"
+    else:
+        stat = float("nan")
+        stat_name = "holdout AUC" if is_binary else "holdout R2"
+
+    if is_binary and y.value_counts().min() < 1:
+        raise ValueError(f"Outcome {outcome} has a single class; nothing to model")
+    model = model_class(**kwargs).fit(X, y)
+    return ModelFit(
+        model=model,
+        task="binary" if is_binary else "continuous",
+        features=tuple(features),
+        stat_name=stat_name,
+        stat_value=stat,
+        model_type=model_type,
+        seed=seed,
+    )
+
+
+def _model_class(model_type: str, is_binary: bool):
+    if model_type == "gbm":
+        from sklearn.ensemble import GradientBoostingClassifier, GradientBoostingRegressor
+
+        cls = GradientBoostingClassifier if is_binary else GradientBoostingRegressor
+        return cls, dict(n_estimators=100, max_depth=4, random_state=42)
+    if model_type == "rf":
+        from sklearn.ensemble import RandomForestClassifier, RandomForestRegressor
+
+        cls = RandomForestClassifier if is_binary else RandomForestRegressor
+        return cls, dict(n_estimators=100, max_depth=6, random_state=42)
+    if model_type == "linear":
+        from sklearn.linear_model import LinearRegression, LogisticRegression
+
+        if is_binary:
+            return LogisticRegression, dict(max_iter=1000)
+        return LinearRegression, {}
+    raise ValueError(f"Unknown model type: {model_type!r}")
+
+
+# ---------------------------------------------------------------------------
+# Stage 2: naive SHAP benchmark
+# ---------------------------------------------------------------------------
+def run_naive_shap(
+    data: pd.DataFrame,
+    features: Sequence[str],
+    outcome: str,
+    *,
+    model_type: str,
+    n_background: int = 100,
+    seed: int = SEED_HUB_DEMO,
+) -> dict[str, object]:
+    fit = fit_outcome_model(data, features, outcome, model_type=model_type, seed=seed)
+    shap_df = compute_standard_shap(
+        fit.model, data.dropna(subset=list(features)), list(features),
+        n_background=n_background, seed=seed,
+    )
+    importance = mean_abs_shap(shap_df)
+    total = float(importance.sum())
+    shares = {name: 100.0 * value / total for name, value in importance.items()} if total else {}
+    return {
+        "fit": fit,
+        "shap_df": shap_df,
+        "importance": importance.to_dict(),
+        "shares": shares,
+        "plot": bar_chart(importance.to_dict(), "Naive SHAP — what the model listened to", AMBER),
+    }
+
+
+# ---------------------------------------------------------------------------
+# Stage 3: discovery
+# ---------------------------------------------------------------------------
+def run_discovery(
+    data: pd.DataFrame,
+    features: Sequence[str],
+    outcome: str,
+    *,
+    algorithm: str,
+    alpha: float,
+    truth: GraphState | None,
+) -> dict[str, object]:
+    columns = list(dict.fromkeys(list(features) + [outcome]))
+    frame = data[columns].dropna()
+    if algorithm == "pc":
+        result = run_pc(frame, alpha=alpha)
+    elif algorithm == "ges":
+        result = run_ges(frame)
+    else:
+        raise ValueError(f"Unknown discovery algorithm: {algorithm!r}")
+
+    state = GraphState.from_pdag(
+        result.pdag,
+        GraphProvenance(
+            source="discovered",
+            algorithm=result.algorithm,
+            params=dict(result.params),
+            n_rows=result.n_rows,
+        ),
+    )
+    payload: dict[str, object] = {"graph": state}
+    if truth is not None:
+        truth_view = _induced(truth, state.nodes)
+        payload["m1"] = m1_concordance(state.digraph(), truth_view)
+    return payload
+
+
+def _induced(truth: GraphState, nodes: Sequence[str]) -> nx.DiGraph:
+    keep = set(nodes)
+    view = nx.DiGraph()
+    view.add_nodes_from(name for name in truth.nodes if name in keep)
+    view.add_edges_from(
+        (a, b) for a, b in truth.directed_edges if a in keep and b in keep
+    )
+    return view
+
+
+# ---------------------------------------------------------------------------
+# Stage 4: depth-detector flags (module may be absent on a clean clone)
+# ---------------------------------------------------------------------------
+def run_flags(
+    flags_id: str,
+    outcome: str,
+    feature_names: Sequence[str],
+    *,
+    block_root: Path | None,
+    preference: str | None = None,
+    data: pd.DataFrame | None = None,
+) -> dict[str, object]:
+    import importlib.util
+
+    if importlib.util.find_spec("causal_shap.node_flags") is None:
+        return {
+            "status": "module_missing",
+            "message": "The depth-detector module is not present in this checkout.",
+            "records": [],
+            "halos": {},
+            "provenance": "",
+        }
+
+    from causal_shap.node_flags import NodeFlagRequest, select_flag_provider
+
+    try:
+        provider = select_flag_provider(preference, block_root=block_root)
+    except (ValueError, RuntimeError) as error:
+        # A misconfigured detector is an answerable state, not a stack trace.
+        return {
+            "status": "unavailable",
+            "message": (
+                f"{error}. To enable the live arm on this machine, set "
+                "CAUSAL_SHAP_FLAG_PROVIDER=module:ClassName in run_hub.local.bat "
+                "and restart the hub."
+            ),
+            "records": [],
+            "halos": {},
+            "provenance": "",
+        }
+    result = provider.flags(
+        NodeFlagRequest(
+            dataset_id=flags_id, outcome=outcome,
+            feature_names=tuple(feature_names), data=data,
+        )
+    )
+    halos = {name: "h0" for name in result.flagged("h0")} if result.ran else {}
+    for channel in ("h1", "eig"):
+        if result.ran:
+            for name in result.flagged(channel):
+                halos.setdefault(name, channel)
+    return {
+        "status": result.status,
+        "message": result.provenance,
+        "records": result.per_feature.to_dict("records") if result.ran else [],
+        "halos": halos,
+        "provenance": result.provenance,
+        "provider": f"{result.provider_name} v{result.provider_version}",
+        "warnings": list(result.warnings),
+        "cleared": result.cleared_for_circulation,
+    }
+
+
+# ---------------------------------------------------------------------------
+# Surgery scorecard (cheap; recomputed per edit on the main thread)
+# ---------------------------------------------------------------------------
+def surgery_scorecard(
+    graph: GraphState,
+    focus: str | None,
+    outcome: str,
+    truth: GraphState | None,
+) -> dict[str, object]:
+    """Graph-level honesty always; a lever's identification story only when
+    the surgeon has nominated one by clicking it. No lever is presumed."""
+    digraph = graph.digraph()
+    card: dict[str, object] = {
+        "source": graph.provenance.source,
+        "n_undirected": graph.n_undirected_pairs,
+        "n_edges": len(graph.directed_edges),
+        "ledger": [
+            f"{entry.kind} {entry.edge[0]} → {entry.edge[1]}"
+            + (f" — {entry.rationale}" if entry.rationale else "")
+            for entry in graph.provenance.constraint_ledger
+        ],
+    }
+    if focus is not None and focus in digraph and outcome in digraph and focus != outcome:
+        card["focus"] = focus
+        candidates = identify_adjustment_sets(digraph, focus, outcome)
+        minimal = candidates.get("minimal", {})
+        card["adjustment"] = sorted(minimal.get("variables", []))
+        card["adjustment_valid"] = bool(minimal.get("valid", False))
+    if truth is not None:
+        truth_view = _induced(truth, graph.nodes)
+        card["m1"] = m1_concordance(digraph, truth_view)
+        if (
+            focus is not None
+            and focus in truth_view and outcome in truth_view and focus != outcome
+        ):
+            m3 = m3_sufficiency_transfer(digraph, truth_view, focus, outcome)
+            card["m3_valid_in_true"] = bool(m3.get("valid_in_true", False))
+    return card
+
+
+# ---------------------------------------------------------------------------
+# Stage 6: causal SHAP, two arms
+# ---------------------------------------------------------------------------
+def run_causal_shap(
+    data: pd.DataFrame,
+    features: Sequence[str],
+    outcome: str,
+    graph: GraphState,
+    *,
+    arm: str,
+    model_type: str,
+    truth_effects: Mapping[str, float] | None,
+    n_perms: int = 32,
+    n_background: int = 16,
+    n_instances: int = 32,
+    seed: int = SEED_HUB_DEMO,
+) -> dict[str, object]:
+    """Attribute on the CURRENT graph; the graph decides who gets attributed.
+
+    This mirrors the frozen record's methodology, where the NASA attribution
+    runs over the outcome's ancestors: a feature with no directed path to the
+    outcome under the current graph has a structural causal share of exactly
+    zero, by construction rather than estimation. That is what makes surgery
+    matter here - flip an edge and a node's very eligibility changes.
+
+    The naive benchmark deliberately stays on the FULL feature set: it is the
+    thing being argued with.
+    """
+    features = tuple(features)
+    fit = fit_outcome_model(data, features, outcome, model_type=model_type, seed=seed)
+    naive_df = compute_standard_shap(
+        fit.model, data.dropna(subset=list(features)), list(features),
+        n_background=100, seed=seed,
+    )
+
+    digraph = graph.digraph()
+    ancestors = nx.ancestors(digraph, outcome) if outcome in digraph else set()
+    attributed = tuple(f for f in features if f in ancestors)
+    excluded = tuple(f for f in features if f not in ancestors)
+    if not attributed:
+        raise ValueError(
+            "No selected feature is an ancestor of the outcome under the "
+            "current graph; there is nothing to causally attribute"
+        )
+    causal_fit = (
+        fit_outcome_model(data, attributed, outcome, model_type=model_type, seed=seed)
+        if excluded else fit
+    )
+    if arm == "structural":
+        fitted = fit_linear_logistic_scm(
+            data[list(graph.nodes)].dropna(), digraph, seed=seed,
+            n_undirected_pairs=graph.n_undirected_pairs,
+        )
+        scm = fitted.scm
+        scm_frame = data[list(scm.order)].dropna()
+        complete = data[list(attributed)].dropna()
+        evaluation = complete.sample(min(n_instances, len(complete)), random_state=seed)
+        background_rows = scm_frame.sample(min(n_background, len(scm_frame)), random_state=seed + 1)
+        background = scm.recover_exogenous(background_rows, seed=seed)
+        feature_edges = [
+            (a, b) for a, b in digraph.edges
+            if a in set(attributed) and b in set(attributed)
+        ]
+        result = compute_structural_asymmetric_shap(
+            prediction_callable(causal_fit.model, list(attributed)),
+            scm,
+            evaluation,
+            background,
+            list(attributed),
+            feature_edges,
+            n_permutations=n_perms,
+            seed=seed,
+        )
+        causal_df = result.values
+        arm_note = (
+            f"structural do()-propagation on a {fitted.grade}-grade SCM calibrated "
+            f"to this data on the current graph ({graph.provenance.source}); "
+            f"attributed over the outcome's {len(attributed)} ancestors"
+        )
+    elif arm == "nonparametric":
+        # The engine draws from process-global NumPy randomness; unseeded, an
+        # identical rerun changed tau-vs-truth from 0.33 to 0.0 in review.
+        # Pinning the globals here is a stopgap confined to this worker call;
+        # threading a local Generator through the engine is post-demo work.
+        import random as stdlib_random
+
+        stdlib_random.seed(seed)
+        np.random.seed(seed)
+        causal_df = _causal_shap_engine(
+            causal_fit.model, data.dropna(subset=list(attributed)), digraph,
+            list(attributed), outcome,
+            n_perms=n_perms, n_background=n_background, n_instances=n_instances,
+        )
+        arm_note = (
+            "nonparametric conditional-model propagation (GBM P(X|parents)); "
+            f"attributed over the outcome's {len(attributed)} ancestors"
+        )
+    else:
+        raise ValueError(f"Unknown attribution arm: {arm!r}")
+
+    # Non-ancestors carry their structural zero into every downstream view.
+    causal_df = causal_df.copy()
+    for name in excluded:
+        causal_df[name] = 0.0
+    causal_df = causal_df[list(features)]
+
+    comparison = compare_shap_rankings(
+        naive_df, causal_df, dict(truth_effects) if truth_effects else None
+    )
+    naive_importance = mean_abs_shap(naive_df).to_dict()
+    causal_importance = mean_abs_shap(causal_df).to_dict()
+    return {
+        "arm": arm,
+        "arm_note": arm_note,
+        "fit": fit,
+        "attributed": attributed,
+        "excluded": excluded,
+        "naive_importance": naive_importance,
+        "causal_importance": causal_importance,
+        "comparison": comparison,
+        "plot": comparison_chart(naive_importance, causal_importance),
+    }
+
+
+# ---------------------------------------------------------------------------
+# Stage 7: price and dice
+# ---------------------------------------------------------------------------
+def run_policy(
+    data: pd.DataFrame,
+    graph: GraphState,
+    outcome: str,
+    specs: Mapping[str, ActionSpec],
+    *,
+    budget: float | None,
+    direction: str,
+    alpha: float,
+    estimation_arm: str = "scm",
+    estimation_learner: str = "gbm",
+    seed: int = SEED_ACTION_ABDUCTION,
+) -> dict[str, object]:
+    """Calibrate on the current graph, then price every candidate lever.
+
+    Calibrating on whatever graph the surgeon left behind is what keeps the
+    screening graph and the propagation model the same object; simulating a
+    frozen bundled SCM after the user removed one of its edges would be
+    quietly incoherent.
+
+    Two estimation arms, stamped on the result like the attribution arms. The
+    "scm" arm reports the paired do() contrast through the calibrated SCM,
+    trusting every equation at once. The "semiparametric" arm follows
+    Marschak's Maxim: the SCM survey still produces the shortlist, but each
+    surviving lever's ±shift is then re-estimated from the data as a modified
+    treatment policy, double-robustly and cross-fitted, using only that
+    lever's DAG-derived adjustment set, with feasibility diagnostics carried
+    on every estimate.
+    """
+    if estimation_arm not in ("scm", "semiparametric"):
+        raise ValueError(f"Unknown estimation arm: {estimation_arm!r}")
+    digraph = graph.digraph()
+    scm_frame = data[list(graph.nodes)].dropna()
+    fitted = fit_linear_logistic_scm(
+        scm_frame, digraph, seed=seed, n_undirected_pairs=graph.n_undirected_pairs
+    )
+
+    # Validate the sheet against the graph and the fitted node kinds before
+    # anything is priced. An unknown node would otherwise be mislabelled
+    # "not-an-ancestor", and a binary lever marked manipulable would get
+    # additive shifts the engine does not support.
+    known = set(graph.nodes)
+    binary_nodes = {
+        name for name, spec in fitted.scm.specs.items() if spec.kind == "binary"
+    }
+    usable: dict[str, object] = {}
+    rejected: list[dict[str, str]] = []
+    for name, spec in specs.items():
+        if name not in known:
+            rejected.append({"node": name, "screened_out": "not-in-graph"})
+        elif spec.manipulable and name in binary_nodes:
+            rejected.append({"node": name, "screened_out": "binary-lever-unsupported"})
+        else:
+            usable[name] = spec
+
+    exogenous = abduct(fitted.scm, scm_frame, seed=seed)
+    problem = InterventionProblem(
+        scm=fitted.scm,
+        outcome=outcome,
+        cost_model=CostModel(specs=usable, budget=budget),
+        graph=digraph,
+        direction=direction,
+        alpha=alpha,
+        n_undirected_pairs=graph.n_undirected_pairs,
+    )
+    ranking = rank_actions(problem, exogenous, seed=seed)
+    screened = pd.concat(
+        [ranking.screened_frame(), pd.DataFrame(rejected)], ignore_index=True
+    ) if rejected else ranking.screened_frame()
+
+    if estimation_arm == "semiparametric":
+        estimates = _targeted_estimates(
+            scm_frame, digraph, ranking, outcome,
+            direction=direction, learner=estimation_learner, seed=seed,
+        )
+        count = (
+            f"{len(estimates)} surviving lever shifts were"
+            if len(estimates) != 1 else "the surviving lever shift was"
+        )
+        arm_note = (
+            f"semiparametric arm: the SCM survey produced the shortlist, then "
+            f"{count} re-estimated from the data as a modified treatment policy "
+            f"(cross-fitted AIPW, {estimation_learner} nuisances), each using "
+            "only its lever's parents under the current graph as the adjustment set"
+            if estimates else
+            "semiparametric arm: no action survived the SCM screen, so there was "
+            "no shortlisted lever to estimate"
+        )
+    else:
+        estimates = ()
+        arm_note = (
+            "scm arm: benefit is the paired do() contrast simulated through the "
+            "calibrated structural model, trusting every equation at once"
+        )
+
+    return {
+        "arm": estimation_arm,
+        "arm_note": arm_note,
+        "ranking": ranking,
+        "table": ranking.to_frame(),
+        "screened": screened,
+        "calibration": fitted,
+        "estimates": estimates,
+        "estimates_table": _estimates_with_scm_benefit(estimates, ranking),
+        "pareto_plot": pareto_chart(ranking, budget),
+    }
+
+
+def _targeted_estimates(
+    frame: pd.DataFrame,
+    digraph: nx.DiGraph,
+    ranking: ActionRanking,
+    outcome: str,
+    *,
+    direction: str,
+    learner: str,
+    seed: int,
+) -> tuple[ShiftEstimate, ...]:
+    """One double-robust functional per shortlisted lever, Marschak's Maxim.
+
+    Only actions that survived the SCM screen are estimated: the structural
+    survey is the shortlist, the targeted estimator is the trusted number.
+    Single-lever actions only; the MTP estimand here is one shift at a time.
+    """
+    estimates: list[ShiftEstimate] = []
+    for item in ranking.feasible():
+        if len(item.touched) != 1:
+            continue
+        (lever, shift), = item.action.items()
+        estimates.append(
+            estimate_shift_effect(
+                frame, digraph, lever, shift, outcome,
+                direction=direction, learner=learner, seed=seed,
+            )
+        )
+    return tuple(estimates)
+
+
+def _estimates_with_scm_benefit(
+    estimates: Sequence[ShiftEstimate], ranking: ActionRanking
+) -> pd.DataFrame:
+    """The targeted table with the SCM's number alongside for comparison."""
+    table = estimates_frame(estimates)
+    if table.empty:
+        return table
+    scm_benefit = {item.label: item.benefit for item in ranking.evaluations}
+    table.insert(3, "scm_benefit", [scm_benefit.get(label) for label in table["action"]])
+    return table
+
+
+# ---------------------------------------------------------------------------
+# Local sandbox (this machine only; nothing here feeds the pipeline)
+# ---------------------------------------------------------------------------
+def run_sandbox(code: str, df: pd.DataFrame) -> dict[str, object]:
+    """Execute exploration code against the loaded data, locally.
+
+    Last expression's repr (or printed output) comes back as text; matplotlib
+    figures are captured as base64. Deliberately no sandboxing beyond scope:
+    this is the analyst's own machine and their own data.
+    """
+    import contextlib
+    import io as io_module
+
+    import matplotlib
+
+    matplotlib.use("Agg")
+    import matplotlib.pyplot as plt
+
+    plt.close("all")
+    namespace = {"df": df, "pd": pd, "np": np, "plt": plt}
+    buffer = io_module.StringIO()
+    result_text = ""
+    try:
+        with contextlib.redirect_stdout(buffer):
+            try:
+                value = eval(compile(code, "<sandbox>", "eval"), namespace)
+                if value is not None:
+                    result_text = repr(value)
+            except SyntaxError:
+                exec(compile(code, "<sandbox>", "exec"), namespace)
+    except Exception as error:
+        return {"ok": False, "text": f"{type(error).__name__}: {error}", "figures": []}
+
+    printed = buffer.getvalue()
+    figures = [
+        _figure_to_base64(plt.figure(num)) for num in plt.get_fignums()
+    ]
+    text = "\n".join(part for part in (printed.rstrip(), result_text) if part)
+    if len(text) > 8000:
+        text = text[:8000] + "\n… (truncated)"
+    return {"ok": True, "text": text or "(no output)", "figures": figures}
+
+
+# ---------------------------------------------------------------------------
+# Charts (hub palette, base64 PNG; None when matplotlib is absent)
+# ---------------------------------------------------------------------------
+def _figure_to_base64(figure) -> str:
+    buffer = io.BytesIO()
+    figure.savefig(buffer, format="png", dpi=110, bbox_inches="tight")
+    import matplotlib.pyplot as plt
+
+    plt.close(figure)
+    return base64.b64encode(buffer.getvalue()).decode()
+
+
+def bar_chart(importance: Mapping[str, float], title: str, color: str) -> str | None:
+    try:
+        import matplotlib
+
+        matplotlib.use("Agg")
+        import matplotlib.pyplot as plt
+    except ImportError:
+        return None
+    items = sorted(importance.items(), key=lambda pair: abs(pair[1]))[-15:]
+    names = [name for name, _ in items]
+    values = [abs(value) for _, value in items]
+    figure, axis = plt.subplots(figsize=(7.2, max(2.4, 0.34 * len(items))))
+    axis.barh(names, values, color=color)
+    axis.set_title(title, fontsize=11, fontfamily="serif", color=INK, loc="left")
+    axis.tick_params(labelsize=9)
+    for spine in ("top", "right"):
+        axis.spines[spine].set_visible(False)
+    return _figure_to_base64(figure)
+
+
+def comparison_chart(
+    naive: Mapping[str, float], causal: Mapping[str, float]
+) -> str | None:
+    try:
+        import matplotlib
+
+        matplotlib.use("Agg")
+        import matplotlib.pyplot as plt
+    except ImportError:
+        return None
+    order = [name for name, _ in sorted(naive.items(), key=lambda p: abs(p[1]))][-12:]
+    positions = np.arange(len(order))
+    figure, axis = plt.subplots(figsize=(7.2, max(2.6, 0.42 * len(order))))
+    axis.barh(positions + 0.2, [abs(naive[n]) for n in order], height=0.38,
+              color=MUTED, label="naive")
+    axis.barh(positions - 0.2, [abs(causal.get(n, 0.0)) for n in order], height=0.38,
+              color=AMBER, label="causal")
+    axis.set_yticks(positions, order, fontsize=9)
+    axis.legend(frameon=False, fontsize=9)
+    axis.set_title("Naive vs causal attribution", fontsize=11, fontfamily="serif",
+                   color=INK, loc="left")
+    for spine in ("top", "right"):
+        axis.spines[spine].set_visible(False)
+    return _figure_to_base64(figure)
+
+
+def pareto_chart(ranking: ActionRanking, budget: float | None) -> str | None:
+    try:
+        import matplotlib
+
+        matplotlib.use("Agg")
+        import matplotlib.pyplot as plt
+    except ImportError:
+        return None
+    figure, axis = plt.subplots(figsize=(6.4, 4.2))
+    for item in ranking.evaluations:
+        color = AMBER if item.feasible else MUTED
+        axis.scatter(item.cost, item.benefit, color=color, s=42, zorder=3)
+        axis.annotate(item.label, (item.cost, item.benefit), fontsize=8,
+                      xytext=(4, 4), textcoords="offset points", color=INK)
+    if budget is not None:
+        axis.axvline(budget, color=INK, linestyle="--", linewidth=1)
+        axis.annotate(f"budget {budget:g}", (budget, axis.get_ylim()[0]), fontsize=8,
+                      xytext=(4, 6), textcoords="offset points", color=INK)
+    axis.set_xlabel("cost", fontsize=10)
+    axis.set_ylabel("expected benefit", fontsize=10)
+    axis.set_title("Benefit against cost", fontsize=11, fontfamily="serif",
+                   color=INK, loc="left")
+    for spine in ("top", "right"):
+        axis.spines[spine].set_visible(False)
+    return _figure_to_base64(figure)
