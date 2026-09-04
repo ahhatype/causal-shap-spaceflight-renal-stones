@@ -5,6 +5,8 @@
 
 **Prediction is the default playbook. Intervention casts a wider net, then prunes.**
 
+New here? Read [ORIENTATION.md](ORIENTATION.md): where everything is, how to run it, what is done, and what to pick up next.
+
 This is the hub for the Space SHAP paper. It consolidates
 [andystats/causal-shap-target-dags](https://github.com/andystats/causal-shap-target-dags)
 (the full 51-node source DAG, the teaching DAGs, the structural value

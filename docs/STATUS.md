@@ -32,3 +32,14 @@ placeholders (ADR 008).
   `docs/lumawarp/README.md` (placeholder outline; results gated).
 - Experiments E1 to E3 (two- and three-layer trees, noise on deep layers)
   are specified, not run.
+
+## Log
+
+- 2026-09-03: target-dags ported into this hub (ADR 007); LumaWarp placeholders
+  (ADR 008); framing memo, transcription, citations; site rewritten; deployed
+  via andystats Pages; Goodenow-Messman corrected; MGM and LAU readings resolved.
+- 2026-09-04: E3 corrected (Giffen good was a doodle); depth-washout figure;
+  Harrell de-emphasized; site framed as the npj Microgravity companion;
+  playbook written; PBI/POA implemented; Box notes ported; manuscript drafted in
+  LaTeX with .bib (kept private); Word originals recovered from C:\Lumawarp,
+  archived in Box and here, and the source folder deleted; ORIENTATION.md added.
