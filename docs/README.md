@@ -7,6 +7,7 @@ the argument, with `STATUS.md` if you want to know what has run.
 
 | file | contents |
 | --- | --- |
+| [`for-coauthors.md`](for-coauthors.md) | The five-minute orientation for coauthors: the premise, the seven steps, where to read in order, what is asked of whom, how to comment |
 | [`framing/prediction-vs-intervention.md`](framing/prediction-vs-intervention.md) | The reframing: two goals, two playbooks; why the intervention playbook casts a wider net and still prunes; deeper nodes wash out; the linearity assumption; detector and filter; experiments E1 to E3 |
 | [`notes/2026-09-01-whiteboard-transcription.md`](notes/2026-09-01-whiteboard-transcription.md) | Transcription of the 1 September 2026 notes the memo is built from |
 | [`references/claims-to-citations.md`](references/claims-to-citations.md) | Verified citations for the reframing's claims, with what each supports and what is unsupported |
