@@ -1,55 +1,66 @@
 # Causal SHAP: Spaceflight-Induced Renal Stones
 
 [![Python tests](https://github.com/ahhatype/causal-shap-spaceflight-renal-stones/actions/workflows/python-tests.yml/badge.svg)](https://github.com/ahhatype/causal-shap-spaceflight-renal-stones/actions/workflows/python-tests.yml)
-[![Site](https://img.shields.io/badge/GitHub%20Pages-open%20site-2563eb)](https://andystats.github.io/causal-shap-target-dags/)
+[![Site](https://img.shields.io/badge/site-andystats.github.io-1a1814)](https://andystats.github.io/causal-shap-target-dags/)
 
-**Prediction is often the default playbook. Goal of intervention is to identify intervenable levers, which motivates casting a wider net and retaining deeper nodes in a DAG.**
+**Your roadmap should follow your goal.** Prediction is often the default
+playbook. The goal of intervention is to identify intervenable levers, which
+motivates casting a wider net and retaining deeper nodes in the graph. Once a
+mediator is measured, a predictor has little use for the cause behind it, so
+the mediator collects the credit and the ranking is still right about the
+model. Intervention needs the manipulable ancestors whose change would reach
+the outcome, and the upstream ones sit where a predictor has the least reason
+to look.
 
-New here? Read [ORIENTATION.md](ORIENTATION.md): where everything is, how to run it, what is done, and what to pick up next.
+<p align="center"><img src="docs/images/two-goals.gif" width="760" alt="A four-node chain. Under prediction, credit pools on the mediator nearest the outcome and the deep cause receives almost none. Under intervention, a signal travels from the deep cause down the chain and the credit returns to it."></p>
 
-This is the hub for the Space SHAP paper. It consolidates
-[andystats/causal-shap-target-dags](https://github.com/andystats/causal-shap-target-dags)
-(the full 51-node source DAG, the teaching DAGs, the structural value
-function, the Shiny apps) with the 14-node working-subgraph pipeline built
-here. Lineage: the [ACIC 2026 Causal SHAP project](https://www.tao-rwd.com/acic-2026/causal-shap)
-established the attribution problem; [Target DAGs](https://andystats.github.io/causal-shap-target-dags/)
-asked which upstream node to change; this hub asks how to find the deeper
-nodes the prediction playbook washes out, and how to prune them honestly.
-See [ADR 007](docs/decisions/007-target-dags-consolidation.md) for what moved
-where.
+This repository is the home of the Space SHAP study, written for *npj
+Microgravity* (collection: Human System Risk Management and Knowledge Graphs
+for Human Spaceflight, Vol. II). It tests one path from data to an
+intervention target on NASA's renal-stone DAG, with data simulated from that
+topology under coefficients we chose, so the true total effect of every node
+is known and every method is scored against it. Say "NASA-topology
+simulation", never "NASA effect".
 
-## What this is
+New here? [ORIENTATION.md](ORIENTATION.md) says where everything is, how to
+run it, what is done, and what to pick up next. The one-page version of the
+argument is the [site](https://andystats.github.io/causal-shap-target-dags/).
 
-NASA's Human System Risk Board maintains expert-built directed acyclic
-graphs (DAGs) for its known spaceflight risks. SHAP (SHapley Additive
-exPlanations) is the standard way to explain a predictive model, and out of
-the box it has no notion of causal structure. On a causal graph a mediator
-can screen off its ancestors for prediction while still transmitting their
-intervention effects, so predictive credit pools near the outcome and the
-upstream nodes an intervention would have to touch drop out of the ranking.
+## The path
 
-The article this hub accompanies is being written for *npj Microgravity*
-(collection: Human System Risk Management and Knowledge Graphs for Human
-Spaceflight, Vol. II) as a playbook for the emerging practice of graph-based
-intervention estimation. Its reframing ([framing memo](docs/framing/prediction-vs-intervention.md))
-treats prediction and intervention as different goals with different recipes,
-a split that is standard in statistics and epidemiology (Shmueli 2010;
-Hernán, Hsu and Healy 2019; Harrell 2015). The prediction recipe is the
-default in explainable AI and is fine for prediction. The
-intervention recipe has to cast a wider net, re-admitting candidates the
-predictor discarded, and then prune with structure. Deeper nodes make that
-hard: their total effects shrink with every hop (product of path
-coefficients), measurement noise attenuates them further, and
-constraint-based discovery recovers them worse. The methods under test are
-the instruments for that job: a detector for depth (LumaWarp), a two-channel
-filter for noise (dichromatic sensitivity gating, proposed by Lexi Pasi), and
-structural propagation for pruning, all working under the assumption that
-direct relationships tend to be linear.
+Seven steps. The first two are the prediction recipe, and it stops there. The
+rest is the intervention recipe. The written guide, with inputs, tools, and
+the failure each step guards against, is [docs/playbook](docs/playbook/README.md).
 
-Everything is synthetic, generated from NASA's SA-07566 renal-stone
-topology with coefficients we chose, so the true total effect of every node
-is known by construction and every method is scored against it. Say
-"NASA-topology simulation", never "NASA effect".
+| | Step | Question | Protocol steps | Where |
+| --- | --- | --- | --- | --- |
+| 01 | Data | What do we have, and what do we already believe? | 1 to 3 | `config/dag_spec.yaml`, `pipeline/step03_simulate_data.R` |
+| 02 | Predict and explain | What is likely to happen, and what did the model use? | 4 | `pipeline/step04_baseline_shap.py` |
+| | *prediction stops here* | | | |
+| 03 | Discover | What structure do the data support, under the usual assumptions? | 8 | `apps/causal_shap/discovery.py`, `evaluation.py` (M1 to M5) |
+| 04 | Cast wider, then filter | Which discarded nodes deserve a second look, and which are noise? | 5, 7 | `python/src/causal_shap_renal/lumawarp_contract.py` (placeholder, provider gated) |
+| 05 | Resolve the graph | Which way do the unresolved arrows point? | 6 | `pipeline/step06*`, [DAG harvest protocol](docs/playbook/dag-harvest-protocol.md) |
+| 06 | Propagate | What moves under do()? | 6, 8 | `apps/causal_shap/structural_value.py` |
+| 07 | Price | Which affordable action is worth testing? | 13 | `apps/causal_shap/policy.py` (scaffolded, out of the article's scope) |
+| | *robustness runs across every step* | | 9 to 11 | `apps/causal_shap/validation/`, `analysis/R/renal_stone_source_aligned_simcausal.R` |
+
+Why the net has to be wider: the manipulable ancestors sit upstream, and
+three effects compound against them. In a linear structural model the total
+effect along a chain is a product of edge coefficients, so with standardized
+coefficients below one every hop multiplies by a fraction. Measurement error
+in each mediator leaves the effect unchanged and makes it harder to estimate. Constraint-based discovery loses power as
+conditioning sets grow. The figure in `docs/images/depth_washout.png` shows
+sampling variance alone removing the deep layers at astronaut-cohort sizes.
+The [framing memo](docs/framing/prediction-vs-intervention.md) carries the
+argument with citations.
+
+Lineage: the [ACIC 2026 Causal SHAP project](https://www.tao-rwd.com/acic-2026/causal-shap)
+illustrated the attribution problem and set out a five-step expert-augmented
+workflow; [Target DAGs](https://andystats.github.io/causal-shap-target-dags/target-dags.html)
+asked which upstream node to change; this study asks how to find the deeper
+nodes the prediction recipe washes out, and how to prune them honestly.
+[ADR 007](docs/decisions/007-target-dags-consolidation.md) records what moved
+where when the two repositories were consolidated.
 
 ## Two lines of work
 
@@ -59,7 +70,7 @@ is known by construction and every method is scored against it. Say
 | Where | `config/`, `pipeline/`, `r/`, `python/src/causal_shap_renal/`, `results/`, `docs/step0N_results.md` | `analysis/`, `apps/`, `docs/full_dag/` |
 | Generator | `simcausal` from `config/edge_coefficients.yaml` | `simcausal` from the DAGitty text |
 | Frozen truth | do(hi) vs do(lo), common random numbers, n = 50,000 | Same recipe, 28 ancestors |
-| Headline so far | Four of five predictive pairings invert a two-hop mediation chain; PC pruned every edge into the outcome at n = 1,000; Ng et al.'s method reaches τ 0.714 once the outcome is reconnected | Ordering-only SHAP tied with ordinary SHAP (τ 0.528 vs 0.506); structural propagation τ 0.794, top-five recovery 1.00 (32×32×32 prototype) |
+| Headline so far | Predictive attribution misplaces credit along two-hop chains in a direction that depends on the model class; PC pruned every edge into the outcome at n = 1,000; Ng et al.'s method reaches τ 0.714 once the outcome is reconnected | Ordering-only SHAP tied with ordinary SHAP (τ 0.528 vs 0.506); structural propagation τ 0.794, top-five recovery 1.00 (32×32×32 prototype) |
 | Record | `docs/step04_results.md`, `docs/step06_results.md` | `docs/full_dag/RESEARCH_RECORD.md` |
 
 The working subgraph is the paper's primary case study. The full DAG carries
@@ -158,19 +169,18 @@ behind the published results.
 
 ## The site
 
-<https://andystats.github.io/causal-shap-target-dags/> is the
-single-page argument: two playbooks, why deeper nodes wash out, the six-rung
-intervention playbook with its two placeholder rungs, the evidence from both
-testbeds, the detector and filter placeholders, and what the hub can claim.
-The page is authored in this repository's `site/` and deployed from
+<https://andystats.github.io/causal-shap-target-dags/> is the one-page
+version: the premise, the seven steps, why deeper nodes wash out, the
+evidence from both testbeds, and what can be claimed. It is authored in this
+repository's `site/` and deployed from
 [andystats/causal-shap-target-dags](https://github.com/andystats/causal-shap-target-dags),
 whose "Publish site from the hub" workflow checks out this repository's
 `main`, renders `site/`, and publishes to that account's GitHub Pages (on
 push there, every six hours, or on demand with `gh workflow run`). Pages on
 this repository is an owner-only setting and is not enabled; this
 repository's own workflow only render-checks the site. The old Target DAGs
-page is kept as an archived subpage at `/target-dags.html`. The root
-`index.html` redirects to the site.
+page is kept as an archived subpage at `/target-dags.html` with its original
+styling in `site/archive.css`. The root `index.html` redirects to the site.
 
 ## The manuscript
 

@@ -1,7 +1,8 @@
 # Orientation
 
-Start here. Last updated 2026-09-04. The one sentence: **prediction is the
-default playbook; intervention casts a wider net, then prunes.** The project
+Start here. Last updated 2026-09-04. The premise: **your roadmap should
+follow your goal.** Prediction is the default playbook; intervention casts a
+wider net, then prunes. The project
 tests that playbook on NASA's renal-stone DAG with an answer key we wrote,
 for an *npj Microgravity* article (deadline recorded as 2026-10-31).
 
@@ -29,7 +30,7 @@ for an *npj Microgravity* article (deadline recorded as 2026-10-31).
 | --- | --- | --- |
 | Code | `config/`, `pipeline/`, `r/`, `python/src/causal_shap_renal/` | `analysis/`, `apps/` (the `causal_shap` library and three Shiny apps) |
 | Generator | `simcausal` from `config/edge_coefficients.yaml` | `simcausal` from the DAGitty text |
-| Headline | Four of five predictive pairings invert a two-hop chain; PC pruned every edge into the binary outcome at n = 1,000; Ng et al. reaches τ 0.714 once reconnected | Ordering-only τ 0.528 tied with ordinary 0.506; structural propagation τ 0.794 (prototype) |
+| Headline | Predictive credit along two-hop chains lands by model class, on one chain nearly zero for the parent and on another inverted onto it; PC pruned every edge into the binary outcome at n = 1,000; Ng et al. reaches τ 0.714 once reconnected | Ordering-only τ 0.528 tied with ordinary 0.506; structural propagation τ 0.794 (prototype) |
 
 ## How to run
 

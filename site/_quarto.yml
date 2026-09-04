@@ -10,7 +10,7 @@ execute:
 
 website:
   title: "Space SHAP"
-  description: "Companion site to an npj Microgravity article on graph-based intervention estimation: prediction is the default playbook; intervention casts a wider net, then prunes."
+  description: "Your roadmap should follow your goal. Prediction and intervention are different goals with different recipes; a seven-step path from data to an intervention target, tested on NASA's renal-stone topology."
   site-url: https://andystats.github.io/causal-shap-target-dags/
   favicon: favicon.svg
   search: false
@@ -19,18 +19,16 @@ website:
     background: light
     collapse: true
     left:
-      - text: "Playbooks"
-        href: index.qmd#playbooks
+      - text: "Two goals"
+        href: index.qmd#goals
+      - text: "The path"
+        href: index.qmd#path
       - text: "Depth"
         href: index.qmd#depth
-      - text: "Pipeline"
-        href: index.qmd#pipeline
       - text: "Evidence"
         href: index.qmd#evidence
-      - text: "Detector"
-        href: index.qmd#detector
-      - text: "Status"
-        href: index.qmd#status
+      - text: "Claims"
+        href: index.qmd#claims
       - text: "Archive"
         href: target-dags.qmd
     right:
@@ -38,7 +36,7 @@ website:
         aria-label: "GitHub repository"
         href: https://github.com/ahhatype/causal-shap-spaceflight-renal-stones
   page-footer:
-    left: "ACIC 2026 Causal SHAP → Target DAGs → Spaceflight renal stones"
+    left: "Space SHAP · companion to an npj Microgravity article"
     right:
       - text: "Original ACIC project"
         href: https://www.tao-rwd.com/acic-2026/causal-shap

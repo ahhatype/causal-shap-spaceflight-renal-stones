@@ -37,6 +37,40 @@ uncertainty procedure. For this playbook add two items per rung:
   playbook is that direct relationships tend to be linear: enforced in the
   generating model, relaxed in the estimators, priced in Step 9.
 
+## The seven steps: one flow, five tellings
+
+The site and the README walk the road as seven steps, cut for a reader who
+starts from the premise (your roadmap should follow your goal) rather than
+from the tooling. The same road has been drawn at least four other times by
+the authors, and the tellings agree on the order. This table is the
+consolidation (2026-09-04); the rungs above remain the working units.
+
+| Site step | Rungs | Aimee Harrison's 13-step protocol (methods draft, 2026-08-10) | Andy Wilson's schematic (FIG. 1, 2026-08-09) | ACIC 2026 workflow (Harrison et al.) | Scope list (Box `PLAN.md`, July 2026) |
+| --- | --- | --- | --- | --- | --- |
+| 01 Data | 0, 1 (inputs) | 1 exposure and outcome; 2 DAG review and augmentation; 3 simcausal data | 1 Data | (data in hand) | 1 living DAG; 2 anchors; 3 synthetic data |
+| 02 Predict and explain | 1, 2 | 4 out-of-box SHAP | 2 predictive model; 3 ordinary SHAP; 4 importance ranking, marked "targets?" | (the baseline it corrects) | 4 ordinary SHAP side of the comparison |
+| 03 Discover | 5 (discovery route) | 8 DAG recovery: PC, GES, LiNGAM, NOTEARS | 5 causal discovery ("they disagree"); 6 DAG hypothesis (CPDAG) | 1 Discover | |
+| 04 Cast wider, then filter | 3, 4 | 5 LumaWarp pass on step 4; 7 LumaWarp reassessment of step 6 | 7 complexity detector, flags "look upstream" into the expert | (future direction: sensing causal depth) | 5 Luma Warp layer |
+| 05 Resolve the graph | 5 (expert review) | 6 (the expert-in-the-loop rounds inside the Causal SHAP comparison) | 8 human expert: reviews, constrains, revises the DAG | 2 Resolve | |
+| 06 Propagate | 5 (structural propagation) | 6 Causal SHAP, four methods | 9 structural Causal SHAP, credit propagated by do() | 3 Weight; 4 Compute | 4 Causal SHAP side of the comparison |
+| 07 Price | 6 | 13 cost-aware manifold warping for cost-sensitive DiCE | 11 intervention targets ("levers, not ears") | | 6 intervenability and cost ranking; 7 cost-sensitive DiCE |
+| Across all steps | robustness | 9 other simulators; 10 space-epi constraints; 11 out-of-distribution; 12 longitudinal | 10 simulation validation, "rehearse where the answer is known" | 5 Sensitivity | |
+
+Two things the consolidation settles and one it leaves open.
+
+- **The detector sits before the expert.** The 2026-08-09 schematic routes
+  the detector's flags into the human expert ("h0-loud and SHAP-quiet, look
+  upstream"), and the 13-step protocol runs the LumaWarp pass on the
+  ordinary-SHAP output before the Causal SHAP comparison. The site follows
+  that order. The 13-step protocol's second pass (step 7, after Causal SHAP)
+  is the audit reading, and the site notes it as the alternative.
+- **Robustness is a band, not a step.** Steps 9 to 12 of the protocol, the
+  schematic's simulation-validation loop, and the ACIC workflow's
+  sensitivity step all run across the path rather than at one point on it.
+  The site says so in one sentence rather than adding an eighth step.
+- **Open: which two channels the filter pairs.** Question 3 in the framing
+  memo. The consolidation does not decide it.
+
 ## How the article's 13 steps map onto the rungs
 
 | Rung | Methods-doc steps |
@@ -52,7 +86,7 @@ uncertainty procedure. For this playbook add two items per rung:
 
 ## How the consolidated plan's phases map onto the rungs
 
-The 2026-08-10 consolidated plan (private, `docs/manuscript/`) walks the
+The 2026-08-10 consolidated plan (`manuscript/archive-2026-08-word-originals/`, gitignored) walks the
 same road as a spine of phases. Rung numbers are from the table above.
 
 | Phase | What | Rungs |

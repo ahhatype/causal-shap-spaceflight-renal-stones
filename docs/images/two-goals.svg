@@ -1,0 +1,104 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 300" width="760" height="300" role="img" aria-labelledby="t d">
+  <title id="t">Two goals, one chain</title>
+  <desc id="d">A chain of four nodes: a deep cause, an intermediate node, a mediator, and the outcome. Under prediction, credit pools on the mediator nearest the outcome and the deep cause receives almost none. Under intervention, a signal travels from the deep cause down the chain and the credit returns to the node an intervention could reach.</desc>
+  <style>
+    :root { --ink:#1a1814; --mute:#8a8178; --line:#b9b0a1; --cyan:#0077a8; --cyan-soft:#d3e8f2; --orange:#e07020; --orange-soft:#fbe3d0; --paper:#ffffff; }
+    @media (prefers-color-scheme: dark) { :root { --ink:#e8e2d6; --mute:#a59c8f; --line:#6b6258; --cyan:#4fb3dd; --cyan-soft:#12465c; --orange:#f08a3c; --orange-soft:#5a3210; --paper:#1f1c18; } }
+    text { font-family: Inter, -apple-system, "Segoe UI", Helvetica, Arial, sans-serif; fill: var(--ink); }
+    .cap { font-size: 15px; fill: var(--ink); }
+    .label { font-size: 19px; letter-spacing: .16em; font-weight: 600; }
+    .label-p { fill: var(--cyan); } .label-i { fill: var(--orange); }
+    .rule-p { fill: var(--cyan); } .rule-i { fill: var(--orange); }
+    .lbl { font-size: 11px; fill: var(--mute); text-anchor: middle; }
+    .node { fill: var(--paper); stroke: var(--line); stroke-width: 1.5; }
+    .edge { stroke: var(--line); stroke-width: 1.5; fill: none; }
+    .bar { opacity: .9; transform-box: fill-box; transform-origin: bottom; }
+    .track { fill: none; stroke: var(--line); stroke-width: 1; stroke-dasharray: 2 3; }
+    .pulse { fill: var(--orange); opacity: 0; }
+    .halo { fill: none; stroke: var(--orange); stroke-width: 1.5; opacity: 0; }
+
+    /* Timeline, 12 s: prediction 4-46 %, switch, intervention 54-96 %, switch. */
+    .phase-p, .phase-i { animation: 12s ease-in-out infinite; transform-box: fill-box; }
+    .phase-p { animation-name: showA; }
+    .phase-i { animation-name: showB; }
+    @keyframes showA { 0%,1% {opacity:0; transform:translateY(8px)} 6%,45% {opacity:1; transform:translateY(0)} 50%,100% {opacity:0; transform:translateY(-8px)} }
+    @keyframes showB { 0%,51% {opacity:0; transform:translateY(8px)} 56%,95% {opacity:1; transform:translateY(0)} 100% {opacity:0; transform:translateY(-8px)} }
+
+    /* The rule under the label wipes in with each phase. */
+    .rule-p, .rule-i { animation: 12s ease-in-out infinite; }
+    .rule-p { animation-name: wipeA; } .rule-i { animation-name: wipeB; }
+    @keyframes wipeA { 0%,1% {width:0} 8%,45% {width:680px} 50%,100% {width:0} }
+    @keyframes wipeB { 0%,51% {width:0} 58%,95% {width:680px} 100% {width:0} }
+
+    /* Credit bars: height and colour follow the phase. */
+    .bar { animation: 12s ease-in-out infinite; }
+    .b-x { animation-name: bx; } .b-a { animation-name: ba; } .b-m { animation-name: bm; }
+    @keyframes bx { 0%,2% {transform:scaleY(.30); fill:var(--mute)} 12%,46% {transform:scaleY(.04); fill:var(--cyan)} 50% {transform:scaleY(.30); fill:var(--mute)} 62%,94% {transform:scaleY(.70); fill:var(--orange)} 100% {transform:scaleY(.30); fill:var(--mute)} }
+    @keyframes ba { 0%,2% {transform:scaleY(.40); fill:var(--mute)} 12%,46% {transform:scaleY(.22); fill:var(--cyan)} 50% {transform:scaleY(.40); fill:var(--mute)} 62%,94% {transform:scaleY(.74); fill:var(--orange)} 100% {transform:scaleY(.40); fill:var(--mute)} }
+    @keyframes bm { 0%,2% {transform:scaleY(.50); fill:var(--mute)} 12%,46% {transform:scaleY(.96); fill:var(--cyan)} 50% {transform:scaleY(.50); fill:var(--mute)} 62%,94% {transform:scaleY(.78); fill:var(--orange)} 100% {transform:scaleY(.50); fill:var(--mute)} }
+
+    /* Node fills: the mediator brightens under prediction, the deep cause under intervention. */
+    .n-m { animation: nm 12s ease-in-out infinite; }
+    .n-x { animation: nx 12s ease-in-out infinite; }
+    @keyframes nm { 0%,4% {fill:var(--paper); stroke:var(--line)} 12%,46% {fill:var(--cyan-soft); stroke:var(--cyan)} 54%,100% {fill:var(--paper); stroke:var(--line)} }
+    @keyframes nx { 0%,56% {fill:var(--paper); stroke:var(--line)} 66%,94% {fill:var(--orange-soft); stroke:var(--orange)} 100% {fill:var(--paper); stroke:var(--line)} }
+
+    /* The do() pulse walks the chain during the intervention phase. */
+    .pulse { offset-path: path("M 110 140 L 616 140"); animation: walk 12s linear infinite; }
+    @keyframes walk { 0%,54% {offset-distance:0%; opacity:0} 56% {opacity:1} 72% {offset-distance:100%; opacity:1} 74%,100% {offset-distance:100%; opacity:0} }
+    .halo { animation: halo 12s ease-in-out infinite; }
+    @keyframes halo { 0%,54% {opacity:0; r:26} 58% {opacity:.9; r:30} 76%,94% {opacity:.9; r:34} 100% {opacity:0; r:26} }
+    @media (prefers-reduced-motion: reduce) { * { animation: none !important; } .pulse, .phase-i, .rule-i { opacity: 0 } .phase-p { opacity: 1 } .rule-p { width: 680px } .b-x { transform: scaleY(.04); fill: var(--cyan) } .b-a { transform: scaleY(.22); fill: var(--cyan) } .b-m { transform: scaleY(.96); fill: var(--cyan) } }
+  </style>
+
+  <!-- phase label, caption, and the rule that wipes in beneath them -->
+  <g class="phase-p">
+    <text class="label label-p" x="40" y="44">PREDICTION</text>
+    <text class="cap" x="40" y="70">Once the mediator is in view, the deep cause adds nothing. Its credit goes to zero.</text>
+  </g>
+  <g class="phase-i">
+    <text class="label label-i" x="40" y="44">INTERVENTION</text>
+    <text class="cap" x="40" y="70">Set the deep cause and the outcome still moves. Structural attribution can return the credit upstream.</text>
+  </g>
+  <rect class="rule-p" x="40" y="82" width="0" height="2"/>
+  <rect class="rule-i" x="40" y="82" width="0" height="2"/>
+
+  <!-- edges -->
+  <path class="edge" d="M 136 140 H 264"/>
+  <path class="edge" d="M 316 140 H 444"/>
+  <path class="edge" d="M 496 140 H 624"/>
+  <g fill="var(--line)">
+    <path d="M 258 135 L 268 140 L 258 145 Z"/>
+    <path d="M 438 135 L 448 140 L 438 145 Z"/>
+    <path d="M 618 135 L 628 140 L 618 145 Z"/>
+  </g>
+
+  <!-- nodes -->
+  <circle class="halo" cx="110" cy="140" r="26"/>
+  <circle class="node n-x" cx="110" cy="140" r="26"/>
+  <circle class="node" cx="290" cy="140" r="26"/>
+  <circle class="node n-m" cx="470" cy="140" r="26"/>
+  <circle class="node" cx="650" cy="140" r="26" style="fill:var(--ink); stroke:var(--ink)"/>
+  <text x="110" y="145" font-size="15" text-anchor="middle" font-weight="600">X</text>
+  <text x="290" y="145" font-size="15" text-anchor="middle" font-weight="600">A</text>
+  <text x="470" y="145" font-size="15" text-anchor="middle" font-weight="600">M</text>
+  <text x="650" y="145" font-size="15" text-anchor="middle" font-weight="600" style="fill:var(--paper)">Y</text>
+  <text class="lbl" x="110" y="186">deep cause</text>
+  <text class="lbl" x="290" y="186">intermediate</text>
+  <text class="lbl" x="470" y="186">mediator</text>
+  <text class="lbl" x="650" y="186">outcome</text>
+
+  <!-- the do() pulse -->
+  <circle class="pulse" r="6" cy="0" cx="0"/>
+
+  <!-- credit bars -->
+  <text class="lbl" x="40" y="272" text-anchor="start" style="letter-spacing:.14em;font-size:10px">CREDIT</text>
+  <g>
+    <rect class="track" x="86" y="204" width="48" height="60" rx="3"/>
+    <rect class="bar b-x" x="86" y="204" width="48" height="60" rx="3"/>
+    <rect class="track" x="266" y="204" width="48" height="60" rx="3"/>
+    <rect class="bar b-a" x="266" y="204" width="48" height="60" rx="3"/>
+    <rect class="track" x="446" y="204" width="48" height="60" rx="3"/>
+    <rect class="bar b-m" x="446" y="204" width="48" height="60" rx="3"/>
+  </g>
+</svg>

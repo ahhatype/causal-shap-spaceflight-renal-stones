@@ -86,6 +86,7 @@ figures:
 	$(PY) analysis/depth_washout_figure.py
 	$(PY) analysis/working_subgraph_figure.py
 	$(PY) analysis/make_spine_figs.py
+	$(PY) analysis/two_goals_gif.py
 
 manuscript:
 	cd manuscript && latexmk -pdf -interaction=nonstopmode main.tex

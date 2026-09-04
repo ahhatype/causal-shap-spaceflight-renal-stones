@@ -4,6 +4,7 @@ pagetitle: "Target DAGs (archive) · from causal attribution to intervention"
 description: "An application of the ACIC Causal SHAP argument: move from predictive credit to defensible intervention targets."
 page-layout: full
 toc: false
+css: archive.css
 ---
 
 ::: {.editorial-shell}
