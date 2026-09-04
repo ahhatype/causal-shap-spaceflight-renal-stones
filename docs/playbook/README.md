@@ -65,6 +65,22 @@ same road as a spine of phases. Rung numbers are from the table above.
 | V. The complexity companion | Detector flags alongside attribution; M6 asks whether flags coincide with true adjustment-set members or pathway ancestors more than chance | 3, 4 |
 | VI. Robustness | Steps 9 to 11 | all |
 
+## Rung 5 in two figures: learned versus known
+
+Both are the manuscript's schematics (`analysis/make_spine_figs.py`).
+Figure 1 is the spine: the known world is sealed before any learning, the
+data go through discovery, an expert ledger, and a plausible graph, and the
+learned graph is judged on two axes before attribution is computed under
+both graphs. Figure 2 is the point of the second axis: topological error and
+functional failure are different events. A learned graph can have a
+pathway edge reversed and still yield a valid adjustment set for the target
+parameter, and only sufficiency transfer (M3), parameter fidelity (M4), and
+identification honesty (M5) can tell.
+
+![Figure 1, the spine](../images/fig1_space_shap_spine.png)
+
+![Figure 2, sufficiency transfer](../images/fig2_sufficiency_transfer.png)
+
 ## The July 2026 schematic
 
 The first whiteboard version of the pipeline, before the depth reframing.

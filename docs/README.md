@@ -13,7 +13,7 @@ the argument, with `STATUS.md` if you want to know what has run.
 | [`lumawarp/README.md`](lumawarp/README.md) | Placeholder outline for the expanded LumaWarp detector treatment and the dichromatic sensitivity filter |
 | [`playbook/README.md`](playbook/README.md) | The written guide the article and site condense: rungs 0 to 6 with inputs, tools, and guards; [`playbook/dag-harvest-protocol.md`](playbook/dag-harvest-protocol.md) is rung 0 |
 | [`references/manuscript-references.md`](references/manuscript-references.md) | Venue, NASA DAG-program references, and the epidemiology framing citations |
-| `manuscript/` (gitignored) | The working manuscript outline with the 2026-09-04 reframing addendum; Box stays canonical for coauthor drafts |
+| [`../manuscript/`](../manuscript/README.md) | The article in LaTeX with its bibliography and outline (ADR 009); the introduction is human-written |
 
 ## The working subgraph (14 nodes; `config/`, `pipeline/`, `r/`, `python/`)
 
@@ -25,7 +25,7 @@ the argument, with `STATUS.md` if you want to know what has run.
 | [`step06_results.md`](step06_results.md) | Three causal SHAP methods over three scripted revision rounds; PC leaving the outcome disconnected |
 | [`dag_README.md`](dag_README.md), [`renal_stone_working_subgraph.txt`](renal_stone_working_subgraph.txt) | The working DAG in DAGitty syntax |
 | [`provenance.md`](provenance.md) | DAG source and coefficient sourcing for the working subgraph |
-| `methods/` (gitignored) | The human-written intro and methods draft. Never machine-rewrite it |
+| `methods/` (gitignored) | The pre-LaTeX snapshot of the intro and methods draft; superseded by `manuscript/main.tex` (ADR 009) |
 | [`../dag-candidates/`](../dag-candidates/) | Core-graph CSVs plus the July 2026 harvest notes and provisional renal and SANS edge lists |
 
 ## The full source DAG (51 nodes; `analysis/`, `apps/`)
@@ -49,6 +49,7 @@ the argument, with `STATUS.md` if you want to know what has run.
 | [006](decisions/006-shapr-heskes-blocked.md) | shapr's Heskes path blocked |
 | [007](decisions/007-target-dags-consolidation.md) | causal-shap-target-dags consolidated into this hub |
 | [008](decisions/008-lumawarp-detector-placeholders.md) | LumaWarp detector placeholders live here; runtime and bridge stay external |
+| [009](decisions/009-single-home.md) | One home for the project, including the manuscript; Box is exchange only |
 
 Documentation rule, carried over from Target DAGs: every substantive result
 states its estimand and intervention semantics, graph and data regime,

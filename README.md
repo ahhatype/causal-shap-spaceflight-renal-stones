@@ -115,8 +115,9 @@ data/             raw, interim, simulated (gitignored, regenerated from a seed);
                    frozen_truth (committed)
 results/          attributions, discovery, evaluation, figures; detector/ (gitignored)
 site/             Quarto single-page site, deployed to GitHub Pages
-docs/             framing memo, notes, references, LumaWarp placeholder, decisions,
-                   step results, full-DAG record. Index: docs/README.md
+manuscript/       The npj Microgravity article (LaTeX, .bib, outline)
+docs/             framing memo, playbook, notes, references, LumaWarp placeholder,
+                   decisions, step results, full-DAG record. Index: docs/README.md
 ```
 
 ## Quickstart
@@ -168,6 +169,16 @@ this repository is an owner-only setting and is not enabled; this
 repository's own workflow only render-checks the site. The old Target DAGs
 page is kept as an archived subpage at `/target-dags.html`. The root
 `index.html` redirects to the site.
+
+## The manuscript
+
+The article is written in LaTeX under [`manuscript/`](manuscript/README.md)
+and tracked here (ADR 009: one home for the project). The introduction is
+human-written and stays that way; Methods follow the 13 steps above;
+Results and Discussion are assembled from the frozen records in this
+repository. `make manuscript` builds the PDF; `make figures` regenerates the
+figures it reads from `docs/images/`. Coauthors receive dated PDF exports in
+the Box project folder, which is for exchange, not editing.
 
 ## What is gated
 

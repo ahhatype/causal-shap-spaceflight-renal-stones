@@ -103,5 +103,14 @@ results/detector/
 # Local Claude Code session config (launch.json etc.)
 .claude/
 
-# Manuscript drafts and outline stay private until circulation (Box is canonical).
-docs/manuscript/
+# LaTeX build products for manuscript/ (the PDF is built, not committed)
+manuscript/*.aux
+manuscript/*.bbl
+manuscript/*.blg
+manuscript/*.log
+manuscript/*.out
+manuscript/*.fls
+manuscript/*.fdb_latexmk
+manuscript/*.synctex.gz
+manuscript/*.toc
+manuscript/main.pdf

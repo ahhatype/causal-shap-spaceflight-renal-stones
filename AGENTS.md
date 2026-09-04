@@ -49,6 +49,7 @@ causal-shap-target-dags (`analysis/`, `apps/`, `docs/full_dag/`).
 
 ## Private files that live here but are ignored
 
-`docs/methods/` (the human-written intro and methods draft) and
-`docs/STATUS.md` are gitignored on purpose. Update them; do not force-add
-them.
+`docs/methods/` (the pre-LaTeX snapshot, superseded by `manuscript/`) and
+`docs/STATUS.md` are gitignored on purpose; do not force-add them. The
+manuscript itself is tracked under `manuscript/` (ADR 009); its
+introduction is human-written and must never be machine-rewritten.

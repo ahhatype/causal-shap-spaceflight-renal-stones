@@ -1,6 +1,6 @@
 .PHONY: setup-r setup-py setup step02 step03 step04 step05 step06 step07 step08 \
         test-r test-py test full-dag-r full-dag-validate full-dag-battery \
-        hub ladder workbench site
+        hub ladder workbench site manuscript figures
 
 # One Python environment for both packages (ADR 007). pip + venv, not uv.
 ifeq ($(OS),Windows_NT)
@@ -76,10 +76,19 @@ ladder:
 workbench:
 	cd apps/workbench && $(PY) -m shiny run --port 8001 app.py
 
-# --- site ---
+# --- site and manuscript ---
 
 site:
 	quarto render site
+
+# The figures the manuscript and the playbook read from docs/images/.
+figures:
+	$(PY) analysis/depth_washout_figure.py
+	$(PY) analysis/working_subgraph_figure.py
+	$(PY) analysis/make_spine_figs.py
+
+manuscript:
+	cd manuscript && latexmk -pdf -interaction=nonstopmode main.tex
 
 # --- tests ---
 
