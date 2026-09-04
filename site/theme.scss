@@ -351,3 +351,19 @@ body:has(.editorial-shell) .quarto-title-block { display: none; }
 .status-grid-3 { grid-template-columns: 1fr 1fr 1fr; }
 .status-tag.placeholder { color: var(--ink); border: 1px dashed var(--orange); background: var(--orange-light); }
 @media (max-width: 980px) { .status-grid-3 { grid-template-columns: 1fr; } }
+
+.archive-banner {
+  margin: 1.5rem auto 0;
+  max-width: 980px;
+  padding: 1.1rem 1.4rem;
+  border: 2px dashed #b7a98f;
+  border-radius: 1rem;
+  background: var(--orange-light);
+  color: var(--ink-soft);
+}
+.archive-banner .section-number { margin-bottom: .4rem; }
+.archive-banner strong { color: var(--ink); }
+.computed-figure { margin: 1.5rem 0 0; padding: 1rem 1rem .75rem; border: 1px solid var(--rule-soft); border-radius: 1.25rem; background: var(--paper); box-shadow: var(--shadow); }
+.computed-figure img { display: block; width: 100%; height: auto; }
+.computed-figure figcaption { margin: .85rem .25rem .2rem; color: var(--ink-mute); font-size: .78rem; }
+.computed-figure figcaption strong { color: var(--ink); }

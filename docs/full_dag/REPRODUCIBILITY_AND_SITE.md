@@ -1,6 +1,6 @@
 # Reproducibility and public site — environments, build commands, site integration
 
-> Ported from andystats/causal-shap-target-dags on 2026-09-03 (ADR 007). "This repository" below refers to that project's full 51-node line of work, now under `analysis/` and `apps/` in this hub; the companion site moved to https://ahhatype.github.io/causal-shap-spaceflight-renal-stones/. Paths were updated (`app/` is now `apps/`); numbers and claims are unchanged.
+> Ported from andystats/causal-shap-target-dags on 2026-09-03 (ADR 007). "This repository" below refers to that project's full 51-node line of work, now under `analysis/` and `apps/` in this hub; the companion site moved to https://andystats.github.io/causal-shap-target-dags/. Paths were updated (`app/` is now `apps/`); numbers and claims are unchanged.
 
 _Consolidated 2026-08-09 from: REPRODUCIBILITY SITE_INTEGRATION_GUIDE_
 

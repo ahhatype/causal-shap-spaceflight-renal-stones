@@ -51,14 +51,21 @@ this file only records what the page says.
 - Measurement. Variance.
 - E2: Deeper nodes need more measurement for proper adjudication (need more
   precision to be captured). => How do we know a deep node from a shallow node?
+  [The author confirmed 2026-09-04 that this question is the core problem
+  LumaWarp is meant to solve.]
 - Deeper nodes wash out faster, accelerated by noise.
-- E3: bitten bad (sinking into noise).
+- E3: Giffen good (sinking into noise). [Corrected by the author 2026-09-04:
+  the words are "Giffen good", an economics doodle about a related idea (a
+  good whose demand rises with its price), not part of the experiment. E3 is
+  about deeper nodes sinking into noise as variance grows.]
 
 ## Readings to confirm with the author
 
 1. Resolved 2026-09-03: "mbm" reads MGM (CausalMGM's PC-Stable).
 2. Resolved 2026-09-03: "LAU" was a question about treating linearity like a
    law, i.e. how strongly to enforce the assumption.
-3. Whether E1, E2, E3 are numbered experiments to run or numbered examples.
+3. Resolved 2026-09-04: E3 reads "Giffen good", a side doodle; E1 to E3 are
+   treated as candidate experiments.
+4. (was 3) Whether E1, E2, E3 are numbered experiments to run or numbered examples.
    This transcription treats them as candidate experiments; see the framing
    memo.

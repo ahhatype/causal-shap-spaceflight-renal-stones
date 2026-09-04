@@ -12,6 +12,12 @@ section 8.
 
 ## 1. What the detector is for
 
+**The problem, in one sentence: how do we know deep nodes from shallow
+nodes?** Total effects shrink with depth, sampling variance and measurement
+noise erase the deep ones first, and predictive importance falls off with
+depth by construction, so the data alone make a deep cause and a column of
+noise look alike. The detector exists to tell them apart.
+
 The intervention playbook casts a wider net than the prediction playbook and
 then prunes. The detector is the instrument for the first half: a per-node
 signal, derived from a fitted model's internal geometry rather than from its
@@ -115,7 +121,7 @@ From the 1 September notes; specified in the framing memo, section 7.
 | --- | --- | --- | --- |
 | E1 | Two-layer tree: B1 -> A1 -> Y; B2 -> A2 -> Y; B2 -> A3 -> Y | n, noise | Recovery, credit, and flags for the B layer |
 | E2 | Three-layer tree (add a C layer) | depth | Precision needed per depth; sensitivity-vs-depth curve |
-| E3 | E2 plus measurement noise on A and C | noise level | Noise level at which deep nodes sink; whether the dichromatic filter separates them |
+| E3 | E2 plus variance: shrinking n, then measurement noise on A and C | sampling variance, noise level | Variance at which deep nodes sink into noise; whether the depth channel and the dichromatic filter separate them. Chain version already drawn: `docs/images/depth_washout.png` (`analysis/depth_washout_figure.py`) |
 
 ```
 TODO: implement as teaching DAGs in apps/causal_shap/teaching_dags.py

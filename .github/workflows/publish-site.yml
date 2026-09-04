@@ -1,4 +1,10 @@
-name: Publish site
+name: Render site
+
+# The site is authored here (site/) but deployed from
+# andystats/causal-shap-target-dags, whose "Publish site from the hub"
+# workflow checks out this repository's main and publishes to that account's
+# GitHub Pages. Pages on this repository is an owner-only setting and is not
+# enabled, so this workflow only proves the site renders.
 
 on:
   push:
@@ -7,38 +13,17 @@ on:
 
 permissions:
   contents: read
-  pages: write
-  id-token: write
-
-concurrency:
-  group: pages
-  cancel-in-progress: true
 
 jobs:
-  # Render on every PR to catch broken references; do not deploy.
   render-check:
-    if: github.event_name == 'pull_request'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
       - uses: quarto-dev/quarto-actions/setup@v2
       - name: Render static site (no analysis execution)
         run: quarto render site
-
-  # Render and deploy from main.
-  deploy:
-    if: github.event_name == 'push'
-    runs-on: ubuntu-latest
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
-    steps:
-      - uses: actions/checkout@v4
-      - uses: quarto-dev/quarto-actions/setup@v2
-      - name: Render site
-        run: quarto render site
-      - uses: actions/upload-pages-artifact@v3
+      - uses: actions/upload-artifact@v4
         with:
+          name: site
           path: site/_site
-      - id: deployment
-        uses: actions/deploy-pages@v4
+          retention-days: 7

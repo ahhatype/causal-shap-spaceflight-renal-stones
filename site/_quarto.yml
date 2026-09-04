@@ -3,6 +3,7 @@ project:
   output-dir: _site
   render:
     - index.qmd
+    - target-dags.qmd
 
 execute:
   freeze: true
@@ -10,7 +11,7 @@ execute:
 website:
   title: "Space SHAP"
   description: "Two playbooks for a NASA renal-stone DAG: prediction is the default; intervention casts a wider net, then prunes."
-  site-url: https://ahhatype.github.io/causal-shap-spaceflight-renal-stones/
+  site-url: https://andystats.github.io/causal-shap-target-dags/
   favicon: favicon.svg
   search: false
   page-navigation: false
@@ -30,6 +31,8 @@ website:
         href: index.qmd#detector
       - text: "Status"
         href: index.qmd#status
+      - text: "Archive"
+        href: target-dags.qmd
     right:
       - icon: github
         aria-label: "GitHub repository"
@@ -39,8 +42,8 @@ website:
     right:
       - text: "Original ACIC project"
         href: https://www.tao-rwd.com/acic-2026/causal-shap
-      - text: "Target DAGs site"
-        href: https://andystats.github.io/causal-shap-target-dags/
+      - text: "Target DAGs page (archive)"
+        href: target-dags.qmd
       - text: "Research record"
         href: https://github.com/ahhatype/causal-shap-spaceflight-renal-stones/tree/main/docs
 

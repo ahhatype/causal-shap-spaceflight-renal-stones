@@ -6,7 +6,7 @@ authors:
   - family-names: Wilson
     given-names: Andy
 repository-code: "https://github.com/ahhatype/causal-shap-spaceflight-renal-stones"
-url: "https://ahhatype.github.io/causal-shap-spaceflight-renal-stones/"
+url: "https://andystats.github.io/causal-shap-target-dags/"
 license: GPL-3.0-or-later
 version: 0.2.0
 date-released: 2026-09-03

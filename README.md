@@ -1,7 +1,7 @@
 # Causal SHAP: Spaceflight-Induced Renal Stones
 
 [![Python tests](https://github.com/ahhatype/causal-shap-spaceflight-renal-stones/actions/workflows/python-tests.yml/badge.svg)](https://github.com/ahhatype/causal-shap-spaceflight-renal-stones/actions/workflows/python-tests.yml)
-[![Site](https://img.shields.io/badge/GitHub%20Pages-open%20site-2563eb)](https://ahhatype.github.io/causal-shap-spaceflight-renal-stones/)
+[![Site](https://img.shields.io/badge/GitHub%20Pages-open%20site-2563eb)](https://andystats.github.io/causal-shap-target-dags/)
 
 **Prediction is the default playbook. Intervention casts a wider net, then prunes.**
 
@@ -151,13 +151,19 @@ behind the published results.
 
 ## The site
 
-<https://ahhatype.github.io/causal-shap-spaceflight-renal-stones/> is the
+<https://andystats.github.io/causal-shap-target-dags/> is the
 single-page argument: two playbooks, why deeper nodes wash out, the six-rung
 intervention playbook with its two placeholder rungs, the evidence from both
 testbeds, the detector and filter placeholders, and what the hub can claim.
-It deploys from `site/` through `.github/workflows/publish-site.yml`; enable
-Pages with "GitHub Actions" as the source. The root `index.html` redirects
-there.
+The page is authored in this repository's `site/` and deployed from
+[andystats/causal-shap-target-dags](https://github.com/andystats/causal-shap-target-dags),
+whose "Publish site from the hub" workflow checks out this repository's
+`main`, renders `site/`, and publishes to that account's GitHub Pages (on
+push there, every six hours, or on demand with `gh workflow run`). Pages on
+this repository is an owner-only setting and is not enabled; this
+repository's own workflow only render-checks the site. The old Target DAGs
+page is kept as an archived subpage at `/target-dags.html`. The root
+`index.html` redirects to the site.
 
 ## What is gated
 

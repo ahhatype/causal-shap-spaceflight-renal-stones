@@ -91,8 +91,8 @@ two-language rule is unchanged; only the Python package manager changed
   the port made available (Step 8 discovery library, Step 9 validation
   scaffolding, Step 13 action-selection machinery).
 - The GitHub Pages site for this hub lives at
-  `https://ahhatype.github.io/causal-shap-spaceflight-renal-stones/` once
+  `https://andystats.github.io/causal-shap-target-dags/` once
   Pages is enabled on the repository (Settings > Pages > Source: GitHub
   Actions).
-- The original repository should get a pointer commit saying that
-  development moved here. That commit is the owner's to make.
+- The original repository carries a pointer to this hub (commit `ca08023`)
+  and now serves only as the Pages deploy target.

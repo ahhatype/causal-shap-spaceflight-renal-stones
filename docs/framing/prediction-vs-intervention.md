@@ -77,10 +77,20 @@ Ogburn 2012); regression dilution does the same for any error-laden
 predictor (Hutcheon, Chiolero and Hanley 2010). A deep node's effect reaches
 the outcome only through several such attenuations. The notes' phrase
 "deeper nodes wash out faster, accelerated by noise" is the compound of the
-two effects above. E3 ("bitten bad, sinking into noise") is the regime where
-a real deep node is indistinguishable from a column of noise. Even Robert's
-source DAG has nodes that, at astronaut-cohort sample sizes, would behave
-this way.
+two effects above. E3 (the notes' "sinking into noise"; the words beside it,
+"Giffen good", were a side doodle about a related idea and not part of the
+experiment) is the regime where a real deep node is indistinguishable from a
+column of noise. Even Robert's source DAG has nodes that, at astronaut-cohort
+sample sizes, would behave this way.
+
+The figure below makes the point with sampling variance alone, before any
+measurement noise. On a standardized linear chain with the same coefficient
+on every edge, the chance of detecting a node at all falls with sample size
+fastest for the deepest nodes; at astronaut-cohort sizes the deep layers are
+already gone while the shallow ones are still visible. Regenerate with
+`python analysis/depth_washout_figure.py`.
+
+![Deeper nodes wash out first as sampling variance grows](../images/depth_washout.png)
 
 **Discovery degrades with depth.** PC-stable (Colombo and Maathuis 2014)
 recovers shallow structure well; the notes record that on a one-layer tree
@@ -105,9 +115,12 @@ returned all zeros in round 1 and reached the best rank agreement in the
 project (tau 0.714) once the outcome was reconnected (`docs/step06_results.md`).
 Discovery quality is the whole game for that method.
 
-**The design question these raise.** E2 asks it directly: how do we know a
-deep node from a shallow one, when the data alone make them look alike? That
-is the job of the detector and the filter.
+**The design question these raise.** E2 asks it directly, and it is the core
+problem LumaWarp is being brought in to solve: how do we know a deep node
+from a shallow one, when the data alone make them look alike? Predictive
+importance cannot answer it, because it falls off with depth by construction.
+The detector is a candidate answer; the filter is what keeps the answer
+honest.
 
 ## 4. Identifying deeper nodes: assumption, detector, filter
 
@@ -153,9 +166,10 @@ which removes that leak; the full-DAG simulator should be checked.
 
 ### 4b. The detector: LumaWarp
 
-The prediction playbook produces a ranking; the intervention playbook needs
-a pointer to nodes the ranking under-credits. LumaWarp is the candidate
-pointer. Its single-seed behavior on the full renal DAG was that the
+The problem statement, in one sentence: how do we know deep nodes from
+shallow nodes? The prediction playbook produces a ranking; the intervention
+playbook needs a pointer to nodes that ranking under-credits because they sit
+deep. LumaWarp is the candidate pointer. Its single-seed behavior on the full renal DAG was that the
 composite signal was near-orthogonal to TreeSHAP (tau about -0.02) and that
 the one flagged node was the graph's root cause. That is the shape of signal
 the intervention playbook wants and is exactly why it needs prespecified
@@ -221,9 +235,11 @@ Step 13 and out of the paper's scope but scaffolded in `apps/causal_shap/policy.
 - **E2.** Same tree, deeper (add a C layer). Measure the precision each
   method needs to place a C node correctly; report the sensitivity-vs-depth
   curve the whiteboard sketched.
-- **E3.** Add measurement noise to the A layer and to the C layer. Find the
-  noise level at which each deep node becomes indistinguishable from a
-  noise column; test whether the dichromatic filter separates them where a
+- **E3.** Deep nodes sinking into noise. Two variance axes: sampling
+  variance (shrink n; the figure in section 3 is the chain version) and
+  measurement noise on the A and C layers. Find the variance at which each
+  deep node becomes indistinguishable from a noise column; test whether the
+  detector's depth channel and the dichromatic filter separate them where a
   single threshold cannot.
 
 ## 8. Open questions for the authors

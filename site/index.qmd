@@ -8,7 +8,7 @@ toc: false
 
 ::: {.editorial-shell}
 ::: {.hero}
-<p class="lineage-tag"><a href="https://www.tao-rwd.com/acic-2026/causal-shap">ACIC 2026 CAUSAL SHAP</a> <span>→</span> <a href="https://andystats.github.io/causal-shap-target-dags/">TARGET DAGS</a> <span>→</span> SPACEFLIGHT RENAL STONES</p>
+<p class="lineage-tag"><a href="https://www.tao-rwd.com/acic-2026/causal-shap">ACIC 2026 CAUSAL SHAP</a> <span>→</span> <a href="target-dags.html">TARGET DAGS</a> <span>→</span> SPACEFLIGHT RENAL STONES</p>
 
 # Prediction is the default playbook. **Intervention casts a wider net.**
 
@@ -115,6 +115,11 @@ estimand mismatch, not a failure of the axioms.
     <circle cx="470" cy="160" r="6" class="deep" />
   </svg>
   <figcaption>The same curve, drawn from the notes: predictive importance falls off with depth faster than the true total effect does. A detector for the intervention playbook has to fall off more slowly. The question the notes pose, and the paper has to answer, is how to tell a deep node from a shallow one when the data alone make them look alike.</figcaption>
+</figure>
+
+<figure class="computed-figure">
+  <img src="assets/depth_washout.svg" alt="Left: true total effect falls geometrically with depth on a standardized chain. Right: the chance of detecting each node falls as sampling standard error grows, and the deepest nodes fall first.">
+  <figcaption><strong>Computed, not sketched.</strong> A standardized linear chain with the same coefficient on every edge. Left, the true total effect shrinks by that coefficient per hop. Right, the chance of detecting the node at all, against sampling standard error: the depth-five node needs a sample about sixty times larger than the depth-one node to reach the same power, and at astronaut-cohort sizes it is already gone while the shallow layers remain. This is sampling variance alone; measurement noise makes it worse. Regenerate with <code>analysis/depth_washout_figure.py</code>.</figcaption>
 </figure>
 
 ## The intervention playbook {#pipeline}
@@ -244,8 +249,10 @@ ancestor's credit "stolen valor."
 
 ### The LumaWarp detector.
 
-A learned-kernel classifier (Lucidity Sciences) exposes a per-feature
-design vector. Reduced per feature, it gives a signal that on one renal run
+The problem it is for, in one sentence: <mark>how do we know deep nodes from
+shallow nodes?</mark> Predictive importance cannot say, because it falls off
+with depth by construction. A learned-kernel classifier (Lucidity Sciences)
+exposes a per-feature design vector. Reduced per feature, it gives a signal that on one renal run
 was near-orthogonal to TreeSHAP and flagged the graph's root cause. That is
 the shape of signal the intervention playbook wants, and it is one seed on
 one dataset. The public interface contract fixes three channels per feature
