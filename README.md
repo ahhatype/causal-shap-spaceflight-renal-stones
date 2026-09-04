@@ -3,7 +3,7 @@
 [![Python tests](https://github.com/ahhatype/causal-shap-spaceflight-renal-stones/actions/workflows/python-tests.yml/badge.svg)](https://github.com/ahhatype/causal-shap-spaceflight-renal-stones/actions/workflows/python-tests.yml)
 [![Site](https://img.shields.io/badge/GitHub%20Pages-open%20site-2563eb)](https://andystats.github.io/causal-shap-target-dags/)
 
-**Prediction is the default playbook. Intervention casts a wider net, then prunes.**
+**Prediction is often the default playbook. Goal of intervention is to identify intervenable levers, which motivates casting a wider net and retaining deeper nodes in a DAG.**
 
 New here? Read [ORIENTATION.md](ORIENTATION.md): where everything is, how to run it, what is done, and what to pick up next.
 
