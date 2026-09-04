@@ -10,7 +10,7 @@ execute:
 
 website:
   title: "Space SHAP"
-  description: "Two playbooks for a NASA renal-stone DAG: prediction is the default; intervention casts a wider net, then prunes."
+  description: "Companion site to an npj Microgravity article on graph-based intervention estimation: prediction is the default playbook; intervention casts a wider net, then prunes."
   site-url: https://andystats.github.io/causal-shap-target-dags/
   favicon: favicon.svg
   search: false

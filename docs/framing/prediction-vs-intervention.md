@@ -11,11 +11,11 @@ is not article text.
 ## 1. The reframing in one paragraph
 
 Modeling for prediction and modeling for intervention are different jobs with
-different recipes. Harrell's *Regression Modeling Strategies* separates them
-at the start (section 1.1: hypothesis testing, estimation, prediction) and
-gives each its own strategy (sections 4.12.1 through 4.12.3); Shmueli (2010)
-and Hernán, Hsu and Healy (2019) make the same cut from the statistics and
-epidemiology sides. Explainable-AI practice runs the prediction playbook by
+different recipes. The split is standard: Shmueli (2010) draws it for
+statistical modeling, Hernán, Hsu and Healy (2019) for data-science tasks in
+epidemiology, and Harrell (2015, sections 1.1 and 4.12) gives it a
+modeling-strategy form. None of them needs to carry the argument; the paper
+cites them together and moves on. Explainable-AI practice runs the prediction playbook by
 default: fit the best predictor, explain it with SHAP, read the ranking as a
 list of what matters. That default is fine for prediction. For intervention
 it fails in a specific, structural way: a mediator can screen off its

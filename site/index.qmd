@@ -12,9 +12,9 @@ toc: false
 
 # Prediction is the default playbook. **Intervention casts a wider net.**
 
-<p class="hero-lede">A predictor can ignore an upstream cause the moment its mediator is in view. An intervention cannot. This hub tests, on NASA's renal-stone topology with an answer key we wrote, <mark>how to re-admit the deeper nodes the prediction playbook washes out</mark>, and how to prune them without fooling ourselves.</p>
+<p class="hero-lede">A predictor can ignore an upstream cause the moment its mediator is in view. An intervention cannot. This site is the companion to an article on graph-based intervention estimation for <em>npj Microgravity</em>: a playbook for <mark>finding the deeper nodes the prediction playbook washes out</mark>, and for pruning them without fooling ourselves.</p>
 
-Two goals, two recipes. The recipe for prediction is well known and works. The recipe for intervention needs a detector for depth, a filter for noise, and a structural model for pruning. Everything here is synthetic, source-aligned, and scored against frozen total-effect truth.
+Two goals, two recipes. The recipe for prediction is well known and works. The recipe for intervention needs a detector for depth, a filter for noise, and a structural model for pruning. Everything here is synthetic, generated from NASA's renal-stone topology with an answer key we wrote, and scored against frozen total-effect truth.
 
 <div class="hero-actions">
   <a class="button button-primary" href="#playbooks">See the two playbooks</a>
@@ -35,7 +35,7 @@ Two goals, two recipes. The recipe for prediction is well known and works. The r
 
 ## Two goals, two playbooks {#playbooks}
 
-<p class="section-deck">Harrell's <em>Regression Modeling Strategies</em> separates hypothesis testing, effect estimation, and prediction on its first page and gives each its own recipe. Explainable AI runs the prediction recipe by default. That is fine for prediction and structurally wrong for intervention.</p>
+<p class="section-deck">Prediction and intervention are different goals with different recipes; the split is standard in statistics and epidemiology (Shmueli 2010; Hernán, Hsu and Healy 2019; Harrell 2015). Explainable AI runs the prediction recipe by default. That is fine for prediction and structurally wrong for intervention.</p>
 
 ::: {.motivation-grid}
 ::: {.lineage-card}
@@ -122,9 +122,9 @@ estimand mismatch, not a failure of the axioms.
   <figcaption><strong>Computed, not sketched.</strong> A standardized linear chain with the same coefficient on every edge. Left, the true total effect shrinks by that coefficient per hop. Right, the chance of detecting the node at all, against sampling standard error: the depth-five node needs a sample about sixty times larger than the depth-one node to reach the same power, and at astronaut-cohort sizes it is already gone while the shallow layers remain. This is sampling variance alone; measurement noise makes it worse. Regenerate with <code>analysis/depth_washout_figure.py</code>.</figcaption>
 </figure>
 
-## The intervention playbook {#pipeline}
+## The playbook {#pipeline}
 
-<p class="section-deck">Each rung inherits the one before it. The prediction playbook stops at the second. Current evidence reaches the fifth; the third and fourth are the placeholders this hub is built to fill.</p>
+<p class="section-deck">Graph-based intervention estimation, as a sequence of rungs. Each rung inherits the one before it. The prediction playbook stops at the second. Current evidence reaches the fifth; the third and fourth are the placeholders this hub is built to fill. The written guide, step by step with tools, is in <a href="https://github.com/ahhatype/causal-shap-spaceflight-renal-stones/tree/main/docs/playbook">docs/playbook</a>.</p>
 
 ```{=html}
 <ol class="hierarchy" aria-label="From prediction to a priced intervention target">

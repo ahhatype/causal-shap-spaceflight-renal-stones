@@ -10,12 +10,12 @@ which cover the attribution-method lineage; the claims here are the ones the
 
 ## Claim 1. Prediction and intervention are distinct modeling goals with distinct playbooks
 
-- Harrell, F.E. Jr. (2015). *Regression Modeling Strategies*, 2nd ed. Springer. <https://doi.org/10.1007/978-3-319-19425-7>
-  Section 1.1 "Hypothesis Testing, Estimation, and Prediction" lays out the three purposes. Section 4.12 "Summary: Possible Modeling Strategies" gives separate recipes: 4.12.1 predictive models, 4.12.2 effect estimation, 4.12.3 hypothesis testing. Numbering confirmed against the book's table of contents and Harrell's online course notes (<https://hbiostat.org/rmsc/intro>, <https://hbiostat.org/rmsc/multivar>).
 - Shmueli, G. (2010). To Explain or to Predict? *Statistical Science* 25(3):289-310. <https://doi.org/10.1214/10-STS330>
   Explanatory and predictive modeling differ at every step; explanatory power does not imply predictive power or the reverse.
 - Hernán, M.A., Hsu, J., Healy, B. (2019). A Second Chance to Get Causal Inference Right: A Classification of Data Science Tasks. *CHANCE* 32(1):42-49. <https://doi.org/10.1080/09332480.2019.1579578>
   Description, prediction, and causal inference as three distinct tasks; prediction does not answer "what if we intervene."
+- Harrell, F.E. Jr. (2015). *Regression Modeling Strategies*, 2nd ed. Springer. <https://doi.org/10.1007/978-3-319-19425-7>
+  Section 1.1 "Hypothesis Testing, Estimation, and Prediction" lays out the three purposes. Section 4.12 "Summary: Possible Modeling Strategies" gives separate recipes: 4.12.1 predictive models, 4.12.2 effect estimation, 4.12.3 hypothesis testing. Supporting citation, not the argument's anchor. Numbering confirmed against the book's table of contents and Harrell's online course notes (<https://hbiostat.org/rmsc/intro>, <https://hbiostat.org/rmsc/multivar>).
 - Breiman, L. (2001). Statistical Modeling: The Two Cultures. *Statistical Science* 16(3):199-231. <https://doi.org/10.1214/ss/1009213726>
   The data-model versus algorithmic-model split; frames SHAP-on-black-box as the predictive culture. It is about prediction versus data models, not about causal inference; do not overstate.
 

@@ -11,6 +11,9 @@ the argument, with `STATUS.md` if you want to know what has run.
 | [`notes/2026-09-01-whiteboard-transcription.md`](notes/2026-09-01-whiteboard-transcription.md) | Transcription of the 1 September 2026 notes the memo is built from |
 | [`references/claims-to-citations.md`](references/claims-to-citations.md) | Verified citations for the reframing's claims, with what each supports and what is unsupported |
 | [`lumawarp/README.md`](lumawarp/README.md) | Placeholder outline for the expanded LumaWarp detector treatment and the dichromatic sensitivity filter |
+| [`playbook/README.md`](playbook/README.md) | The written guide the article and site condense: rungs 0 to 6 with inputs, tools, and guards; [`playbook/dag-harvest-protocol.md`](playbook/dag-harvest-protocol.md) is rung 0 |
+| [`references/manuscript-references.md`](references/manuscript-references.md) | Venue, NASA DAG-program references, and the epidemiology framing citations |
+| `manuscript/` (gitignored) | The working manuscript outline with the 2026-09-04 reframing addendum; Box stays canonical for coauthor drafts |
 
 ## The working subgraph (14 nodes; `config/`, `pipeline/`, `r/`, `python/`)
 
@@ -23,6 +26,7 @@ the argument, with `STATUS.md` if you want to know what has run.
 | [`dag_README.md`](dag_README.md), [`renal_stone_working_subgraph.txt`](renal_stone_working_subgraph.txt) | The working DAG in DAGitty syntax |
 | [`provenance.md`](provenance.md) | DAG source and coefficient sourcing for the working subgraph |
 | `methods/` (gitignored) | The human-written intro and methods draft. Never machine-rewrite it |
+| [`../dag-candidates/`](../dag-candidates/) | Core-graph CSVs plus the July 2026 harvest notes and provisional renal and SANS edge lists |
 
 ## The full source DAG (51 nodes; `analysis/`, `apps/`)
 
@@ -31,6 +35,7 @@ the argument, with `STATUS.md` if you want to know what has run.
 | [`full_dag/RESEARCH_RECORD.md`](full_dag/RESEARCH_RECORD.md) | Narrative, methods, frozen results (ordering-only null, structural prototype), limitations, roadmap |
 | [`full_dag/PROVENANCE_AND_REFERENCES.md`](full_dag/PROVENANCE_AND_REFERENCES.md) | DAG and data lineage, the Reynolds handoff, ACIC lineage, annotated references and claim-to-citation map |
 | [`full_dag/REPRODUCIBILITY_AND_SITE.md`](full_dag/REPRODUCIBILITY_AND_SITE.md) | Environments, build and validation commands, site content discipline (paths updated for this hub) |
+| [`full_dag/proximity-bias-metrics.md`](full_dag/proximity-bias-metrics.md) | The 2026-07-10 proposal defining directed target distance, PBI, POA, and the distance-concentration curve; now implemented in `causal_shap_renal.evaluation` |
 
 ## Decisions
 

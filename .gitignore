@@ -102,3 +102,6 @@ results/detector/
 
 # Local Claude Code session config (launch.json etc.)
 .claude/
+
+# Manuscript drafts and outline stay private until circulation (Box is canonical).
+docs/manuscript/

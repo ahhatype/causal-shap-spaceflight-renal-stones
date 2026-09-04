@@ -1,0 +1,13 @@
+from,to
+spaceflight_exposure,altered_gravity
+altered_gravity,bone_unloading
+bone_unloading,bone_remodeling_imbalance
+bone_remodeling_imbalance,serum_calcium
+serum_calcium,urine_calcium
+urine_calcium,urine_chemistry
+hydration_status,urine_chemistry
+hydration_status,urinary_stasis
+urine_chemistry,renal_stone_formation
+urinary_stasis,renal_stone_formation
+renal_stone_formation,renal_colic_or_medical_event
+renal_colic_or_medical_event,mission_or_task_impact

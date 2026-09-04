@@ -26,10 +26,14 @@ can screen off its ancestors for prediction while still transmitting their
 intervention effects, so predictive credit pools near the outcome and the
 upstream nodes an intervention would have to touch drop out of the ranking.
 
-The paper's reframing ([framing memo](docs/framing/prediction-vs-intervention.md))
-follows Harrell's *Regression Modeling Strategies* in treating prediction
-and intervention as different goals with different recipes. The prediction
-recipe is the default in explainable AI and is fine for prediction. The
+The article this hub accompanies is being written for *npj Microgravity*
+(collection: Human System Risk Management and Knowledge Graphs for Human
+Spaceflight, Vol. II) as a playbook for the emerging practice of graph-based
+intervention estimation. Its reframing ([framing memo](docs/framing/prediction-vs-intervention.md))
+treats prediction and intervention as different goals with different recipes,
+a split that is standard in statistics and epidemiology (Shmueli 2010;
+Hernán, Hsu and Healy 2019; Harrell 2015). The prediction recipe is the
+default in explainable AI and is fine for prediction. The
 intervention recipe has to cast a wider net, re-admitting candidates the
 predictor discarded, and then prune with structure. Deeper nodes make that
 hard: their total effects shrink with every hop (product of path
