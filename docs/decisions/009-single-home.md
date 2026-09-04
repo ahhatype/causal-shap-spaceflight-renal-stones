@@ -20,7 +20,7 @@ manuscript is written here, in LaTeX, under `manuscript/`:
 
 | Location | Role from now on |
 | --- | --- |
-| This hub (`ahhatype/causal-shap-spaceflight-renal-stones`) | Code, results, docs, site source, **and the manuscript** (`manuscript/main.tex`, `references.bib`, figures) |
+| This hub (`ahhatype/causal-shap-spaceflight-renal-stones`) | Code, results, docs, site source, **and the manuscript** (`manuscript/main.tex`, `references.bib`), the latter gitignored for now |
 | `andystats/causal-shap-target-dags` | Frozen provenance and the GitHub Pages deploy shim (ADR 007). No edits except the deploy workflow |
 | Box project folder | Coauthor exchange only: Word or PDF exports of the LaTeX manuscript in dated `from-github-YYYY-MM-DD/` folders, the recovered August Word originals in `manuscript/` as an archive, reference PDFs, whiteboard photos. Not a place to edit text |
 | `C:\Lumawarp\` | LumaWarp runtime and frozen logs only. `_to_delete_2026-08-12\` may be deleted once the Box and hub copies are confirmed |
@@ -39,10 +39,12 @@ manuscript is written here, in LaTeX, under `manuscript/`:
 - No coauthor correspondence, no credentials, no private PDFs.
 
 ## Consequences
-- `manuscript/` is tracked in git. This repository is public, so the draft
-  is public from the first commit. npj Microgravity permits preprints; if
-  any coauthor objects, one line in `.gitignore` makes the folder private
-  again without moving it.
+- `manuscript/` is gitignored (decided 2026-09-04, same day): the folder
+  lives in the hub and builds from it, but the draft is not published until
+  the coauthors agree. It appeared in one public commit (`7913fa7`) before
+  the decision and was removed from the tree in the next; the history still
+  holds that version unless it is rewritten. Removing the `.gitignore` line
+  publishes it.
 - `make manuscript` builds the PDF with latexmk. CI does not build it.
 - `.gitignore` drops the `docs/manuscript/` entry.
 - Box receives a PDF export whenever the draft goes to coauthors, in a

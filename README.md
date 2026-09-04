@@ -115,7 +115,7 @@ data/             raw, interim, simulated (gitignored, regenerated from a seed);
                    frozen_truth (committed)
 results/          attributions, discovery, evaluation, figures; detector/ (gitignored)
 site/             Quarto single-page site, deployed to GitHub Pages
-manuscript/       The npj Microgravity article (LaTeX, .bib, outline)
+manuscript/       The npj Microgravity article (LaTeX, .bib, outline); gitignored for now
 docs/             framing memo, playbook, notes, references, LumaWarp placeholder,
                    decisions, step results, full-DAG record. Index: docs/README.md
 ```
@@ -172,8 +172,9 @@ page is kept as an archived subpage at `/target-dags.html`. The root
 
 ## The manuscript
 
-The article is written in LaTeX under [`manuscript/`](manuscript/README.md)
-and tracked here (ADR 009: one home for the project). The introduction is
+The article is written in LaTeX under `manuscript/` in this repository
+(ADR 009: one home for the project). The folder is gitignored for now, so it
+builds from the hub but is not published; coauthors receive PDF exports. The introduction is
 human-written and stays that way; Methods follow the 13 steps above;
 Results and Discussion are assembled from the frozen records in this
 repository. `make manuscript` builds the PDF; `make figures` regenerates the

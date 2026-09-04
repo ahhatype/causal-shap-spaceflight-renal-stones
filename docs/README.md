@@ -13,7 +13,7 @@ the argument, with `STATUS.md` if you want to know what has run.
 | [`lumawarp/README.md`](lumawarp/README.md) | Placeholder outline for the expanded LumaWarp detector treatment and the dichromatic sensitivity filter |
 | [`playbook/README.md`](playbook/README.md) | The written guide the article and site condense: rungs 0 to 6 with inputs, tools, and guards; [`playbook/dag-harvest-protocol.md`](playbook/dag-harvest-protocol.md) is rung 0 |
 | [`references/manuscript-references.md`](references/manuscript-references.md) | Venue, NASA DAG-program references, and the epidemiology framing citations |
-| [`../manuscript/`](../manuscript/README.md) | The article in LaTeX with its bibliography and outline (ADR 009); the introduction is human-written |
+| `../manuscript/` (gitignored for now) | The article in LaTeX with its bibliography and outline (ADR 009); the introduction is human-written |
 
 ## The working subgraph (14 nodes; `config/`, `pipeline/`, `r/`, `python/`)
 

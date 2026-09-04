@@ -103,14 +103,7 @@ results/detector/
 # Local Claude Code session config (launch.json etc.)
 .claude/
 
-# LaTeX build products for manuscript/ (the PDF is built, not committed)
-manuscript/*.aux
-manuscript/*.bbl
-manuscript/*.blg
-manuscript/*.log
-manuscript/*.out
-manuscript/*.fls
-manuscript/*.fdb_latexmk
-manuscript/*.synctex.gz
-manuscript/*.toc
-manuscript/main.pdf
+# The manuscript stays private for now (decided 2026-09-04; ADR 009). It lives
+# here, builds with `make manuscript`, and is exchanged with coauthors as PDF
+# exports into Box. Remove this line to publish it.
+manuscript/

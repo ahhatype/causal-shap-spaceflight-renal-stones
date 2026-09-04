@@ -51,5 +51,5 @@ causal-shap-target-dags (`analysis/`, `apps/`, `docs/full_dag/`).
 
 `docs/methods/` (the pre-LaTeX snapshot, superseded by `manuscript/`) and
 `docs/STATUS.md` are gitignored on purpose; do not force-add them. The
-manuscript itself is tracked under `manuscript/` (ADR 009); its
-introduction is human-written and must never be machine-rewritten.
+manuscript lives under `manuscript/`, gitignored for now (ADR 009); never
+force-add it, and never machine-rewrite its human-written introduction.
