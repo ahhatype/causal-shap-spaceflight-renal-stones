@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 480 150" role="img" aria-labelledby="title desc"><title id="title">Predict Y: a clean mediator M can screen off X</title>
+<desc id="desc">A three-node causal chain X to M to Y. Edge coefficients are a and b. No attribution magnitudes are depicted.</desc>
+<defs><marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10" fill="#b9b0a1"/></marker></defs>
+<g font-family="Arial, sans-serif" text-anchor="middle" fill="#1a1814">
+<path d="M102 85H202" stroke="#b9b0a1" stroke-width="2.5" marker-end="url(#arrow)"/>
+<path d="M272 85H372" stroke="#b9b0a1" stroke-width="2.5" marker-end="url(#arrow)"/>
+<circle cx="70" cy="85" r="31" fill="#ffffff" stroke="#b9b0a1" stroke-width="2"/><text x="70" y="95" font-size="28" fill="#1a1814">X</text>
+<circle cx="240" cy="85" r="31" fill="#e0f1f7" stroke="#0077a8" stroke-width="2"/><text x="240" y="95" font-size="28" fill="#1a1814">M</text>
+<circle cx="410" cy="85" r="31" fill="#1a1814" stroke="#1a1814" stroke-width="2"/><text x="410" y="95" font-size="28" fill="#ffffff">Y</text>
+<text x="155" y="67" font-size="22" font-style="italic">a</text><text x="325" y="67" font-size="22" font-style="italic">b</text>
+</g></svg>
