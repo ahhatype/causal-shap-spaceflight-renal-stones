@@ -1,5 +1,9 @@
 # Orientation
 
+**Next session:** [Mac-to-experiment-machine handoff](docs/NEXT_SESSION.md)
+records the published tutorial, pending animation revision, experiment
+priorities, companion setup and deployment steps.
+
 Start here. Last updated 2026-09-04. The premise: **your roadmap should
 follow your goal.** Prediction is the default playbook; intervention casts a
 wider net, then prunes. The project

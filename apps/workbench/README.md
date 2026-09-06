@@ -12,7 +12,7 @@ the app from this directory:
 
 ```powershell
 py -3.13 -m pip install -e ".[workbench]"
-Set-Location app\workbench
+Set-Location apps\workbench
 py -3.13 -m shiny run --port 8001 app.py
 ```
 

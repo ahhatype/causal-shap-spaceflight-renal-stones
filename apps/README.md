@@ -7,7 +7,7 @@ materials or network access.
 ## Run
 
 ```powershell
-cd causal-shap-target-dags
+cd causal-shap-spaceflight-renal-stones
 py -3.13 -m pip install -e ".[discovery]"
 cd apps
 py -3.13 -m shiny run --port 8010 app.py
@@ -18,11 +18,11 @@ Open `http://127.0.0.1:8010`.
 ## Rebuild frozen results
 
 ```powershell
-cd causal-shap-target-dags
+cd causal-shap-spaceflight-renal-stones
 py -3.13 -m pip install -e ".[discovery,site]"
 py -3.13 -m causal_shap.build all
 py -3.13 -m causal_shap.build validate
-py -3.13 -m unittest discover -s app/tests -v
+py -3.13 -m unittest discover -s apps/tests -v
 ```
 
 The pre-frozen ACIC and NASA structural bundles are excluded from `all`; rebuild

@@ -30,7 +30,7 @@ the repository.
 Python 3.13 was used for the current build.
 
 ```powershell
-cd causal-shap-target-dags
+cd causal-shap-spaceflight-renal-stones
 py -3.13 -m venv .venv
 .\.venv\Scripts\Activate.ps1
 python -m pip install --upgrade pip
@@ -76,7 +76,8 @@ quarto render site       # renders with zero code execution; output in site/_sit
 The single page contains prose and pre-built figures, so no Python or R runs at
 render time. `freeze: true` protects that boundary if an executable chunk is
 added later. Deploy is handled by
-`.github/workflows/publish-site.yml` (GitHub Pages). The interactive app is **not
+`publish-site.yml` in `andystats/causal-shap-target-dags`, which checks out this
+hub's `main` (GitHub Pages). This hub's workflow checks rendering only. The interactive app is **not
 hosted** — install from the repository root, then run it locally
 (`pip install -e ".[discovery]" && cd apps && shiny run app.py`). This is a
 reproducibility choice: a hosted instance can't pin the environment behind the
