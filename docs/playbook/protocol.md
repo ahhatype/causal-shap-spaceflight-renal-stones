@@ -25,9 +25,9 @@ The full-DAG comparison also contributes to central-workflow stage 6 through
 `analysis/07_run_shap_comparison.R` and `apps/causal_shap/build/stages.py`;
 these are separate from the numbered working-subgraph drivers.
 
-Detail for Steps 1 to 6 on the working subgraph is in
-`docs/step03_simulation_review.md`, `docs/step04_results.md`, and
-`docs/step06_results.md`. The full-DAG methods and results are in
-`docs/full_dag/RESEARCH_RECORD.md`. The LumaWarp placeholders and what is
-gated are in `docs/lumawarp/README.md` and [ADR 008](../decisions/008-lumawarp-detector-placeholders.md).
-
+Working-subgraph records: [simulation checks](../step03_simulation_review.md),
+[baseline attribution](../step04_results.md), and
+[scripted causal-attribution revisions](../step06_results.md).
+See the [full-DAG research record](../full_dag/RESEARCH_RECORD.md) for its
+separate methods and results, and the [detector interface](../lumawarp/README.md)
+for the unevaluated Steps 5 and 7.
