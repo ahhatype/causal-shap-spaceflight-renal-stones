@@ -98,7 +98,7 @@ figures:
 	$(PY) analysis/two_goals_gif.py
 
 manuscript:
-	cd manuscript && latexmk -pdf -interaction=nonstopmode main.tex
+	$(PY) manuscript/build.py
 
 # --- tests ---
 

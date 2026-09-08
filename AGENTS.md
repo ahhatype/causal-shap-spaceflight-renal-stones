@@ -55,5 +55,9 @@ causal-shap-target-dags (`analysis/`, `apps/`, `docs/full_dag/`).
 
 `docs/methods/` (the pre-LaTeX snapshot, superseded by `manuscript/`) and
 `docs/STATUS.md` are gitignored on purpose; do not force-add them. The
-manuscript lives under `manuscript/`, gitignored for now (ADR 009); never
-force-add it, and never machine-rewrite its human-written introduction.
+manuscript source is `manuscript/prism-upload/`, gitignored for now (ADR 009);
+never force-add it, and never machine-rewrite its human-written introduction,
+which is embedded between labeled comments in `main.tex`. Use
+`python manuscript/build.py` to build its PDF and ZIP; do not create a second
+editing copy at the manuscript root. Coauthor correspondence and the recording
+script live in `manuscript/coauthor-review/`.
