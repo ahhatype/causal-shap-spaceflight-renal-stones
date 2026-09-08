@@ -21,6 +21,10 @@ causal-shap-target-dags (`analysis/`, `apps/`, `docs/full_dag/`).
 - Keep `site/` as a source archive. The root `index.html` redirects to this
   GitHub repository. Current reader entry points are README.md,
   REPRODUCIBILITY.md and docs/classroom/README.md.
+- Keep reader entry points focused on the study and how to use its materials.
+  Hosting history, manuscript handoffs and maintenance instructions belong in
+  contributor notes or decisions. Avoid repeating caveats already stated with
+  the relevant result, and do not promote the standalone animation link.
 - Preserve code, math, figures and references in this repository before
   retiring any presentation. Settle a claim in `docs/` before the README. Use "NASA-topology
   simulation", never "NASA effect". Keep the placeholder rungs marked as

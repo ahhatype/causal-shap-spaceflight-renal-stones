@@ -1,22 +1,19 @@
-# Orientation
+# Contributor orientation
 
-This is the master repository for the Space SHAP manuscript, reproducibility
-companion and teaching companion. Pages is retired under [ADR 010](docs/decisions/010-repository-companion.md).
-The manuscript remains a private coauthor draft; research and teaching sources
-are public here.
+Source locations and current development priorities for the Space SHAP project.
 
 | What you need | Start here |
 | --- | --- |
 | Argument, workflow and current results | [README](README.md) |
 | Reproduction commands and limits | [REPRODUCIBILITY.md](REPRODUCIBILITY.md) |
 | Path-length math, detection, causal credit and splines | [Technical note](docs/technical/path-length-and-response-shape.md) |
-| Classroom lab, worksheet, answer key and controlled animation | [Teaching companion](docs/classroom/README.md) |
+| Classroom lab, worksheet and answer key | [Teaching companion](docs/classroom/README.md) |
 | Public technical citations | [BibTeX](docs/references/technical-companion.bib), [reference map](docs/references/manuscript-references.md) |
 | 14-node working-subgraph findings | [Step 4](docs/step04_results.md), [scripted Step 6](docs/step06_results.md) |
 | 51-node full-DAG findings | [Research record](docs/full_dag/RESEARCH_RECORD.md) |
 | Pipeline status | [config/pipeline_status.yaml](config/pipeline_status.yaml) |
 | Original protocol and framework | [Playbook](docs/playbook/README.md), [central workflow](docs/playbook/central-workflow.md) |
-| Preserved Pages sources and history | [Archive guide](site/README.md), [preservation map](docs/decisions/010-repository-companion.md) |
+| Archived presentations and repository history | [Archive guide](site/README.md), [preservation map](docs/decisions/010-repository-companion.md) |
 | Private manuscript on the writing machine | manuscript/main.tex, introduction-aimee.tex, references.bib, technical-companion.tex and main.pdf |
 | Private portable writing package | manuscript/prism-upload/ and manuscript/causal-shap-prism.zip |
 
@@ -52,5 +49,31 @@ python analysis/depth_washout_figure.py --verify-recorded
 
 Use the repository Python environment for the depth experiment and research
 apps. See the README for installation and the Makefile for R/Python pipeline
-commands. No Pages publishing is needed. The [previous machine handoff](docs/NEXT_SESSION.md)
-is retained as history; its deployment instructions are superseded.
+commands.
+
+## Repository map
+
+```
+config/           DAG spec, edge coefficients, model engines, pipeline status (YAML)
+pipeline/         Numbered driver scripts for the working subgraph, one per step
+r/                R package for the working subgraph (renv): DAG utilities,
+                   simcausal helpers, ground truth, pcalg and shapr wrappers
+python/src/       causal_shap_renal: attribution methods, discovery wrappers,
+                   evaluation, the file interchange contract, the LumaWarp contract
+python/tests/     pytest suite for causal_shap_renal
+apps/             causal_shap library (teaching DAGs,
+                   discovery, experimental complexity interface, structural value function,
+                   validation, M1-M5, action selection, figures); the guided hub,
+                   the M1-M5 Workbench, the six-rung ladder app; frozen bundles; tests
+analysis/         R pipeline on the full 51-node DAG and
+                   its frozen result record under analysis/output/
+references/       NASA SA-07566 DAGitty text; Robert Reynolds's 2026-07-13 files
+dag-candidates/   Core-graph node and edge CSVs
+data/             raw, interim, simulated (gitignored, regenerated from a seed);
+                   frozen_truth (committed)
+results/          attributions, discovery, evaluation, figures; detector/ (gitignored)
+site/             Archived presentations and assets
+manuscript/       The npj Microgravity article (LaTeX, .bib, outline); gitignored for now
+docs/             framing memo, playbook, notes, references, LumaWarp placeholder,
+                   decisions, step results, full-DAG record. Index: docs/README.md
+```

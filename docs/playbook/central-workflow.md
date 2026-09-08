@@ -1,9 +1,8 @@
 # The central workflow and its evidence
 
-This is the shared reader-facing account for the repository and companion.
-The seven stages organize this project's work; they are not a required order
+The seven stages organize the analysis; they are not a required order
 for every causal analysis, and the complete workflow has not been validated
-end to end. The [protocol crosswalk](README.md#the-seven-steps-one-flow-five-tellings)
+end to end. The [protocol crosswalk](README.md#protocol-crosswalk)
 maps them to the original 13-step methods plan. Discovery and graph review
 can be revisited as evidence changes; a supplied graph can also be evaluated
 directly. The detector remains optional and unevaluated.

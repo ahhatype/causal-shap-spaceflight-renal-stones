@@ -1,10 +1,5 @@
 # Reproducing the examples and research record
 
-This repository is the master companion. GitHub Pages is retired under
-[ADR 010](docs/decisions/010-repository-companion.md); no hosted page is
-needed for these instructions. The manuscript remains a private coauthor
-draft under `manuscript/`.
-
 ## Choose a level
 
 | Task | Start here | Requirements |
@@ -15,24 +10,32 @@ draft under `manuscript/`.
 | Inspect working-subgraph results | [Step 4](docs/step04_results.md), [scripted Step 6](docs/step06_results.md) | No installation to read |
 | Inspect full-DAG results | [Research record](docs/full_dag/RESEARCH_RECORD.md) | No installation to read |
 | Validate frozen bundles | `python -m causal_shap.build validate` from `apps/` | Repository Python environment |
-| Rerun the renal pipelines | [Existing build guide](docs/full_dag/REPRODUCIBILITY_AND_SITE.md), [Makefile](Makefile) | Python 3.11–3.13, R/renv and recorded dependencies |
+| Rerun the renal pipelines | [Build guide](docs/full_dag/REPRODUCIBILITY_AND_SITE.md), [Makefile](Makefile) | Python 3.11–3.13, R/renv and recorded dependencies |
 
 ```bash
 python docs/classroom/lab.py --check
 python analysis/package_classroom.py
 ```
 
-The second command creates `dist/causal-shap-classroom.zip`, including the
-offline lab and four-node animation. Alternatively download this repository
-with GitHub's **Code → Download ZIP**, extract it, and open
-`docs/classroom/index.html` or `animation.html`. GitHub displays HTML source;
-it does not execute these files in the repository view. No Pages hosting is
-required. The package includes the repository license.
+The second command creates `dist/causal-shap-classroom.zip`. Extract it and
+open `index.html` for the interactive lesson.
 
-For research, create the Python environment using the root README. Frozen
-simulations are separate from the exact classroom examples. The depth
-verification does not overwrite its CSV; a full renal rerun can regenerate
-outputs and should be done with an explicitly chosen experiment plan.
+For research, create the Python environment using the [quickstart](README.md#quickstart).
+R dependencies are managed by `renv` for the working subgraph and by
+`analysis/install_dependencies.R` for the full DAG. Common commands:
+
+```bash
+make step02 step03 step04 step06  # working-subgraph pipeline
+make full-dag-validate           # R validation and frozen-output hash check
+make depth-check                # verify recorded teaching curves without rewriting them
+make hub                        # discovery hub, localhost:8002
+make workbench                  # M1–M5 Workbench, localhost:8001
+make ladder                     # six-rung teaching app, localhost:8000
+```
+
+The [build guide](docs/full_dag/REPRODUCIBILITY_AND_SITE.md) gives full-DAG
+reproduction commands. A pipeline rerun may regenerate outputs; the
+validation and depth-check commands check existing records.
 
 ## Reproducibility limits that matter
 
@@ -50,12 +53,3 @@ outputs and should be done with an explicitly chosen experiment plan.
 - Detector/filter results, broader discovery comparisons, nonlinear
   robustness and action evaluation remain incomplete. See the
   [workflow evidence map](docs/playbook/central-workflow.md).
-
-## Manuscript handoff
-
-The ignored local `manuscript/main.tex` includes Aimee's introduction from
-`introduction-aimee.tex`; the bibliography is `references.bib`. Figure sources
-and public technical notes are in this repository. A private
-`manuscript/prism-upload/` snapshot packages these with relative figure paths
-and a compiled PDF. Agree a writing master before exchanging dated exports;
-the repository, Prism import and Google Doc are not automatically synchronized.

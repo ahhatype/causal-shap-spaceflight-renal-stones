@@ -86,7 +86,7 @@ mediated-effect tests, which are related but different calculations.
 | Simulation, test and original plotting code | [depth_washout_figure.py](../../analysis/depth_washout_figure.py) |
 | Frozen teaching results | [depth_washout.csv](../../results/figures/depth_washout.csv) |
 | Original full figure | [PNG](../images/depth_washout.png) |
-| Simplified figure preserved from Pages | [SVG](../images/depth-detection.svg) |
+| Summary figure | [SVG](../images/depth-detection.svg) |
 | Simplified figure renderer | [build_tutorial_figures.py](../../site/build_tutorial_figures.py) |
 
 ```bash

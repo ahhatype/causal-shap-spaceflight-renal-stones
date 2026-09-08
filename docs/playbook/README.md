@@ -1,17 +1,10 @@
-# The playbook: graph-based intervention estimation, step by step
+# Framework and protocol mappings
 
-**Reader-facing workflow:** [The central workflow and its evidence](central-workflow.md)
-connects the seven stages to the worked classroom example and the separate
-renal simulations. It is the current scope guide for the repository companion.
-The historical rung and protocol mappings below retain the original plan;
-their sequence is a design proposal, not a validated end-to-end result.
-
-**Status:** skeleton, 2026-09-04. This is the written guide the *npj
-Microgravity* article and the repository companion condense. Each rung names the
-question it answers, the inputs it needs, the tools that exist in this
-repository, and the failure it guards against. Rungs three and four are
-placeholders (ADR 008). The argument behind the ordering is in the
-[framing memo](../framing/prediction-vs-intervention.md).
+The [central workflow](central-workflow.md) connects the study's seven
+stages to the examples and renal simulations. The [13-step protocol](protocol.md)
+lists implementations and status. The framework below describes proposed
+analytical roles; it has not been validated end to end. Rungs three and four
+remain unevaluated placeholders.
 
 The prediction playbook is rungs 0 to 2 and stops there. The intervention
 playbook continues.
@@ -28,7 +21,7 @@ playbook continues.
 
 ## What each rung must report
 
-Carried over from the Target DAGs record: every substantive result states
+Each result should state
 its estimand and intervention semantics, graph and data regime, evidence
 status (teaching, matched comparison, prototype), computational budget, and
 uncertainty procedure. For this playbook add two items per rung:
@@ -44,15 +37,12 @@ uncertainty procedure. For this playbook add two items per rung:
   arrow does not guarantee linearity. Nonlinear robustness in Step 9 is
   pending, not a completed assessment of this assumption.
 
-## The seven steps: one flow, five tellings
+## Protocol crosswalk
 
-The site and the README walk the road as seven steps, cut for a reader who
-starts from the premise (your roadmap should follow your goal) rather than
-from the tooling. The same road has been drawn at least four other times by
-the authors, and the tellings agree on the order. This table is the
-consolidation (2026-09-04); the rungs above remain the working units.
+The table maps the workflow to the authors' protocol and earlier schematics.
+These are planning frameworks, not separate completed analyses.
 
-| Site step | Rungs | Aimee Harrison's 13-step protocol (methods draft, 2026-08-10) | Andy Wilson's schematic (FIG. 1, 2026-08-09) | ACIC 2026 workflow (Harrison et al.) | Scope list (Box `PLAN.md`, July 2026) |
+| Workflow stage | Rungs | Aimee Harrison's 13-step protocol (methods draft, 2026-08-10) | Andy Wilson's schematic (FIG. 1, 2026-08-09) | ACIC 2026 workflow (Harrison et al.) | Scope list (Box `PLAN.md`, July 2026) |
 | --- | --- | --- | --- | --- | --- |
 | 01 Data | 0, 1 (inputs) | 1 exposure and outcome; 2 DAG review and augmentation; 3 simcausal data | 1 Data | (data in hand) | 1 living DAG; 2 anchors; 3 synthetic data |
 | 02 Predict and explain | 1, 2 | 4 out-of-box SHAP | 2 predictive model; 3 ordinary SHAP; 4 importance ranking, marked "targets?" | (the baseline it corrects) | 4 ordinary SHAP side of the comparison |
@@ -93,8 +83,7 @@ Two things the consolidation settles and one it leaves open.
 
 ## How the consolidated plan's phases map onto the rungs
 
-The 2026-08-10 consolidated plan (`manuscript/archive-2026-08-word-originals/`, gitignored) walks the
-same road as a spine of phases. Rung numbers are from the table above.
+The original plan groups the proposed analyses into these phases.
 
 | Phase | What | Rungs |
 | --- | --- | --- |
