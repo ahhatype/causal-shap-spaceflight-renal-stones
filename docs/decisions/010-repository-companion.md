@@ -7,7 +7,7 @@ The master is `ahhatype/causal-shap-spaceflight-renal-stones`. Priorities are
 the manuscript, the GitHub reproducibility companion and the teaching
 companion. No Pages deployment or migration to Aimee's Pages account is
 planned. The old host's automatic deployment is disabled; its published
-Pages site is to be unpublished after preservation and the hub update.
+Pages site was unpublished after preservation and the hub update.
 The old repository and its history remain available as provenance.
 
 ## Preservation map
@@ -35,6 +35,13 @@ Existing hub revisions were preserved rather than overwritten with older
 copies. The original index presentation is retained in `site/target-dags.qmd`;
 the latest presentation is `site/index.qmd`. No source or old repository
 history is deleted to retire hosting.
+
+Retirement verified after hub commit `2cedcc2`: GitHub reports the old
+workflow as `disabled_manually` and the old Pages resource as absent
+(HTTP 404). The old repository's README now points readers here, in commit
+`0d7778e`. Hub CI passed. Local validation passed 151 tests with one skip,
+all 90 frozen depth rows reproduced, and the seven-file offline kit passed
+its analytic and archive-integrity checks. No frozen renal results changed.
 
 The classroom package builds independently of Quarto. The archived site can
 still render manually for provenance, but does not publish. A future change
