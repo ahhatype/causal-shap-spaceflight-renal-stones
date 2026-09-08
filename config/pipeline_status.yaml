@@ -1,6 +1,5 @@
 # Machine-readable mirror of docs/STATUS.md. Keep the two in sync.
-# Updated 2026-09-03 with the causal-shap-target-dags consolidation (ADR 007)
-# and the LumaWarp placeholders (ADR 008).
+# Updated 2026-09-07: distinguish completed scripted runs from pending human review.
 steps:
   - step: 1
     label: "Exposure/outcome specification"
@@ -22,8 +21,8 @@ steps:
     owner: "Lexi Pasi / Andy Wilson"
     note: "Public interface contract and driver in the repo; provider gated on Lucidity sign-off (ADR 008)."
   - step: 6
-    label: "Causal SHAP comparison and human-in-the-loop iteration"
-    status: done
+    label: "Causal SHAP comparison and planned human review"
+    status: partial
     note: "3 methods run (ASV, Ng et al. Causal SHAP, Shapley Flow) across 3 scripted-revision rounds. Rounds 2-3 are a scripted heuristic, not real expert review. The Heskes-style structural value function ported to apps/causal_shap/structural_value.py is the candidate fourth method (ADR 006 blocked the shapr path)."
   - step: 7
     label: "LumaWarp detector over Step 6"

@@ -29,9 +29,11 @@ under real expert revision.
 | Ng et al.'s Causal SHAP | PC's discovered CPDAG, `pdag2dag()`'s arbitrary orientation of undirected edges | (a) Reorient PC-undirected edges toward `dag_spec.yaml`'s true direction; (b) if the outcome ends up with **zero** discovered edges, add one edge from the feature with the strongest marginal \|correlation\| to it | (b) is a genuine finding-driven addition, not in the original plan - see below | PC left `nephrolithiasis` fully disconnected in round 1 (see below); a real reviewer seeing all-zero attributions would obviously investigate and reconnect it, not accept the output silently |
 | Shapley Flow | No inter-feature edges at all (every feature a direct, independent model input) | Add the single true `dag_spec.yaml` inter-feature edge whose child has the highest prior-round error, one per round | One edge/round, accumulated | Arbitrary pacing choice - revising all edges at once would collapse rounds 2 and 3 into the same, less informative comparison |
 
-Also not LLM decisions, for contrast: the DAG structure and coefficients themselves
-(Robert's, cited per-edge in `config/dag_spec.yaml`), and the ground-truth computation
-(a deterministic `do()`-intervention, no judgment call involved).
+The graph augmentation draws on Robert Reynolds's supplied files, with edge
+provenance in `config/dag_spec.yaml`. Coefficients in `config/edge_coefficients.yaml`
+are simulation assumptions pending expert calibration. Ground-truth contrasts
+are computed by specified `do()` interventions under those assumptions; they
+are not measured astronaut effects or evidence of completed human review.
 
 ## A real finding, not a bug: PC left the outcome disconnected
 

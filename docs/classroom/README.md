@@ -16,7 +16,7 @@ This directory is the canonical classroom source. The companion runs locally wit
 extract the repository, and open docs/classroom/index.html. Open
 [animation.html](animation.html) for the preserved four-node comparison.
 Run `python analysis/package_classroom.py` from the repository root to
-create a standalone kit in dist/ (including the license). See [the central workflow](../playbook/central-workflow.md) for the relationship between this two-player lab, the four-node animation, the five-node stress test and the renal simulations.
+create a standalone kit in dist/ (including the license). See [the central workflow](https://github.com/ahhatype/causal-shap-spaceflight-renal-stones/blob/main/docs/playbook/central-workflow.md) for the relationship between this two-player lab, the four-node animation, the five-node stress test and the renal simulations. Research links require an internet connection; the included lesson runs offline.
 
 | What to explore | Repository source |
 | --- | --- |
@@ -30,10 +30,12 @@ create a standalone kit in dist/ (including the license). See [the central workf
 
 Those research scripts have additional Python/R dependencies documented by the repository. The included lab is deliberately independent. Read the repository license before redistributing its code; this kit does not bundle the research code or private LumaWarp materials.
 
-## What the next kit version needs
+## Technical extension
 
-The [technical note](../technical/path-length-and-response-shape.md) supplies
+The [technical note](https://github.com/ahhatype/causal-shap-spaceflight-renal-stones/blob/main/docs/technical/path-length-and-response-shape.md) supplies
 path-length math, detection assumptions, nonlinear counterexamples and
-[BibTeX references](../references/technical-companion.bib).
+[BibTeX references](https://github.com/ahhatype/causal-shap-spaceflight-renal-stones/blob/main/docs/references/technical-companion.bib).
+
+## What the next kit version needs
 
 Coauthor-reviewed slides, a pinned environment/notebook for reproducing selected renal outputs, learner feedback, and accessible downloadable figures. The current kit is a usable lesson prototype, not a completed course or verified replication package.
