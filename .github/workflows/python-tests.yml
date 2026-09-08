@@ -19,6 +19,12 @@ jobs:
           cache-dependency-path: pyproject.toml
       - name: Install both packages with discovery and Workbench extras
         run: python -m pip install -e ".[discovery,workbench,dev]"
+      - name: Check and package the teaching companion
+        run: |
+          python docs/classroom/lab.py --check
+          python analysis/build_teaching_animation.py
+          git diff --exit-code -- docs/classroom/animation.html
+          python analysis/package_classroom.py
       - name: Compile
         run: python -m compileall -q apps/causal_shap apps/stages apps/tests apps/workbench apps/hub apps/app.py python/src pipeline
       - name: Test (working-subgraph package and ported library)

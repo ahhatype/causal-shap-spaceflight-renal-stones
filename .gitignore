@@ -59,6 +59,7 @@ docs/STATUS.md
 # Quarto site render output (site/_site is built by CI; never committed)
 site/_site/
 site/.quarto/
+site/resources/causal-shap-classroom.zip
 .pytest_cache/
 Thumbs.db
 /build/
@@ -110,3 +111,6 @@ manuscript/
 
 # Local project map with absolute machine paths; lives in each root, not in git
 PROJECT_MAP.md
+
+# Generated offline teaching packages
+dist/

@@ -1,7 +1,13 @@
 # The playbook: graph-based intervention estimation, step by step
 
+**Reader-facing workflow:** [The central workflow and its evidence](central-workflow.md)
+connects the seven stages to the worked classroom example and the separate
+renal simulations. It is the current scope guide for the repository companion.
+The historical rung and protocol mappings below retain the original plan;
+their sequence is a design proposal, not a validated end-to-end result.
+
 **Status:** skeleton, 2026-09-04. This is the written guide the *npj
-Microgravity* article and the companion site condense. Each rung names the
+Microgravity* article and the repository companion condense. Each rung names the
 question it answers, the inputs it needs, the tools that exist in this
 repository, and the failure it guards against. Rungs three and four are
 placeholders (ADR 008). The argument behind the ordering is in the
@@ -32,10 +38,11 @@ uncertainty procedure. For this playbook add two items per rung:
   metrics (PBI, POA, proximal mass) in
   [`../full_dag/proximity-bias-metrics.md`](../full_dag/proximity-bias-metrics.md)
   are the summary statistics.
-- **Assumption ledger.** Name the working assumptions the rung leans on and
-  how strongly they are enforced. The one that runs through the whole
-  playbook is that direct relationships tend to be linear: enforced in the
-  generating model, relaxed in the estimators, priced in Step 9.
+- **Assumption ledger.** Name the working assumptions and their limits.
+  Selected continuous mechanisms use affine approximations, while the
+  binary-logit outcome and interaction require different treatment. A direct
+  arrow does not guarantee linearity. Nonlinear robustness in Step 9 is
+  pending, not a completed assessment of this assumption.
 
 ## The seven steps: one flow, five tellings
 

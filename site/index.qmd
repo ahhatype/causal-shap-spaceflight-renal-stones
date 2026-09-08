@@ -1,7 +1,7 @@
 ---
 title: ""
-pagetitle: "Space SHAP · prediction is not intervention"
-description: "A prediction ranking does not tell us where to intervene. A simple causal example, a seven-step workflow, and evidence from a NASA-topology simulation."
+pagetitle: "Causal SHAP · workflow, evidence and teaching"
+description: "A prediction ranking need not tell us where to intervene. A simple causal example, a seven-step workflow, and evidence from a NASA-topology simulation."
 page-layout: full
 toc: false
 include-after-body:
@@ -10,72 +10,98 @@ include-after-body:
 ---
 
 ::: {.page}
+<p class="section-note">Archived presentation. The <a href="https://github.com/ahhatype/causal-shap-spaceflight-renal-stones">master repository</a> now carries the manuscript companion, reproducibility guide and teaching materials. Pages deployment is retired.</p>
 ::: {.hero}
-<p class="eyebrow">TWO GOALS. DIFFERENT QUESTIONS.</p>
+<p class="eyebrow">CAUSAL SHAP · A SPACEFLIGHT RISK BENCHMARK</p>
 
-# A prediction ranking does not tell us where to intervene.
+# What can a prediction ranking tell us about changing risk?
 
-<p class="lede">A model can predict an outcome using a measured mediator while giving an upstream cause little credit. Changing that cause can still change the outcome.</p>
+<p class="lede">We compare explanations of a model's predictions with the effects of changing variables in a causal model. NASA's renal-stone graph provides the structure for simulations in which those effects are known.</p>
 
-<p class="hero-route">Start with a simple chain. Then follow the idea into a NASA-topology simulation.</p>
+<p class="hero-route">The central workflow connects the teaching example below to the study's completed comparisons, open questions and classroom materials.</p>
+<nav class="reading-route" aria-label="On this page"><a href="#path">Central workflow</a><a href="#worked-example">Worked example</a><a href="#depth">Path length</a><a href="#evidence">Simulation results</a><a href="#claims">Remaining work</a><a href="#educators">Educator guide</a><a href="#resources">Code and records</a></nav>
 :::
 
 ::: {.panel .goals-panel #goals}
-<p class="eyebrow">01 / THE DISTINCTION</p>
+<p class="eyebrow">THE QUESTION</p>
 
-## Same chain. Two questions.
+## A cause can receive little predictive credit.
 
-<p class="deck">X influences an outcome Y through a mediator M. In this unconfounded example, M is measured without error and carries the entire effect of X.</p>
+<p class="deck">In this four-node teaching chain, X affects Y through A and M. If M is measured exactly and carries the entire effect, a predictor can rely on M while an intervention on X can still change Y.</p>
 
 ```{=html}
+<figure class="chain-figure">
+  <object id="chain-animation" data="assets/two-goals.svg" type="image/svg+xml" width="760" height="300" aria-label="Four-node chain comparing predictive and structural credit">
+    <p>X → A → M → Y. A predictor can use M alone. Setting X can still change Y through A and M.</p>
+  </object>
+  <div class="chain-controls" hidden>
+    <button type="button" id="chain-play">Play comparison</button>
+    <button type="button" data-chain-view="prediction">Show prediction</button>
+    <button type="button" data-chain-view="intervention">Show structural credit</button>
+    <span id="chain-status" role="status">Prediction view</span>
+  </div>
+  <figcaption><strong>Schematic illustration.</strong> Bar heights are not measured SHAP values or effect sizes, and totals are not comparable across phases. The orange phase illustrates possible structural credit, not an action recommendation.</figcaption>
+</figure>
 <div class="goal-grid">
-  <section class="goal prediction">
-    <p class="goal-kind">Prediction</p>
-    <h3>What does the model use?</h3>
-    <img class="chain" src="assets/prediction-chain.svg" width="480" height="150" alt="X causes M, which causes Y. The mediator M is highlighted as the predictor's input.">
-    <div class="node-labels" aria-hidden="true"><span>cause</span><span>mediator</span><span>outcome</span></div>
-    <p class="figure-answer">Once M is known, X adds no predictive information.</p>
-    <p>An ideal predictor can use M alone. Model-interventional SHAP then gives the unused X zero credit.</p>
-  </section>
-  <section class="goal intervention">
-    <p class="goal-kind">Intervention</p>
-    <h3>What changes if we set X?</h3>
-    <div class="propagation-scene" id="propagation-scene">
-      <img class="chain" src="assets/intervention-chain.svg" width="480" height="150" alt="Set X, then propagate the change along the edges with coefficients a and b through M to Y.">
-      <svg class="motion-overlay" viewBox="0 0 480 150" aria-hidden="true" focusable="false">
-        <circle class="propagation-pulse" r="5" fill="#bb541a" stroke="#fbf9f5" stroke-width="2"/>
-        <circle class="propagation-halo" data-at="mediator" cx="240" cy="85" r="36"/>
-        <circle class="propagation-halo" data-at="outcome" cx="410" cy="85" r="36"/>
-      </svg>
-    </div>
-    <div class="node-labels" aria-hidden="true"><span>change here</span><span>propagate</span><span>measure here</span></div>
-    <p class="figure-answer">Changing X can still change Y through M.</p>
-    <p>With linear coefficients a and b, a one-unit change in X changes the expected Y by ab.</p>
-    <button class="motion-control" type="button" data-motion="propagation" aria-controls="propagation-scene" hidden>Replay change</button>
-  </section>
+  <section class="goal"><h3>Explaining a prediction</h3><p>An ideal predictor using M alone does not use X or A. Model-interventional SHAP gives unused inputs zero credit. Conditional SHAP can give them credit through their associations.</p></section>
+  <section class="goal intervention"><h3>Estimating a change</h3><p>Setting X changes the downstream variables according to the assumed equations. The resulting change in Y is an intervention effect. Structural attribution distributes credit using a specified causal game; that credit is not the effect of an action.</p></section>
 </div>
 ```
 
-<p class="takeaway">Predictive credit describes a model. Choosing an action needs a causal model of what would change.</p>
-
 <details class="math-note">
-<summary>The algebra and the limits of this example</summary>
+<summary>Assumptions behind the chain</summary>
 
-For $M = aX + \varepsilon_M$ and $Y = bM + \varepsilon_Y$, with independent errors,
-
-$$Y \perp X \mid M, \qquad \frac{\partial}{\partial x}\mathbb E[Y \mid do(X=x)] = ab.$$
-
-Conditional SHAP can still credit X through its association with M. Noisy mediators, additional paths and fitted-model behavior can change the predictive ranking. This example is not a universal rule that credit goes downstream. [Why the distinction matters](https://github.com/ahhatype/causal-shap-spaceflight-renal-stones/blob/main/docs/framing/prediction-vs-intervention.md).
+For $A=aX+\varepsilon_A$, $M=bA+\varepsilon_M$, and $Y=cM+\varepsilon_Y$, with mutually independent mean-zero disturbances and X independent of them, $Y\perp(X,A)\mid M$. The slope of the mean response to setting X is $abc$. This is full mediation in an affine chain; noisy measurement, additional paths, nonlinear responses and fitted-model behavior can change the conclusion. The renal comparisons below include credit shifts in both directions. [Derivation and scope](https://github.com/ahhatype/causal-shap-spaceflight-renal-stones/blob/main/docs/playbook/central-workflow.md).
 
 </details>
 :::
 
+::: {.panel #path}
+<p class="eyebrow">THE CENTRAL WORKFLOW</p>
+
+## From a prediction explanation to an evaluated intervention
+
+<p class="deck">These seven stages organize the project. The simulations assess parts of this workflow; they do not yet validate it end to end. A supplied graph can be tested directly, and discovery and expert review may require several iterations.</p>
+
+```{=html}
+<ol class="central-workflow">
+  <li><span class="stage-number">01</span><div><h3>Define the study</h3><p>Specify the outcome, graph assumptions and changes to compare. The renal example uses cumulative mission days and nephrolithiasis.</p></div><span class="stage-status">Completed</span></li>
+  <li><span class="stage-number">02</span><div><h3>Fit and explain predictions</h3><p>Compare what different fitted models credit. Five model–explainer pairings have run on the 14-node working subgraph.</p></div><span class="stage-status">Completed</span></li>
+  <li><span class="stage-number">03</span><div><h3>Examine candidate graphs</h3><p>Assess structures under stated discovery assumptions. The Step 6 diagnostic disconnected the binary outcome; the broader Step 8 working-subgraph comparison remains pending.</p></div><span class="stage-status">Partial</span></li>
+  <li><span class="stage-number">04</span><div><h3>Reconsider excluded candidates</h3><p>A proposed detector and two-channel filter would flag candidates for further review. Neither has evaluated results.</p></div><span class="stage-status placeholder">Placeholder</span></li>
+  <li><span class="stage-number">05</span><div><h3>Review graph assumptions</h3><p>Record biological evidence and unresolved directions. Round 1 uses unrevised causal inputs; rounds two and three use a scripted heuristic. No human reviewed these rounds.</p></div><span class="stage-status">Partial</span></li>
+  <li><span class="stage-number">06</span><div><h3>Follow changes through the graph</h3><p>Distinguish ordering-based attribution from propagation through structural equations. The full-DAG propagation result is a prototype.</p></div><span class="stage-status">Partial</span></li>
+  <li><span class="stage-number">07</span><div><h3>Evaluate feasible actions</h3><p>Estimate a specified action's benefit, uncertainty and cost. Attribution can inform this step but cannot replace it.</p></div><span class="stage-status placeholder">Future work</span></li>
+</ol>
+```
+
+Robustness checks apply across the stages. Nonlinear-generator comparisons and broader data-constraint sweeps remain pending. A prediction study can finish after stage 2; causal analysis need not begin with SHAP. The [workflow and evidence map](https://github.com/ahhatype/causal-shap-spaceflight-renal-stones/blob/main/docs/playbook/central-workflow.md) links each stage to the examples. The [protocol crosswalk](https://github.com/ahhatype/causal-shap-spaceflight-renal-stones/blob/main/docs/playbook/README.md#the-seven-steps-one-flow-five-tellings) maps this presentation to the original 13-step plan and the six-rung framework.
+:::
+
+::: {.panel #worked-example}
+<p class="eyebrow">A WORKED EXAMPLE</p>
+
+## A two-player calculation
+
+The classroom example combines A into the X-to-M relationship, leaving $X\to M\to Y$. Let $M=0.6X+\varepsilon_M$ and $Y=0.6M+\varepsilon_Y$, with independent mean-zero disturbances. For a synthetic observation with $x=1$ and $\varepsilon_M=0.2$, we observe $m=0.8$ and the ideal predictor $f=0.6M$ gives 0.48.
+
+| Calculation | X | M | What it answers |
+| --- | ---: | ---: | --- |
+| Model-interventional Shapley credit | 0 | 0.48 | Which inputs contribute to this prediction? |
+| Symmetric structural Shapley credit | 0.18 | 0.30 | How does a specified causal game distribute credit? |
+| Mean effect of setting X from 0 to 1 | 0.36 | — | How much does the expected outcome change? |
+
+The Shapley rows each sum to the same prediction relative to a zero background. The intervention contrast is a separate quantity. When both X and M are set in the structural game, M stays at its set value; it is not updated again from X. The [worksheet and answer key](https://github.com/ahhatype/causal-shap-spaceflight-renal-stones/tree/main/docs/classroom) show every coalition value.
+
+This example makes stages 1, 2 and 6 calculable by hand, using an ideal predictor in place of fitting one in stage 2. It uses a known graph and does not run discovery, expert review, the detector or action selection. Its symmetric game is not a numerical reproduction of the full-DAG prototype. The next sections show what changes when we add longer paths, competing predictors and a spaceflight risk graph.
+:::
+
 ::: {.panel #depth}
-<p class="eyebrow">02 / WHY CANDIDATES GET MISSED</p>
+<p class="eyebrow">PATH LENGTH AND SAMPLE SIZE</p>
 
-## A cause can matter and still be hard to see.
+## Path length and detection
 
-<p class="deck">Screening-off is one reason an ancestor can disappear from a predictive ranking. Attenuation is another challenge: along a chain of coefficients smaller than one in magnitude, effects shrink with each extra link.</p>
+<p class="deck">This is a power problem distinct from predictive screening-off: the upstream effect really is smaller in this example. Each added link multiplies the effect by 0.6, so more data are needed to distinguish it from sampling noise.</p>
 
 ```{=html}
 <div class="depth-grid">
@@ -111,107 +137,102 @@ Conditional SHAP can still credit X through its association with M. Noisy mediat
 </div>
 ```
 
-<p class="takeaway">Low predictive importance is not enough reason to exclude a candidate cause.</p>
+<p>A small or undetected marginal effect at one sample size is not enough reason to exclude a candidate cause.</p>
 
 <p class="section-note">The example uses linear mechanisms; it does not say the best action is always upstream. Measurement error adds estimation difficulty. <a href="assets/depth_washout.svg">View all five depths and the original simulation details</a>.</p>
 :::
 
-::: {.panel #path}
-<p class="eyebrow">03 / THE WORKFLOW</p>
-
-## Start with the goal. Then choose the work.
-
-<p class="deck">This project uses seven steps, grouped below. A prediction analysis can stop at explaining the fitted model. An intervention analysis needs defensible causal assumptions and a separate evaluation of actions.</p>
-
-```{=html}
-<div class="goal-fork" aria-label="Two routes from the analysis goal">
-  <span class="fork-origin">Your goal</span>
-  <span class="fork-route prediction-route">Predict <span aria-hidden="true">→</span> explain the model</span>
-  <span class="fork-route intervention-route">Intervene <span aria-hidden="true">→</span> establish structure <span aria-hidden="true">→</span> evaluate change</span>
-</div>
-<div class="workflow">
-  <section class="workflow-phase">
-    <p class="phase-label">Understand the data</p>
-    <ol class="steps">
-      <li><span class="step-number">01</span><div><h3>Gather</h3><p>Define the outcome, candidate variables and prior causal knowledge.</p></div></li>
-      <li><span class="step-number">02</span><div><h3>Predict and explain</h3><p>Fit a predictor and inspect its SHAP ranking. Treat it as a model explanation.</p></div></li>
-    </ol>
-  </section>
-  <section class="workflow-phase">
-    <p class="phase-label">Establish the structure</p>
-    <figure class="assumption-sketch">
-      <svg viewBox="0 0 300 112" role="img" aria-labelledby="assumption-title assumption-desc">
-        <title id="assumption-title">An unresolved edge becomes an explicitly assumed direction</title>
-        <desc id="assumption-desc">An uncertain connection between A and B, followed by an arrow from A to B. The recorded assumption is that A precedes B. Time order constrains direction; it does not establish causation.</desc>
-        <g class="sketch-ink"><path d="M19 41C17 17 54 18 54 40C56 65 18 65 19 41Z M100 40C99 18 135 17 136 40C138 65 98 64 100 40Z"/><path d="M57 41Q75 37 96 41" stroke-dasharray="4 5"/>
-          <path d="M175 41C172 17 210 18 211 40C212 65 174 65 175 41Z M255 40C252 18 290 17 291 40C292 65 253 64 255 40Z"/><path d="M216 41Q233 39 250 41 M243 36L251 41L243 46"/>
-        </g>
-        <g class="sketch-text"><text x="37" y="47">A</text><text x="118" y="47">B</text><text x="194" y="47">A</text><text x="273" y="47">B</text><text x="151" y="47">→</text></g>
-        <text class="sketch-question" x="76" y="31">?</text>
-        <path class="sketch-annotation" d="M204 79Q212 67 227 57 M222 58l6-2-1 6"/>
-        <text class="sketch-note" x="16" y="98">assumption recorded: A precedes B</text>
-      </svg>
-      <figcaption>Time order constrains an arrow; it does not prove a causal link.</figcaption>
-    </figure>
-    <ol class="steps" start="3">
-      <li><span class="step-number">03</span><div><h3>Discover</h3><p>Test which structures the data support. Keep unresolved edges explicit.</p></div></li>
-      <li class="proposed-step"><span class="step-number">04</span><div><h3>Cast wider, then filter</h3><span class="status-tag">Placeholder</span><p>Reconsider discarded candidates and flag possible noise. The proposed detector and filter have no results yet.</p></div></li>
-      <li><span class="step-number">05</span><div><h3>Resolve</h3><p>Record temporal and biological constraints. Our expert-loop rounds two and three currently use a scripted heuristic.</p></div></li>
-    </ol>
-  </section>
-  <section class="workflow-phase">
-    <p class="phase-label">Attribute and evaluate</p>
-    <ol class="steps" start="6">
-      <li><span class="step-number">06</span><div><h3>Propagate</h3><p>Compute structural attribution using interventions propagated through the assumed graph.</p></div></li>
-      <li class="proposed-step"><span class="step-number">07</span><div><h3>Evaluate candidate actions</h3><span class="status-tag">Not evaluated here</span><p>Estimate each feasible action's benefit, uncertainty and cost. A Shapley value is not that benefit.</p></div></li>
-    </ol>
-  </section>
-</div>
-```
-
-<p class="section-note">These are this project's steps, not a requirement to fit SHAP before every causal analysis. Discovery depends on its assumptions, data types and signal strength; linearity alone cannot identify a graph. Robustness checks run across the workflow. <a href="https://github.com/ahhatype/causal-shap-spaceflight-renal-stones/tree/main/docs/playbook">Read the full playbook</a>.</p>
-:::
-
 ::: {.panel #evidence}
-<p class="eyebrow">04 / THE EVIDENCE</p>
+<p class="eyebrow">THE RENAL SIMULATIONS AND A SEPARATE STRESS TEST</p>
 
 ## What the simulations show.
 
 <p class="deck">NASA supplies the renal-stone topology. We choose the simulation coefficients, giving each testbed a known total-effect answer key. These are simulation results, not measured astronaut effects.</p>
 
 ```{=html}
+<p class="section-note">The working subgraph is scoped and augmented, with separately specified coefficients; it is not an unchanged subset of the full simulator. The full-DAG clean-v3 data have 10,000 records (generation seed 20260710). The <a href="https://github.com/ahhatype/causal-shap-spaceflight-renal-stones/blob/main/docs/playbook/central-workflow.md#what-information-each-comparison-receives">comparison-inputs record</a> states what graph and mechanism information each method receives.</p>
 <div class="evidence-groups">
+  <section class="evidence-group">
+    <div class="testbed-heading"><h3>Working subgraph</h3><span>14 nodes · diagnostics</span></div>
+    <div class="finding"><p class="finding-number">Model dependent<small>direction of misplaced credit</small></p><div><h4>The ranking follows the fitted model.</h4><p>One chain gives a parent almost no credit; on another, four of five model–explainer pairings shift credit toward the parent. One seed.</p></div></div>
+    <div class="finding"><p class="finding-number">0 edges<small>adjacent to the outcome</small></p><div><h4>A discovery configuration disconnects Y.</h4><p>At n = 1,000 (seed 20260812), Gaussian PC leaves the binary outcome isolated. Ng et al.'s Causal SHAP then returns all zeros. This diagnoses one test configuration, including its suitability for a binary outcome.</p></div></div>
+    <div class="finding"><p class="finding-number">Mixed changes<small>scripted revisions · XGBoost</small></p><div><h4>Revising causal inputs does not always help.</h4><p>From round 1 to round 3, Kendall’s τ changes from 0.231 to 0.205 for ASV, from 0.077 to 0.154 for Shapley Flow, and from undefined to 0.714 for Ng et al. Rounds two and three use a scripted heuristic standing in for expert review, consulting the known graph or errors against truth. Method budgets and revision rules differ. No human reviewed these rounds.</p></div></div>
+  </section>
+  <section class="evidence-group">
+    <div class="testbed-heading"><h3>Source DAG</h3><span>51 nodes · NASA-topology simulation</span></div>
+    <div class="finding"><p class="finding-number">0.506 / 0.528<small>Kendall's τ · ordinary / ordering-only</small></p><div><h4>No detected difference in the matched comparison.</h4><p>Both explain the same fitted XGBoost model, with 64 evaluation records, 128 background records and 128 permutations each. The ordering variant receives the true graph’s constraints. The paired-bootstrap interval includes zero.</p></div></div>
+    <div class="finding prototype-finding"><p class="finding-number">τ 0.794<small>structural propagation prototype</small></p><div><h4>Propagation with known mechanisms.</h4><p>Top-five recovery is 1.00. This prototype uses 32 evaluation records, 32 background records and 32 permutations. It propagates interventions using the supplied graph and known simulation mechanisms, then scores the fitted XGBoost model. Its additional information and smaller budget prevent interpreting its score as method superiority over the ordering comparison. It does not recover unknown mechanisms and has no repeated-seed uncertainty.</p></div></div>
+  </section>
   <section class="evidence-group">
     <div class="testbed-heading"><h3>Teaching case</h3><span>5-node stress test</span></div>
     <div class="finding"><p class="finding-number">45.6%<small>of ordinary SHAP mass</small></p><div><h4>Prediction can credit a non-cause.</h4><p>A node caused by the outcome receives this credit despite having zero total effect. A deliberately pedagogic example.</p></div></div>
   </section>
-  <section class="evidence-group">
-    <div class="testbed-heading"><h3>Working subgraph</h3><span>14 nodes · diagnostics</span></div>
-    <div class="finding"><p class="finding-number">Model dependent<small>direction of misplaced credit</small></p><div><h4>The ranking follows the fitted model.</h4><p>One chain gives a parent almost no credit; on another, four of five model–explainer pairings shift credit toward the parent. One seed.</p></div></div>
-    <div class="finding"><p class="finding-number">0 edges<small>adjacent to the outcome</small></p><div><h4>A discovery configuration disconnects Y.</h4><p>At n = 1,000, Gaussian PC leaves the binary outcome isolated. Discovery-based Causal SHAP returns all zeros. One seeded diagnostic, not a general verdict on PC.</p></div></div>
-    <div class="finding"><p class="finding-number">τ 0.714<small>rank agreement with truth</small></p><div><h4>Attribution depends on the supplied graph.</h4><p>After a scripted heuristic standing in for expert review reconnects the outcome, agreement improves from an undefined τ. One seed; not human expert validation.</p></div></div>
-  </section>
-  <section class="evidence-group">
-    <div class="testbed-heading"><h3>Source DAG</h3><span>51 nodes · NASA-topology simulation</span></div>
-    <div class="finding"><p class="finding-number">0.506 / 0.528<small>Kendall's τ · ordinary / ordering-only</small></p><div><h4>No detected difference in the matched comparison.</h4><p>The paired-bootstrap interval for the difference includes zero. Restricting feature order is distinct from propagating interventions.</p></div></div>
-    <div class="finding prototype-finding"><p class="finding-number">τ 0.794<small>structural propagation prototype</small></p><div><h4>A promising result that needs replication.</h4><p>Top-five recovery is 1.00. This 32×32×32 prototype uses one configuration, with no repeated-seed uncertainty.</p></div></div>
-  </section>
 </div>
 ```
+
+<p class="section-note">Both renal outcomes are binary. The ranking target is the absolute difference in simulated nephrolithiasis probability between specified high and low settings, using 50,000 common-random-number draws. The working subgraph uses ±1 SD for continuous variables; the full DAG uses Q25 versus Q75. Binary contrasts use 0 versus 1. These contrasts and SHAP output scales are not interchangeable.</p>
 
 <p class="section-note">Kendall's τ measures rank agreement with the frozen total-effect truth within each testbed. <a href="https://github.com/ahhatype/causal-shap-spaceflight-renal-stones/blob/main/docs/full_dag/RESEARCH_RECORD.md">Full-DAG results</a> · <a href="https://github.com/ahhatype/causal-shap-spaceflight-renal-stones/blob/main/docs/step04_results.md">Working-subgraph attribution</a> · <a href="https://github.com/ahhatype/causal-shap-spaceflight-renal-stones/blob/main/docs/step06_results.md">Scripted expert-loop results</a>.</p>
 :::
 
-::: {.panel #claims}
-<p class="eyebrow">05 / WHAT REMAINS OPEN</p>
+::: {.panel #educators}
+<p class="eyebrow">EDUCATOR GUIDE</p>
 
-## A prototype, with visible limits.
+## A 50-minute classroom lesson
+
+The starter kit includes an offline interactive lab, a student worksheet, an educator guide with answers, and a Python script using only the standard library. Learners should know regression, conditional expectation and basic causal graphs. No astronaut data, proprietary tool or SHAP installation is required.
+
+| Time | Activity |
+| --- | --- |
+| 0–5 min | Ask whether X should receive predictive credit before revealing the calculation. |
+| 5–15 min | Work through the predictive coalition values in the worksheet. |
+| 15–25 min | Compare structural credit with the intervention contrast; explain why 0.18 and 0.36 differ. |
+| 25–35 min | Try zero and negative coefficients, then a direct nonlinear response. |
+| 35–45 min | Examine two observationally identical Gaussian models with different causal directions; inspect the research status below. |
+| 45–50 min | Ask learners to state one assumption and propose a test of a provisional research result. |
+
+For a 90-minute lab, add 20 minutes modifying the Python examples and 20 minutes tracing one renal result to its source. The four-node animation, the two-player worksheet and the five-node stress test have different roles; none is the renal simulation.
+
+<p class="resource-links"><a href="resources/causal-shap-classroom.zip" download>Download the complete classroom kit</a> · <a href="https://github.com/ahhatype/causal-shap-spaceflight-renal-stones/blob/main/docs/classroom/educator-guide.md">Educator guide and answer key</a> · <a href="https://github.com/ahhatype/causal-shap-spaceflight-renal-stones/blob/main/docs/classroom/worksheet.md">Student worksheet</a></p>
+
+Unzip the kit and open `index.html` for the interactive lesson. Run `python lab.py --check` for the text-only analytic checks. This is a lesson prototype; coauthor-reviewed slides and a guided renal-reproduction notebook remain to be developed.
+
+<details class="math-note"><summary>Three discussion prompts</summary>
+
+- **Does a direct arrow imply a straight response?** No. A direct structural relationship can be curved; the graph and the response function specify different assumptions.
+- **Does a longer pathway always have a smaller effect?** No. Attenuation in the chain requires coefficients below one in magnitude; paths can also reinforce or cancel.
+- **Does a better prediction imply a better intervention estimate?** No. Evaluate both against the appropriate target; the nonlinear robustness analysis is still pending.
+
+</details>
+:::
+
+::: {.panel #resources}
+<p class="eyebrow">CODE AND RESEARCH RECORDS</p>
+
+## Research files and reproducible examples
+
+| What you want to inspect | Start here |
+| --- | --- |
+| Study orientation and installation | [Repository guide](https://github.com/ahhatype/causal-shap-spaceflight-renal-stones#quickstart) |
+| The central workflow and original methods plan | [Evidence map](https://github.com/ahhatype/causal-shap-spaceflight-renal-stones/blob/main/docs/playbook/central-workflow.md) · [13-step crosswalk](https://github.com/ahhatype/causal-shap-spaceflight-renal-stones/tree/main/docs/playbook) |
+| 14-node graph and generating equations | [Graph specification](https://github.com/ahhatype/causal-shap-spaceflight-renal-stones/blob/main/config/dag_spec.yaml) · [Coefficients](https://github.com/ahhatype/causal-shap-spaceflight-renal-stones/blob/main/config/edge_coefficients.yaml) · [Step 4](https://github.com/ahhatype/causal-shap-spaceflight-renal-stones/blob/main/docs/step04_results.md) · [Step 6](https://github.com/ahhatype/causal-shap-spaceflight-renal-stones/blob/main/docs/step06_results.md) |
+| 51-node source DAG, methods and frozen results | [Research record](https://github.com/ahhatype/causal-shap-spaceflight-renal-stones/blob/main/docs/full_dag/RESEARCH_RECORD.md) · [Reproduction instructions](https://github.com/ahhatype/causal-shap-spaceflight-renal-stones/blob/main/docs/full_dag/REPRODUCIBILITY_AND_SITE.md) |
+| Runnable research exploration | [Local Shiny companion](https://github.com/ahhatype/causal-shap-spaceflight-renal-stones/blob/main/apps/README.md) · [Workbench](https://github.com/ahhatype/causal-shap-spaceflight-renal-stones/blob/main/apps/workbench/README.md) |
+| References, provenance and decisions | [Documentation index](https://github.com/ahhatype/causal-shap-spaceflight-renal-stones/tree/main/docs) |
+
+The offline classroom lab is included in the download above. The research Shiny apps require the repository's Python environment and run locally; GitHub Pages does not host them. The manuscript remains a private coauthor draft and is not included in the public site or classroom download.
+:::
+
+::: {.panel #claims}
+<p class="eyebrow">REMAINING WORK</p>
+
+## Completed comparisons and remaining work
 
 ```{=html}
 <div class="status-grid">
-  <section class="status-item"><h3>Established in these testbeds</h3><p>Predictive credit can miss causal relevance. Ordering-only attribution shows no detected improvement in the matched full-DAG comparison.</p></section>
-  <section class="status-item"><h3>Provisional</h3><p>Structural propagation needs larger runs and repeated seeds. The scripted expert loop still needs human review. The Heskes-style value function has not run on the working subgraph.</p></section>
-  <section class="status-item claim-placeholder"><h3>Proposed, not evaluated</h3><p>The detector and filter remain placeholders. Experiments E1–E3, the nonlinear-generator sweep and the decision layer have not been evaluated here.</p></section>
+  <section class="status-item"><h3>Completed comparisons</h3><p>Five model–explainer pairings have run on the working subgraph. The matched full-DAG run found no detected improvement from ordering alone; this is not evidence of equivalence. The separate worked example is derived by hand.</p></section>
+  <section class="status-item"><h3>Provisional</h3><p>The propagation prototype receives true mechanisms that the other methods do not; its score cannot establish method superiority. It needs larger runs and repeated seeds. The scripted expert loop still needs human review. The intervention-propagating value function has not run on the working subgraph.</p></section>
+  <section class="status-item claim-placeholder"><h3>Proposed, not evaluated</h3><p>The detector and filter remain placeholders. The prespecified detector stress tests, nonlinear-generator sweep and action evaluation remain unevaluated.</p></section>
 </div>
 ```
 :::

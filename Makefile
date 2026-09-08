@@ -1,6 +1,6 @@
 .PHONY: setup-r setup-py setup step02 step03 step04 step05 step06 step07 step08 \
         test-r test-py test full-dag-r full-dag-validate full-dag-battery \
-        hub ladder workbench site manuscript figures
+        hub ladder workbench site manuscript figures classroom depth-check
 
 # One Python environment for both packages (ADR 007). pip + venv, not uv.
 ifeq ($(OS),Windows_NT)
@@ -76,7 +76,16 @@ ladder:
 workbench:
 	cd apps/workbench && $(PY) -m shiny run --port 8001 app.py
 
-# --- site and manuscript ---
+# --- teaching companion, archive and manuscript ---
+
+classroom:
+	$(PY) analysis/build_teaching_animation.py
+	$(PY) docs/classroom/lab.py --check
+	$(PY) analysis/package_classroom.py
+
+depth-check:
+	$(PY) analysis/depth_washout_figure.py --verify-recorded
+
 
 site:
 	quarto render site

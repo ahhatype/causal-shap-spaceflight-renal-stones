@@ -1,6 +1,6 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 300" width="760" height="300" role="img" aria-labelledby="t d">
   <title id="t">Two goals, one chain</title>
-  <desc id="d">A chain of four nodes: a deep cause, an intermediate node, a mediator, and the outcome. Under prediction, credit pools on the mediator nearest the outcome and the deep cause receives almost none. Under intervention, a signal travels from the deep cause down the chain and the credit returns to the node an intervention could reach.</desc>
+  <desc id="d">A chain of four nodes: a deep cause, an intermediate node, a mediator, and the outcome. Under prediction, credit pools on the mediator nearest the outcome and the deep cause receives almost none. Under intervention, a signal travels down the chain. Structural credit can include upstream nodes. Bars are schematic, not measured effects or comparable totals.</desc>
   <style>
     :root { --ink:#1a1814; --mute:#8a8178; --line:#b9b0a1; --cyan:#0077a8; --cyan-soft:#d3e8f2; --orange:#e07020; --orange-soft:#fbe3d0; --paper:#ffffff; }
     @media (prefers-color-scheme: dark) { :root { --ink:#e8e2d6; --mute:#a59c8f; --line:#6b6258; --cyan:#4fb3dd; --cyan-soft:#12465c; --orange:#f08a3c; --orange-soft:#5a3210; --paper:#1f1c18; } }
@@ -33,8 +33,8 @@
     /* Credit bars: height and colour follow the phase. */
     .bar { animation: 12s ease-in-out infinite; }
     .b-x { animation-name: bx; } .b-a { animation-name: ba; } .b-m { animation-name: bm; }
-    @keyframes bx { 0%,2% {transform:scaleY(.30); fill:var(--mute)} 12%,46% {transform:scaleY(.04); fill:var(--cyan)} 50% {transform:scaleY(.30); fill:var(--mute)} 62%,94% {transform:scaleY(.70); fill:var(--orange)} 100% {transform:scaleY(.30); fill:var(--mute)} }
-    @keyframes ba { 0%,2% {transform:scaleY(.40); fill:var(--mute)} 12%,46% {transform:scaleY(.22); fill:var(--cyan)} 50% {transform:scaleY(.40); fill:var(--mute)} 62%,94% {transform:scaleY(.74); fill:var(--orange)} 100% {transform:scaleY(.40); fill:var(--mute)} }
+    @keyframes bx { 0%,2% {transform:scaleY(.30); fill:var(--mute)} 12%,46% {transform:scaleY(0); fill:var(--cyan)} 50% {transform:scaleY(.30); fill:var(--mute)} 62%,94% {transform:scaleY(.70); fill:var(--orange)} 100% {transform:scaleY(.30); fill:var(--mute)} }
+    @keyframes ba { 0%,2% {transform:scaleY(.40); fill:var(--mute)} 12%,46% {transform:scaleY(0); fill:var(--cyan)} 50% {transform:scaleY(.40); fill:var(--mute)} 62%,94% {transform:scaleY(.74); fill:var(--orange)} 100% {transform:scaleY(.40); fill:var(--mute)} }
     @keyframes bm { 0%,2% {transform:scaleY(.50); fill:var(--mute)} 12%,46% {transform:scaleY(.96); fill:var(--cyan)} 50% {transform:scaleY(.50); fill:var(--mute)} 62%,94% {transform:scaleY(.78); fill:var(--orange)} 100% {transform:scaleY(.50); fill:var(--mute)} }
 
     /* Node fills: the mediator brightens under prediction, the deep cause under intervention. */
@@ -48,17 +48,21 @@
     @keyframes walk { 0%,54% {offset-distance:0%; opacity:0} 56% {opacity:1} 72% {offset-distance:100%; opacity:1} 74%,100% {offset-distance:100%; opacity:0} }
     .halo { animation: halo 12s ease-in-out infinite; }
     @keyframes halo { 0%,54% {opacity:0; r:26} 58% {opacity:.9; r:30} 76%,94% {opacity:.9; r:34} 100% {opacity:0; r:26} }
-    @media (prefers-reduced-motion: reduce) { * { animation: none !important; } .pulse, .phase-i, .rule-i { opacity: 0 } .phase-p { opacity: 1 } .rule-p { width: 680px } .b-x { transform: scaleY(.04); fill: var(--cyan) } .b-a { transform: scaleY(.22); fill: var(--cyan) } .b-m { transform: scaleY(.96); fill: var(--cyan) } }
+    /* Rest on the prediction phase until the reader starts playback. */
+    * { animation-delay: -3s !important; animation-play-state: paused; }
+    svg.is-playing * { animation-play-state: running; }
+    @media (prefers-reduced-motion: reduce) { * { animation-play-state: paused !important; } }
+
   </style>
 
   <!-- phase label, caption, and the rule that wipes in beneath them -->
   <g class="phase-p">
     <text class="label label-p" x="40" y="44">PREDICTION</text>
-    <text class="cap" x="40" y="70">Once the mediator is in view, the deep cause adds nothing. Its credit goes to zero.</text>
+    <text class="cap" x="40" y="70">A predictor can use M while giving X little credit.</text>
   </g>
   <g class="phase-i">
-    <text class="label label-i" x="40" y="44">INTERVENTION</text>
-    <text class="cap" x="40" y="70">Set the deep cause and the outcome still moves. Structural attribution can return the credit upstream.</text>
+    <text class="label label-i" x="40" y="44">STRUCTURAL CREDIT</text>
+    <text class="cap" x="40" y="70">Interventions follow the arrows; a causal game assigns credit.</text>
   </g>
   <rect class="rule-p" x="40" y="82" width="0" height="2"/>
   <rect class="rule-i" x="40" y="82" width="0" height="2"/>
@@ -92,7 +96,7 @@
   <circle class="pulse" r="6" cy="0" cx="0"/>
 
   <!-- credit bars -->
-  <text class="lbl" x="40" y="272" text-anchor="start" style="letter-spacing:.14em;font-size:10px">CREDIT</text>
+  <text class="lbl" x="40" y="272" text-anchor="start" style="text-anchor:start;letter-spacing:.14em;font-size:10px">SCHEMATIC CREDIT</text>
   <g>
     <rect class="track" x="86" y="204" width="48" height="60" rx="3"/>
     <rect class="bar b-x" x="86" y="204" width="48" height="60" rx="3"/>

@@ -1,6 +1,11 @@
 project:
   type: website
   output-dir: _site
+  pre-render:
+    - python build_resources.py
+  resources:
+    - resources/**
+    - assets/two-goals.svg
   render:
     - index.qmd
     - target-dags.qmd
@@ -10,7 +15,7 @@ execute:
 
 website:
   title: "Space SHAP"
-  description: "A prediction ranking does not tell us where to intervene. A causal tutorial with evidence from a NASA-topology simulation."
+  description: "A prediction ranking need not tell us where to intervene. A causal tutorial with evidence from a NASA-topology simulation."
   site-url: https://andystats.github.io/causal-shap-target-dags/
   favicon: favicon.svg
   search: false
@@ -19,14 +24,16 @@ website:
     background: light
     collapse: true
     left:
-      - text: "Two goals"
+      - text: "The example"
         href: index.qmd#goals
-      - text: "Depth"
-        href: index.qmd#depth
-      - text: "The workflow"
+      - text: "Central workflow"
         href: index.qmd#path
+      - text: "Worked calculation"
+        href: index.qmd#worked-example
       - text: "Evidence"
         href: index.qmd#evidence
+      - text: "Educators"
+        href: index.qmd#educators
       - text: "Open questions"
         href: index.qmd#claims
     right:

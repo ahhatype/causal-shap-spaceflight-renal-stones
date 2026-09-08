@@ -73,6 +73,34 @@ body:has(.page) .quarto-title-block { display: none; }
 .hero h1 { max-width: 25ch; margin: 0 0 1.4rem; font-size: clamp(2.45rem, 4.7vw, 4rem); }
 .hero .lede { max-width: 64ch; margin: 0; font-size: clamp(1.08rem, 1.6vw, 1.25rem); line-height: 1.5; }
 .hero-route { margin: 1rem 0 0; color: var(--ink-mute); font-size: .95rem; }
+.reading-route { display: flex; flex-wrap: wrap; gap: .6rem 1.4rem; margin-top: 1.5rem; font-size: .9rem; }
+.chain-figure { margin: 0 0 1.5rem; background: white; padding: 1rem; border: 1px solid var(--rule-soft); }
+.chain-figure object { width: 100%; height: auto; aspect-ratio: 760 / 300; display: block; }
+.chain-figure figcaption { margin-top: 1rem; font-size: .86rem; color: var(--ink-mute); max-width: 85ch; }
+.chain-controls { display: flex; align-items: center; flex-wrap: wrap; gap: .65rem; }
+.chain-controls[hidden], .chain-controls button[hidden] { display: none; }
+.chain-controls button { min-height: 44px; padding: .45rem .8rem; border: 1px solid var(--rule); background: white; color: var(--ink-soft); border-radius: 4px; font: inherit; font-size: .85rem; }
+.chain-controls button:hover { background: var(--paper); }
+.chain-controls button:focus-visible { outline: 2px solid var(--cyan); outline-offset: 3px; }
+#chain-status { font-size: .82rem; color: var(--ink-mute); }
+.central-workflow { list-style: none; padding: 0; margin: 1.5rem 0; }
+.central-workflow li { display: grid; grid-template-columns: 2.3rem minmax(0,1fr) 10rem; align-items: start; gap: 1rem; border-top: 1px solid var(--rule); padding: 1.2rem 0; }
+.central-workflow h3 { margin: 0 0 .4rem; font-size: 1.2rem; }
+.central-workflow p { margin: 0; font-size: .95rem; }
+.stage-number { color: var(--orange-dark); font-size: .95rem; font-weight: 600; }
+.stage-status { justify-self: start; font-size: .75rem; color: #34594f; border: 1px solid #b9ccc4; padding: .25rem .45rem; border-radius: 3px; }
+.stage-status.placeholder { color: #82451e; border-color: #d5b997; }
+.panel .table { font-size: .9rem; }
+.panel .table th { color: var(--ink); }
+.resource-links { margin-block: 1.5rem; }
+@media (max-width: 600px) {
+  .central-workflow li { grid-template-columns: 1.5rem minmax(0,1fr); gap: .7rem; }
+  .stage-status { grid-column: 2; }
+  .chain-figure { padding: .5rem; }
+  .chain-controls { gap: .4rem; }
+  .chain-controls button { font-size: .78rem; padding-inline: .5rem; }
+}
+@media print { .chain-controls, .reading-route { display: none !important; } }
 .panel { margin: 3rem 0 0; padding: clamp(1.5rem, 4vw, 3.5rem); background: var(--paper); border: 1px solid var(--rule-soft); }
 .panel > h2 { max-width: 26ch; margin: 0 0 1rem; font-size: clamp(1.9rem, 3vw, 2.65rem); }
 .panel .deck { max-width: 70ch; margin: 0 0 2rem; font-size: 1.05rem; }
@@ -177,6 +205,11 @@ a:focus-visible, summary:focus-visible { outline: 2px solid var(--cyan); outline
   .status-grid { gap: 1.5rem; }
 }
 @media (max-width: 540px) {
+  .panel .table { table-layout: fixed; width: 100%; overflow-wrap: anywhere; }
+  .panel .table th, .panel .table td { padding-inline: .25rem; }
+  #worked-example .table col:nth-child(1), #worked-example .table col:nth-child(4) { width: 36% !important; }
+  #worked-example .table col:nth-child(2), #worked-example .table col:nth-child(3) { width: 14% !important; }
+  #worked-example .table td:nth-child(2), #worked-example .table td:nth-child(3) { white-space: nowrap; padding-inline: .1rem; }
   .page { padding: 0 1.2rem 3rem; }
   .panel { padding: 1.5rem 1rem; }
   .goals-panel { padding-inline: 0; }

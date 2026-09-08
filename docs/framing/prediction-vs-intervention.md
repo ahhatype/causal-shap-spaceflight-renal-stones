@@ -1,3 +1,5 @@
+> Historical document: hosting and presentation instructions are superseded by [ADR 010](../../docs/decisions/010-repository-companion.md). Use the [current reproducibility guide](../../REPRODUCIBILITY.md) and [technical note](../../docs/technical/path-length-and-response-shape.md). Do not deploy Pages. Earlier scientific framing is qualified by the current technical note.
+
 # Two goals, two playbooks: reframing the paper around intervention
 
 **Status:** framing memo, 2026-09-03. Written from the 1 September 2026

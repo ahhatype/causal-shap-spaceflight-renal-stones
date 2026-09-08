@@ -14,15 +14,15 @@ causal-shap-target-dags (`analysis/`, `apps/`, `docs/full_dag/`).
   contributor on this repository).
 - Commit and push when Andy asks.
 
-## Public-site convention
+## Repository-companion convention (ADR 010)
 
-- The only public site is the single-page Quarto project under `site/`;
-  the deploy workflow publishes `site/_site`. The root `index.html` is a
-  redirect and stays one.
-- The page carries the argument (two playbooks, depth, the six rungs, the
-  evidence, the placeholders, the status). Methods, references, provenance,
-  decisions, and step results stay in `docs/`.
-- Settle a claim in `docs/` before it reaches the site. Use "NASA-topology
+- This repository is the master for the manuscript, reproducibility and
+  teaching companions. Pages is retired; do not deploy or re-enable it.
+- Keep `site/` as a source archive. The root `index.html` redirects to this
+  GitHub repository. Current reader entry points are README.md,
+  REPRODUCIBILITY.md and docs/classroom/README.md.
+- Preserve code, math, figures and references in this repository before
+  retiring any presentation. Settle a claim in `docs/` before the README. Use "NASA-topology
   simulation", never "NASA effect". Keep the placeholder rungs marked as
   placeholders until they have results.
 

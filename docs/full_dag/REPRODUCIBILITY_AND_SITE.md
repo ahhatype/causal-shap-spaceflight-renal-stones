@@ -1,3 +1,5 @@
+> Historical document: hosting and presentation instructions are superseded by [ADR 010](../../docs/decisions/010-repository-companion.md). Use the [current reproducibility guide](../../REPRODUCIBILITY.md) and [technical note](../../docs/technical/path-length-and-response-shape.md). Do not deploy Pages. Earlier scientific framing is qualified by the current technical note.
+
 # Reproducibility and public site — environments, build commands, site integration
 
 > Ported from andystats/causal-shap-target-dags on 2026-09-03 (ADR 007). "This repository" below refers to that project's full 51-node line of work, now under `analysis/` and `apps/` in this hub; the companion site moved to https://andystats.github.io/causal-shap-target-dags/. Paths were updated (`app/` is now `apps/`); numbers and claims are unchanged.

@@ -1,13 +1,16 @@
 # Documentation map
 
-One hub, two lines of work (ADR 007). Start with the framing memo if you want
-the argument, with `STATUS.md` if you want to know what has run.
-For the next working session, use the [experiment-machine handoff](NEXT_SESSION.md).
+One hub, two lines of work (ADR 007). Start with the [central workflow](playbook/central-workflow.md)
+for the argument and [reproducibility guide](../REPRODUCIBILITY.md) for the
+code, technical notes and teaching companion. [Orientation](../ORIENTATION.md)
+lists manuscript priorities. The previous machine handoff is historical.
 
 ## The argument
 
 | file | contents |
 | --- | --- |
+| [`playbook/central-workflow.md`](playbook/central-workflow.md) | Central workflow, exact classroom calculation, simulation mapping and limits |
+| [`classroom/README.md`](classroom/README.md) | Educator guide, worksheet, offline interactive lab, controlled animation and Python examples; no Pages dependency |
 | [`../ORIENTATION.md`](../ORIENTATION.md) | Project orientation: the premise, workflow, code, results and next steps |
 | [`framing/prediction-vs-intervention.md`](framing/prediction-vs-intervention.md) | The reframing: two goals, two playbooks; why the intervention playbook casts a wider net and still prunes; deeper nodes wash out; the linearity assumption; detector and filter; experiments E1 to E3 |
 | [`notes/2026-09-01-whiteboard-transcription.md`](notes/2026-09-01-whiteboard-transcription.md) | Transcription of the 1 September 2026 notes the memo is built from |
@@ -39,6 +42,13 @@ For the next working session, use the [experiment-machine handoff](NEXT_SESSION.
 | [`full_dag/REPRODUCIBILITY_AND_SITE.md`](full_dag/REPRODUCIBILITY_AND_SITE.md) | Environments, build and validation commands, site content discipline (paths updated for this hub) |
 | [`full_dag/proximity-bias-metrics.md`](full_dag/proximity-bias-metrics.md) | The 2026-07-10 proposal defining directed target distance, PBI, POA, and the distance-concentration curve; now implemented in `causal_shap_renal.evaluation` |
 
+## Technical and reproducibility companion
+
+- [Reproduction routes and commands](../REPRODUCIBILITY.md).
+- [Path length, causal credit, response shape and splines](technical/path-length-and-response-shape.md).
+- [Technical BibTeX](references/technical-companion.bib).
+- [Pages preservation map](decisions/010-repository-companion.md).
+
 ## Decisions
 
 | ADR | decision |
@@ -51,6 +61,7 @@ For the next working session, use the [experiment-machine handoff](NEXT_SESSION.
 | [006](decisions/006-shapr-heskes-blocked.md) | shapr's Heskes path blocked |
 | [007](decisions/007-target-dags-consolidation.md) | causal-shap-target-dags consolidated into this hub |
 | [008](decisions/008-lumawarp-detector-placeholders.md) | LumaWarp detector placeholders live here; runtime and bridge stay external |
+| [010](decisions/010-repository-companion.md) | GitHub is the master companion; Pages retired with source retained |
 | [009](decisions/009-single-home.md) | One home for the project, including the manuscript; Box is exchange only |
 
 Documentation rule, carried over from Target DAGs: every substantive result

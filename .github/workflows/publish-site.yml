@@ -1,29 +1,18 @@
-name: Render site
-
-# The site is authored here (site/) but deployed from
-# andystats/causal-shap-target-dags, whose "Publish site from the hub"
-# workflow checks out this repository's main and publishes to that account's
-# GitHub Pages. Pages on this repository is an owner-only setting and is not
-# enabled, so this workflow only proves the site renders.
-
+name: Render archived presentation
+# ADR 010: local/provenance build only. No automatic Pages deployment.
 on:
-  push:
-    branches: [main]
-  pull_request:
-
+  workflow_dispatch:
 permissions:
   contents: read
-
 jobs:
   render-check:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
       - uses: quarto-dev/quarto-actions/setup@v2
-      - name: Render static site (no analysis execution)
-        run: quarto render site
+      - run: quarto render site
       - uses: actions/upload-artifact@v4
         with:
-          name: site
+          name: archived-presentation
           path: site/_site
           retention-days: 7

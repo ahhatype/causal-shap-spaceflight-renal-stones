@@ -1,108 +1,56 @@
 # Orientation
 
-**Next session:** [Mac-to-experiment-machine handoff](docs/NEXT_SESSION.md)
-records the published tutorial, pending animation revision, experiment
-priorities, companion setup and deployment steps.
+This is the master repository for the Space SHAP manuscript, reproducibility
+companion and teaching companion. Pages is retired under [ADR 010](docs/decisions/010-repository-companion.md).
+The manuscript remains a private coauthor draft; research and teaching sources
+are public here.
 
-Start here. Last updated 2026-09-04. The premise: **your roadmap should
-follow your goal.** Prediction is the default playbook; intervention casts a
-wider net, then prunes. The project
-tests that playbook on NASA's renal-stone DAG with an answer key we wrote,
-for an *npj Microgravity* article (deadline recorded as 2026-10-31).
+| What you need | Start here |
+| --- | --- |
+| Argument, workflow and current results | [README](README.md) |
+| Reproduction commands and limits | [REPRODUCIBILITY.md](REPRODUCIBILITY.md) |
+| Path-length math, detection, causal credit and splines | [Technical note](docs/technical/path-length-and-response-shape.md) |
+| Classroom lab, worksheet, answer key and controlled animation | [Teaching companion](docs/classroom/README.md) |
+| Public technical citations | [BibTeX](docs/references/technical-companion.bib), [reference map](docs/references/manuscript-references.md) |
+| 14-node working-subgraph findings | [Step 4](docs/step04_results.md), [scripted Step 6](docs/step06_results.md) |
+| 51-node full-DAG findings | [Research record](docs/full_dag/RESEARCH_RECORD.md) |
+| Pipeline status | [config/pipeline_status.yaml](config/pipeline_status.yaml) |
+| Original protocol and framework | [Playbook](docs/playbook/README.md), [central workflow](docs/playbook/central-workflow.md) |
+| Preserved Pages sources and history | [Archive guide](site/README.md), [preservation map](docs/decisions/010-repository-companion.md) |
+| Private manuscript on the writing machine | manuscript/main.tex, introduction-aimee.tex, references.bib, technical-companion.tex and main.pdf |
+| Private portable writing package | manuscript/prism-upload/ and manuscript/causal-shap-prism.zip |
 
-## Where everything is
+## Current priorities
 
-| What | Where | Notes |
-| --- | --- | --- |
-| Everything | This repository (`ahhatype/causal-shap-spaceflight-renal-stones`) | The single home (ADR 009) |
-| The argument in one page | <https://andystats.github.io/causal-shap-target-dags/> | Authored in `site/` here; deployed by the old repo's workflow. Redeploy: `gh workflow run "Publish site from the hub" -R andystats/causal-shap-target-dags` |
-| The written guide | `docs/playbook/README.md` | Rungs 0 to 6 with tools and guards; FIG. 1 and FIG. 2 |
-| Why the reframing | `docs/framing/prediction-vs-intervention.md` | From the 1 Sept whiteboard (`docs/notes/`) |
-| Citations | `docs/references/` | Verified claims map; manuscript-side references |
-| The manuscript | `manuscript/` (gitignored, local) | `main.tex`, `references.bib`, `OUTLINE.md`, the archived Word originals. `make manuscript` |
-| Working-subgraph results | `docs/step04_results.md`, `docs/step06_results.md` | 14 nodes; the primary case study |
-| Full-DAG results | `docs/full_dag/RESEARCH_RECORD.md` | 51 nodes; the ordering null and the propagation result |
-| Decisions | `docs/decisions/` | 001 to 009; 007 (consolidation), 008 (LumaWarp gate), 009 (one home) matter most |
-| Step status | `config/pipeline_status.yaml`, `docs/STATUS.md` (gitignored) | |
-| Coauthor exchange | Box `Causal SHAP Target DAGs - Robert Reynolds Lexi Pasi/` | PDF exports in `from-github-YYYY-MM-DD/`; Word originals archived in `manuscript/`. Not for editing |
-| LumaWarp runtime | `C:\Lumawarp\` | Binaries, logs, the private format guide. Never enters git |
-| Old repo | `andystats/causal-shap-target-dags` | Frozen; deploy shim only |
+1. Reconcile manuscript scope and unfinished references with Aimee, preserving
+   her human-written introduction. The closing intro still mentions a clinical
+   example that is not in the completed synthetic work. The marked framing
+   subsection also requires human review. Choose the writing master before
+   exchanging dated Prism exports.
+2. Review the graph with Robert. Step 6 rounds two and three remain scripted
+   heuristics; their results are not evidence of human expert review.
+3. Prespecify the next experiments: mixed-data discovery on the working graph,
+   propagation with unknown or misspecified mechanisms, repeated-seed uncertainty,
+   and nonlinear robustness. Preserve the original diagnostic and null result.
+4. Resolve the proprietary detector's publication boundary with its owners.
+   The detector and filter have no evaluated public results.
 
-## The two lines of work
+The full DAG and working graph have separate coefficients and purposes.
+NASA supplies topology, not effects. The propagation prototype receives
+known mechanisms and cannot establish method superiority over methods given
+less causal information. Attribution remains a prototype input to action
+selection, not an action recommendation.
 
-| | Working subgraph | Full source DAG |
-| --- | --- | --- |
-| Code | `config/`, `pipeline/`, `r/`, `python/src/causal_shap_renal/` | `analysis/`, `apps/` (the `causal_shap` library and three Shiny apps) |
-| Generator | `simcausal` from `config/edge_coefficients.yaml` | `simcausal` from the DAGitty text |
-| Headline | Predictive credit along two-hop chains lands by model class, on one chain nearly zero for the parent and on another inverted onto it; PC pruned every edge into the binary outcome at n = 1,000; Ng et al. reaches τ 0.714 once reconnected | Ordering-only τ 0.528 tied with ordinary 0.506; structural propagation τ 0.794 (prototype) |
-
-## How to run
+## Quick local checks
 
 ```bash
-make setup-py            # py -3.13 venv + editable install of both packages
-make test-py             # 151 tests across both packages
-make step02 step03 step04 step06   # working-subgraph pipeline (R + Python)
-make full-dag-validate   # R validator + frozen-output hash gate
-make hub | ladder | workbench      # the Shiny apps, local only
-make figures             # depth washout, working-subgraph DAG, FIG. 1 and 2
-make manuscript          # latexmk -> manuscript/main.pdf
-make site                # quarto render site
+python docs/classroom/lab.py --check
+python analysis/build_teaching_animation.py
+python analysis/package_classroom.py
+python analysis/depth_washout_figure.py --verify-recorded
 ```
 
-R side: `make setup-r` (renv) for the working subgraph;
-`Rscript analysis/install_dependencies.R` for the full DAG.
-
-## What is done (as of 2026-09-04)
-
-- Steps 1 to 4 and 6 on the working subgraph, with results docs.
-- Full-DAG frozen record ported: ordering null, propagation prototype,
-  teaching trap, M1 to M5 battery, action selection.
-- LumaWarp placeholders: public contract (`lumawarp_contract.py`), Step 5
-  and 7 drivers that refuse to score without a provider, `docs/lumawarp/`.
-- Proximity-bias metrics (PBI, POA, proximal mass) implemented and tested.
-- Depth-washout figure (E3, chain version) computed.
-- Site rewritten as the article companion; archived Target DAGs page kept.
-- Manuscript drafted in LaTeX with the human-written intro verbatim,
-  Methods in the 13-step flow, results tables, and a `.bib`.
-
-## What is private or gated
-
-- `manuscript/` is gitignored until the coauthors agree to publish (it was
-  public in one commit, `7913fa7`).
-- `docs/methods/` and `docs/STATUS.md` are gitignored.
-- LumaWarp block semantics and results wait on Lucidity's six sign-off
-  questions (`docs/lumawarp/README.md` section 8). Nothing about them
-  enters git.
-
-## Conventions that bite
-
-- Say "NASA-topology simulation", never "NASA effect".
-- Never machine-rewrite the human-written introduction. Blue
-  `\draftnote{}` blocks in the manuscript are LLM drafts to be rewritten by
-  hand; red `\todo{}` blocks are open items.
-- Rounds two and three of Step 6 are a scripted heuristic, not expert
-  review; every number from them carries that label.
-- Goodenow-Messman, not Goodenow.
-
-## Pick up tomorrow
-
-1. `git pull`, `make test-py`. Both should be quiet.
-2. Manuscript: read the red and blue markers in `manuscript/main.tex`.
-   The first thing to write by hand is the paragraph the draft asked for:
-   what causally informed SHAP is and how each method depends on the DAG
-   (Methods, Step 6, has the material). Then verify the six `TODO verify`
-   entries in `references.bib` (Li 2023, Sanders 2023, Scott 2023, Antonsen
-   2023, the Annals of Epidemiology 2025 piece, Hooker and Mentch 2019).
-3. Step 6, fourth method: run the Heskes-style structural value function
-   (`apps/causal_shap/structural_value.py`) on the working subgraph. It
-   needs a `LinearLogisticSCM` built from `config/edge_coefficients.yaml`;
-   `apps/causal_shap/nasa_scm.py` is the pattern.
-4. Step 8 on the working subgraph: PC, GES, LiNGAM, and MGM PC-Stable
-   (`causalMGM` in R, because the outcome is binary), scored with the
-   M1 to M5 battery (`apps/causal_shap/evaluation.py`) and by node depth.
-5. E1 to E3 as teaching DAGs (`apps/causal_shap/teaching_dags.py`), so the
-   detector has a prespecified test when a provider arrives.
-6. Ask Lexi for the dichromatic gating rule and which two channels it
-   pairs; send Lucidity the six questions; ask Robert about the canonical
-   graph version, the three unmatched edges, and actionable nodes.
-7. Decide with the coauthors whether `manuscript/` can be public.
+Use the repository Python environment for the depth experiment and research
+apps. See the README for installation and the Makefile for R/Python pipeline
+commands. No Pages publishing is needed. The [previous machine handoff](docs/NEXT_SESSION.md)
+is retained as history; its deployment instructions are superseded.
