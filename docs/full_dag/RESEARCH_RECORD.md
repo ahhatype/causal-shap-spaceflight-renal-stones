@@ -1,10 +1,14 @@
 # Research record — narrative, methods, results, limitations, roadmap
 
-> Ported from andystats/causal-shap-target-dags on 2026-09-03 (ADR 007). "This repository" below refers to that project's full 51-node line of work, now under `analysis/` and `apps/` in this hub; the companion site moved to https://andystats.github.io/causal-shap-target-dags/. Paths were updated (`app/` is now `apps/`); numbers and claims are unchanged.
+Methods and frozen results for the full 51-node source DAG under `analysis/`
+and `apps/`. The 14-node working-subgraph results are documented separately.
 
-_Consolidated 2026-08-09 from: PROJECT_NARRATIVE METHODS RESULTS LIMITATIONS ROADMAP_
-
----
+**Evaluation target:** the frozen ranking scores measure agreement with
+individual intervention effects. They are not estimates of error against a
+matched do-Shapley oracle. The structural prototype uses graph-respecting
+orders, supplied mechanisms and a fitted-model margin; see the
+[causal-contribution tutorial](../technical/do-shapley.md) for the distinction
+from symmetric outcome-based do-Shapley and its implications for validation.
 
 ## Canonical project narrative
 

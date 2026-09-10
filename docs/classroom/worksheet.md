@@ -14,4 +14,6 @@ Assume a fully observed, unconfounded chain X → M → Y. Let M=0.6X+eM and Y=0
 8. Along a single path with every coefficient 0.6, compute the depth-1 and depth-5 effects. Can you infer the most important intervention from depth alone in a graph with parallel paths?
 9. Paper-reading exit ticket: the renal structural prototype has τ=0.794 in one configuration. Name two additional checks needed before claiming general superiority. Does a scripted reviewer count as human expert validation?
 
+10. Enumerate the orders X→M and M→X using the causal coalition values. Average their contributions, then use only X→M. Which allocation is symmetric do-Shapley? Would a difference from the individual effect of X prove an estimation error? Check with `python lab.py --oracle`.
+
 Optional discussion: how would a noisy mediator change the ideal predictor? Why would conditional SHAP be a different game from the two demonstrated here?

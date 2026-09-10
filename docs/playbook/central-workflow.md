@@ -44,6 +44,17 @@ prototype uses 32 evaluation records, 32 background records and 32
 permutations, as well as additional mechanism information. Its budget is
 not matched to the ordering comparison.
 
+## Attribution accuracy and intervention-ranking agreement
+
+The renal benchmark compares mean-absolute attribution rankings with individual
+high-versus-low intervention effects. A do-Shapley value allocates a joint
+intervention contrast and need not equal an individual effect. These scores
+therefore assess agreement with a screening target, rather than isolate
+estimation error for each method's own attribution game. The
+[Jung/Heskes tutorial](../technical/do-shapley.md) gives the definitions and
+an exact two-player oracle. A corresponding renal oracle comparison remains
+pending.
+
 ## What the worked examples establish
 
 The four-node illustration is **X → A → M → Y**. Under full mediation,

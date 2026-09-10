@@ -24,6 +24,12 @@ the renal simulations and their attribution methods.
 
 ## Extend the lesson
 
+The [do-Shapley tutorial](https://github.com/ahhatype/causal-shap-spaceflight-renal-stones/blob/main/docs/technical/do-shapley.md)
+derives the causal game, its connection to Jung et al. (2022) and Heskes et al.
+(2020), and the difference from model-interventional SHAP. Run
+`python lab.py --oracle` to enumerate the two variable orders and compare
+them with an ancestor-first allocation.
+
 The [technical note](https://github.com/ahhatype/causal-shap-spaceflight-renal-stones/blob/main/docs/technical/path-length-and-response-shape.md)
 develops the path-length equations, detection assumptions and nonlinear
 examples, with [BibTeX references](https://github.com/ahhatype/causal-shap-spaceflight-renal-stones/blob/main/docs/references/technical-companion.bib).

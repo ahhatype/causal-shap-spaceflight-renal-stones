@@ -5,6 +5,7 @@
 | Task | Start here | Requirements |
 | --- | --- | --- |
 | Work the exact causal-credit example | [Worksheet](docs/classroom/worksheet.md), [answer key](docs/classroom/educator-guide.md), [lab](docs/classroom/README.md) | Browser or Python standard library |
+| Compare prediction credit, do-Shapley and individual effects | [Math tutorial](docs/technical/do-shapley.md); `python docs/classroom/lab.py --oracle` | Python standard library for the exact oracle |
 | Understand path length and the equations | [Technical note](docs/technical/path-length-and-response-shape.md) and [BibTeX](docs/references/technical-companion.bib) | GitHub math rendering |
 | Verify the recorded depth experiment | `python analysis/depth_washout_figure.py --verify-recorded` | Repository Python environment |
 | Inspect working-subgraph results | [Step 4](docs/step04_results.md), [scripted Step 6](docs/step06_results.md) | No installation to read |
@@ -38,6 +39,11 @@ reproduction commands. A pipeline rerun may regenerate outputs; the
 validation and depth-check commands check existing records.
 
 ## Reproducibility limits that matter
+
+The renal scores measure agreement with individual intervention-effect rankings.
+Attribution-estimation accuracy requires a reference computed for the same
+coalition game, outcome scale and order distribution. The exact two-player
+oracle is complete; a renal do-Shapley oracle and DML comparison remain pending.
 
 - The 14-node working graph is scoped and augmented, with separate
   coefficients from the 51-node source graph. NASA supplies topology.

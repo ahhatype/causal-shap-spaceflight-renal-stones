@@ -30,6 +30,8 @@ For 90 minutes, add 20 minutes modifying `lab.py` and 20 minutes reading one fro
 8. 0.6 and 0.07776. Parallel paths can add, opposing paths can cancel, and coefficients above one can amplify. This is a conditional attenuation lesson, not a universal ordering rule.
 9. Examples: repeated data/training seeds; more evaluation/background/permutation samples; graph misspecification; nonlinear generator; held-out or genuinely independent expert review; outcome-scale and intervention-range sensitivity. Scripted graph edits are not human validation.
 
+10. X→M contributes (0.36, 0.12); M→X contributes (0, 0.48), with entries listed as (X, M). Their average is (0.18, 0.30), the symmetric do-Shapley allocation. Keeping only the first order is an asymmetric allocation. The individual X contrast is 0.36; the different allocation does not imply an estimation error. These are exact analytic calculations, not fitted renal estimates.
+
 ## Assessment
 
 Use the full-DAG structural-propagation prototype as the default research result for the exit ticket: what information did it receive, and what should be varied in a replication?
@@ -44,6 +46,9 @@ For path products, the exact recorded detection rule and spline context, see
 the repository [technical note](https://github.com/ahhatype/causal-shap-spaceflight-renal-stones/blob/main/docs/technical/path-length-and-response-shape.md).
 
 ## Reading
+
+- Jung et al. (2022), causal contributions, identification and estimation: https://proceedings.mlr.press/v162/jung22a.html
+- [Do-Shapley derivation and exact oracle](https://github.com/ahhatype/causal-shap-spaceflight-renal-stones/blob/main/docs/technical/do-shapley.md).
 
 - Heskes et al. (2020), causal coalition values: https://proceedings.neurips.cc/paper_files/paper/2020/hash/32e54441e6382a7fbacbbbaf3c450059-Abstract.html
 - Shimizu et al. (2006), assumptions for LiNGAM: https://jmlr.org/papers/v7/shimizu06a.html

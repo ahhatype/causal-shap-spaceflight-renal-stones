@@ -1,6 +1,33 @@
 """Exact teaching examples; no fitting and no renal results. Python stdlib only."""
 import argparse
 from math import exp, isclose
+from itertools import permutations
+
+
+def credits_by_orders(values, orders):
+    """Average successive coalition gains; explicit enumeration for tiny games."""
+    orders = list(orders)
+    credits = dict.fromkeys(orders[0], 0.0)
+    for order in orders:
+        coalition = frozenset()
+        for player in order:
+            enlarged = coalition | {player}
+            credits[player] += (values[enlarged] - values[coalition]) / len(orders)
+            coalition = enlarged
+    return credits
+
+
+def oracle_example():
+    """Known coalition means, independently enumerated; no estimator is fitted."""
+    empty, x, m, both = map(frozenset, [(), ('X',), ('M',), ('X','M')])
+    model = {empty:0.0, x:0.0, m:0.48, both:0.48}
+    causal = {empty:0.0, x:0.36, m:0.48, both:0.48}
+    return {
+        'model_interventional': credits_by_orders(model, permutations(('X','M'))),
+        'symmetric_do_shapley': credits_by_orders(causal, permutations(('X','M'))),
+        'X_before_M_only': credits_by_orders(causal, [('X','M')]),
+        'effect_X_0_to_1': 0.36,
+    }
 
 def games(a=0.6, b=0.6, x=1.0, residual=0.2):
     # X and eM have mean zero and are independent. M=aX+eM; f(X,M)=bM.
@@ -23,6 +50,16 @@ def sigmoid(x):
     return 1/(1+exp(-x))
 
 def checks():
+    oracle = oracle_example()
+    for name, expected in [('model_interventional',(0,0.48)),
+                           ('symmetric_do_shapley',(0.18,0.30)),
+                           ('X_before_M_only',(0.36,0.12))]:
+        assert all(isclose(oracle[name][p],v,abs_tol=1e-12)
+                   for p,v in zip(('X','M'),expected))
+        assert isclose(sum(oracle[name].values()),0.48)
+    # The enumerated game and the existing analytic formula agree.
+    assert all(isclose(oracle['symmetric_do_shapley'][p],v)
+               for p,v in zip(('X','M'),games()['structural_shap']))
     for a,b,x,e in [(0.6,0.6,1,0.2),(-0.6,0.6,1,0.2),(0,0.6,1,0.2),(1.2,1.1,2,-0.1)]:
         r=games(a,b,x,e)
         assert isclose(sum(r['predictive_shap']),r['prediction'],abs_tol=1e-12)
@@ -39,14 +76,19 @@ def checks():
     # Both Gaussian direction models have Var(X)=Var(Y)=1 and Cov(X,Y)=rho.
     rho=0.6
     assert isclose(rho*rho+(1-rho*rho),1)
-    print('PASS: efficiency, dummy input, signed/zero effects, nonlinear contrasts, logistic scale, covariance equivalence.')
+    print('PASS: exact oracle, symmetric/asymmetric orders, efficiency, dummy input, signed/zero effects, nonlinear contrasts, logistic scale, covariance equivalence.')
 
 def main():
     p=argparse.ArgumentParser(description=__doc__)
     p.add_argument('--check',action='store_true')
+    p.add_argument('--oracle',action='store_true',help='Enumerate the exact two-player model and causal games')
     args=p.parse_args()
     if args.check:
         checks(); return
+    if args.oracle:
+        print('EXACT TEACHING ORACLE: two players, known coalition means; no renal estimation.')
+        for name, value in oracle_example().items(): print(f'{name}: {value}')
+        return
     r=games()
     print('TEACHING ONLY: M=0.6X+eM, f=0.6M; x=1, eM=0.2, mean-zero population.')
     for k,v in r.items(): print(f'{k}: {v}')

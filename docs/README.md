@@ -43,6 +43,7 @@ the examples and research code.
 ## Technical and reproducibility companion
 
 - [Reproduction routes and commands](../REPRODUCIBILITY.md).
+- [Do-Shapley math tutorial and benchmark targets](technical/do-shapley.md).
 - [Path length, causal credit, response shape and splines](technical/path-length-and-response-shape.md).
 - [Technical BibTeX](references/technical-companion.bib).
 

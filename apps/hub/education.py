@@ -204,13 +204,14 @@ TOPICS: dict[str, tuple[str, str]] = {
         "ratio weights, both flag the estimate with a caution.",
     ),
     "doshapley": (
-        "Decision-grade attribution: do-Shapley",
-        "This stage's attributions explain the fitted model under the current "
-        "graph: a survey instrument for triage. When the attribution itself "
-        "must carry decision weight, do-Shapley values (Jung et al. 2022) "
-        "define the shares on the real outcome, give graphical identification "
-        "conditions, and come with double/debiased-ML estimators. Full "
-        "citations sit in References below the tabs.",
+        "Causal contributions: do-Shapley",
+        "Do-Shapley values (Jung et al. 2022; Heskes et al. 2020) allocate "
+        "a joint intervention's outcome change. They need not equal the "
+        "effects of intervening on each variable alone. Jung et al. give "
+        "identification conditions and discrete-variable estimators, including "
+        "double/debiased ML. This hub's fitted-model, graph-ordered prototype "
+        "uses a different target. An action still requires its own effect, "
+        "feasibility and cost assessment. Citations are in References.",
     ),
     "routes": (
         "Alternate routes to the same question",
@@ -377,8 +378,10 @@ _FUTURE_DIRECTIONS = (
     "from its DAG-derived adjustment set alone, with feasibility/positivity "
     "checks surfaced. Tabled; the survey-then-target logic is in Methods "
     "position above.",
-    "A do-Shapley attribution arm (Jung et al. 2022): decision-grade shares "
-    "on the real outcome where the graph class identifies them.",
+    "A do-Shapley attribution arm (Jung et al. 2022): shares of a joint "
+    "intervention contrast where identified. Match its oracle target and "
+    "report individual intervention effects separately; the mixed-variable "
+    "estimation design remains pending.",
     "Longitudinal support: the hub is cross-sectional v1, one row per unit; "
     "time-varying exposures and the longitudinal MTP literature (D\u00edaz "
     "et al. 2023) are the natural extension.",

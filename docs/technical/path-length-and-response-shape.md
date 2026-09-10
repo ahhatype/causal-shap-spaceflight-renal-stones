@@ -2,7 +2,9 @@
 
 This is the technical companion to the [central workflow](../playbook/central-workflow.md)
 and [classroom lesson](../classroom/README.md). The propositions below are
-conditional mathematical statements, not additional renal findings.
+conditional mathematical statements, not additional renal findings. The
+[do-Shapley tutorial](do-shapley.md) defines the attribution games, their
+baselines and the difference from individual intervention effects.
 
 ## 1. A cause can receive zero predictive credit
 
@@ -30,8 +32,10 @@ $$\phi_M=\tfrac12(0.48-0)+\tfrac12(0.48-0.36)=0.30.$$
 
 Both credit vectors sum to 0.48; the effect of setting X from 0 to 1 is
 0.36. [Heskes et al.](https://proceedings.neurips.cc/paper_files/paper/2020/hash/32e54441e6382a7fbacbbbaf3c450059-Abstract.html)
-provides the causal-game framework; this symmetric toy is not a numerical
-reproduction of every causal Shapley method or the full-DAG prototype.
+provides the causal-game framework; [Jung et al. (2022)](https://proceedings.mlr.press/v162/jung22a.html)
+extend the do-Shapley treatment to inaccessible outcome mechanisms. This
+symmetric toy illustrates that game, separately from its discrete-variable
+estimation theory and our asymmetric full-DAG prototype.
 
 ## 2. Path products explain attenuation under stated conditions
 

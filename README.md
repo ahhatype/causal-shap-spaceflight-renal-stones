@@ -47,7 +47,8 @@ disturbances, x = 1 and eM = 0.2. The ideal predictor is f = 0.6M.
 | Mean effect of setting X from 0 to 1 | 0.36 | — | How much does the expected outcome change? |
 
 Both credit allocations sum to the prediction relative to a zero background.
-The intervention contrast is a different quantity. The [worked calculation](docs/classroom/educator-guide.md#answer-key)
+The intervention contrast is a different quantity. The [do-Shapley tutorial](docs/technical/do-shapley.md),
+based on Jung et al. (2022) and Heskes et al. (2020),
 defines the games and derives the numbers. This is an exact teaching example,
 separate from the renal simulations and their attribution methods.
 
@@ -61,7 +62,8 @@ come from the chosen simulation mechanisms.
 | 14-node working subgraph | Credit shifts in both directions by chain and model. Gaussian PC isolates the binary outcome at n = 1,000. | One seed. Scripted revisions produce mixed changes across methods; no human reviewed the rounds. [Baseline results](docs/step04_results.md), [scripted revisions](docs/step06_results.md). |
 | 51-node source DAG | Ordinary versus ordering-only Kendall's tau: 0.506 / 0.528, with no detected difference. A propagation prototype reaches 0.794. | The prototype receives known mechanisms and uses a different budget, without repeated-seed uncertainty; its score does not establish method superiority. [Research record](docs/full_dag/RESEARCH_RECORD.md). |
 
-Kendall's tau measures agreement with simulated total-effect rankings. The
+Kendall's tau measures agreement with individual intervention-effect rankings,
+which is separate from estimating a causal allocation accurately. The
 two renal graphs use separate generators and intervention ranges, so their
 scores are not one head-to-head comparison. See [comparison inputs and intervention definitions](docs/playbook/central-workflow.md#what-information-each-comparison-receives).
 

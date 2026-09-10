@@ -97,6 +97,11 @@ No citable source was found arguing that direct mechanisms in epidemiology are a
   The closest published statement that standard SHAP conflates a root cause's effect with its mediators'.
 - Wang, J., Wiens, J., Lundberg, S.M. (2021). Shapley Flow. *AISTATS*, PMLR 130:721-729. <https://proceedings.mlr.press/v130/wang21b.html>
 - Jung, Y., Kasiviswanathan, S., Tian, J., Janzing, D., Blöbaum, P., Bareinboim, E. (2022). On Measuring Causal Contributions via do-interventions. *ICML*, PMLR 162. <https://proceedings.mlr.press/v162/jung22a.html>
+  Jung et al. characterize allocation of a joint intervention contrast,
+  give a sufficient identification criterion and develop discrete-variable
+  estimators. This supports specifying the attribution target; it does not
+  make do-Shapley equal to an individual intervention effect or establish a
+  universal proximity bias. See the [math tutorial](../technical/do-shapley.md).
 - Ng, W.Y., Wang, L.R., Liu, S., Fan, X. (2025). Causal SHAP: Feature Attribution with Dependency Awareness through Causal Discovery. *IJCNN 2025*. arXiv:2509.00846, <https://arxiv.org/abs/2509.00846>. IEEE Xplore record 11228295; the IEEE DOI was not retrieved.
 
 No paper proves a general proximity bias. Heskes et al. and Wang et al. are the cleanest published statements; the proximity-bias index and the mediator-inversion tables in this repository are the paper's own evidence.
