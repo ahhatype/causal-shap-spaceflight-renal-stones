@@ -1,0 +1,54 @@
+{
+  "status": "exploratory analytic example; not calibrated to NASA data",
+  "graph_scope": "four-variable outcome model plus selection; neither the 14-node nor 51-node simulation",
+  "method": "exact enumeration of four baseline strata; no model fitting or random draws",
+  "intervention": "A is a hypothetical binary hydration strategy; no dose units assigned",
+  "population": "hypothetical preflight candidate source; hard exclusion is a support stress test, not NASA policy",
+  "assumptions": "baseline selection, independent H and F, randomized A, unchanged outcome mechanism across selection regimes",
+  "results": [
+    {
+      "regime": "no_selection",
+      "retained_fraction": 1.0,
+      "history_prevalence": 0.2,
+      "history_fitness_correlation": 0.0,
+      "risk_a0": 0.12552042724552337,
+      "risk_a1": 0.07249989413699845,
+      "selected_risk_difference": -0.053020533108524906,
+      "source_support_coverage": 1.0,
+      "source_ipw_risk_difference": -0.053020533108524906
+    },
+    {
+      "regime": "random_half",
+      "retained_fraction": 0.5,
+      "history_prevalence": 0.2,
+      "history_fitness_correlation": 0.0,
+      "risk_a0": 0.12552042724552337,
+      "risk_a1": 0.07249989413699845,
+      "selected_risk_difference": -0.053020533108524906,
+      "source_support_coverage": 1.0,
+      "source_ipw_risk_difference": -0.053020533108524906
+    },
+    {
+      "regime": "soft_selection",
+      "retained_fraction": 0.6139546759985222,
+      "history_prevalence": 0.11914156616061722,
+      "history_fitness_correlation": 0.059767857267834026,
+      "risk_a0": 0.11390910865894434,
+      "risk_a1": 0.06802054314468518,
+      "selected_risk_difference": -0.045888565514259155,
+      "source_support_coverage": 1.0,
+      "source_ipw_risk_difference": -0.053020533108524906
+    },
+    {
+      "regime": "hard_exclusion",
+      "retained_fraction": 0.5408071543484239,
+      "history_prevalence": 0.0,
+      "history_fitness_correlation": null,
+      "risk_a0": 0.10254242326187668,
+      "risk_a1": 0.06486152113616626,
+      "selected_risk_difference": -0.0376809021257104,
+      "source_support_coverage": 0.8,
+      "source_ipw_risk_difference": null
+    }
+  ]
+}

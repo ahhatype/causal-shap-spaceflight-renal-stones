@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE svg
+  PUBLIC '-//W3C//DTD SVG 1.0//EN'
+  'http://www.w3.org/TR/2001/REC-SVG-20010904/DTD/svg10.dtd'>
+<svg width="720" height="340" preserveAspectRatio="xMinYMin meet" viewBox="0 0 720 340" xmlns="http://www.w3.org/2000/svg" version="1.0" fill-rule="evenodd" xmlns:xlink="http://www.w3.org/1999/xlink">
+	<title>...</title>
+	<desc>...</desc>
+	<clipPath id="clip">
+		<rect x="0" y="0" width="720" height="340"/>
+	</clipPath>
+	<g id="group" transform="scale(1,-1) translate(0,-340)" style="clip-path: url(#clip)">
+		<g transform="">
+			<rect x="10" y="245" width="180" height="60" rx="7" ry="7" style="stroke: rgb(15%,39%,48%); stroke-linecap: butt; stroke-width: 1.2; fill: rgb(94%,96%,96%); fill-rule: evenodd;"/>
+			<text x="48.269999999999996" y="283.0" style="font-family: Helvetica-Bold; font-size: 14px;fill: rgb(15%,39%,48%); stroke:none;" transform="translate(0,566) scale(1,-1)">Stone history H</text>
+			<text x="40.96" y="262.0" style="font-family: Helvetica; font-size: 12.8px;fill: rgb(12%,21%,27%); stroke:none;" transform="translate(0,524) scale(1,-1)">Pre-flight information</text>
+			<rect x="280" y="245" width="160" height="60" rx="7" ry="7" style="stroke: rgb(22%,48%,44%); stroke-linecap: butt; stroke-width: 1.2; fill: rgb(94%,96%,96%); fill-rule: evenodd;"/>
+			<text x="314.283" y="283.0" style="font-family: Helvetica-Bold; font-size: 14px;fill: rgb(22%,48%,44%); stroke:none;" transform="translate(0,566) scale(1,-1)">Eligibility E=1</text>
+			<rect x="525" y="245" width="180" height="60" rx="7" ry="7" style="stroke: rgb(22%,48%,44%); stroke-linecap: butt; stroke-width: 1.2; fill: rgb(94%,96%,96%); fill-rule: evenodd;"/>
+			<text x="544.1949999999999" y="283.0" style="font-family: Helvetica-Bold; font-size: 14px;fill: rgb(22%,48%,44%); stroke:none;" transform="translate(0,566) scale(1,-1)">Baseline screening B</text>
+			<text x="584.0496" y="262.0" style="font-family: Helvetica; font-size: 12.8px;fill: rgb(12%,21%,27%); stroke:none;" transform="translate(0,524) scale(1,-1)">e.g. fitness</text>
+			<path d="M 190,275 L 280,275 Z" style="stroke: rgb(22%,48%,44%); stroke-linecap: butt; stroke-width: 1.2; stroke-dasharray: 4, 3;"/>
+			<polygon points="280 275, 273 272, 273 278" style="stroke: rgb(22%,48%,44%); stroke-linecap: butt; stroke-width: 1; fill: rgb(22%,48%,44%); fill-rule: evenodd;"/>
+			<path d="M 525,275 L 440,275 Z" style="stroke: rgb(22%,48%,44%); stroke-linecap: butt; stroke-width: 1.2; stroke-dasharray: 4, 3;"/>
+			<polygon points="440 275, 447 278, 447 272" style="stroke: rgb(22%,48%,44%); stroke-linecap: butt; stroke-width: 1; fill: rgb(22%,48%,44%); fill-rule: evenodd;"/>
+			<rect x="280" y="149" width="160" height="60" rx="7" ry="7" style="stroke: rgb(22%,48%,44%); stroke-linecap: butt; stroke-width: 1.2; fill: rgb(94%,96%,96%); fill-rule: evenodd;"/>
+			<text x="304.567" y="187.0" style="font-family: Helvetica-Bold; font-size: 14px;fill: rgb(22%,48%,44%); stroke:none;" transform="translate(0,374) scale(1,-1)">Assignment G=1</text>
+			<path d="M 360,245 L 360,209 Z" style="stroke: rgb(22%,48%,44%); stroke-linecap: butt; stroke-width: 1.2; stroke-dasharray: 4, 3;"/>
+			<polygon points="360 209, 357 216, 363 216" style="stroke: rgb(22%,48%,44%); stroke-linecap: butt; stroke-width: 1; fill: rgb(22%,48%,44%); fill-rule: evenodd;"/>
+			<text x="566.2375" y="183.0" style="font-family: Helvetica; font-size: 12.5px;fill: rgb(22%,48%,44%); stroke:none;" transform="translate(0,366) scale(1,-1)">Observed crew:</text>
+			<text x="572.81875" y="166.125" style="font-family: Helvetica; font-size: 12.5px;fill: rgb(22%,48%,44%); stroke:none;" transform="translate(0,332) scale(1,-1)">E=1 and G=1</text>
+			<rect x="10" y="40" width="175" height="62" rx="7" ry="7" style="stroke: rgb(15%,39%,48%); stroke-linecap: butt; stroke-width: 1.2; fill: rgb(94%,96%,96%); fill-rule: evenodd;"/>
+			<text x="28.655" y="80.0" style="font-family: Helvetica-Bold; font-size: 14px;fill: rgb(15%,39%,48%); stroke:none;" transform="translate(0,160) scale(1,-1)">Hydration strategy A</text>
+			<text x="56.9496" y="59.0" style="font-family: Helvetica; font-size: 12.8px;fill: rgb(12%,21%,27%); stroke:none;" transform="translate(0,118) scale(1,-1)">After selection</text>
+			<rect x="275" y="40" width="170" height="62" rx="7" ry="7" style="stroke: rgb(15%,39%,48%); stroke-linecap: butt; stroke-width: 1.2; fill: rgb(94%,96%,96%); fill-rule: evenodd;"/>
+			<text x="307.094" y="80.0" style="font-family: Helvetica-Bold; font-size: 14px;fill: rgb(15%,39%,48%); stroke:none;" transform="translate(0,160) scale(1,-1)">Urine chemistry</text>
+			<text x="310.9184" y="59.0" style="font-family: Helvetica; font-size: 12.8px;fill: rgb(12%,21%,27%); stroke:none;" transform="translate(0,118) scale(1,-1)">Existing mediator</text>
+			<rect x="530" y="40" width="175" height="62" rx="7" ry="7" style="stroke: rgb(15%,39%,48%); stroke-linecap: butt; stroke-width: 1.2; fill: rgb(94%,96%,96%); fill-rule: evenodd;"/>
+			<text x="560.317" y="80.0" style="font-family: Helvetica-Bold; font-size: 14px;fill: rgb(15%,39%,48%); stroke:none;" transform="translate(0,160) scale(1,-1)">Nephrolithiasis Y</text>
+			<text x="591.5352" y="59.0" style="font-family: Helvetica; font-size: 12.8px;fill: rgb(12%,21%,27%); stroke:none;" transform="translate(0,118) scale(1,-1)">Outcome</text>
+			<path d="M 185,70 L 275,70 Z" style="stroke: rgb(34%,40%,45%); stroke-linecap: butt; stroke-width: 1.2;"/>
+			<polygon points="275 70, 268 67, 268 73" style="stroke: rgb(34%,40%,45%); stroke-linecap: butt; stroke-width: 1; fill: rgb(34%,40%,45%); fill-rule: evenodd;"/>
+			<path d="M 445,70 L 530,70 Z" style="stroke: rgb(34%,40%,45%); stroke-linecap: butt; stroke-width: 1.2;"/>
+			<polygon points="530 70, 523 67, 523 73" style="stroke: rgb(34%,40%,45%); stroke-linecap: butt; stroke-width: 1; fill: rgb(34%,40%,45%); fill-rule: evenodd;"/>
+			<path d="M 100,245 L 100,123 Z" style="stroke: rgb(34%,40%,45%); stroke-linecap: butt; stroke-width: 1.2;"/>
+			<path d="M 100,123 L 360,123 Z" style="stroke: rgb(34%,40%,45%); stroke-linecap: butt; stroke-width: 1.2;"/>
+			<path d="M 360,123 L 360,102 Z" style="stroke: rgb(34%,40%,45%); stroke-linecap: butt; stroke-width: 1.2;"/>
+			<polygon points="360 102, 357 109, 363 109" style="stroke: rgb(34%,40%,45%); stroke-linecap: butt; stroke-width: 1; fill: rgb(34%,40%,45%); fill-rule: evenodd;"/>
+			<path d="M 100,40 L 100,18 Z" style="stroke: rgb(34%,40%,45%); stroke-linecap: butt; stroke-width: 1.2;"/>
+			<path d="M 100,18 L 615,18 Z" style="stroke: rgb(34%,40%,45%); stroke-linecap: butt; stroke-width: 1.2;"/>
+			<path d="M 615,18 L 615,40 Z" style="stroke: rgb(34%,40%,45%); stroke-linecap: butt; stroke-width: 1.2;"/>
+			<polygon points="615 40, 618 33, 612 33" style="stroke: rgb(34%,40%,45%); stroke-linecap: butt; stroke-width: 1; fill: rgb(34%,40%,45%); fill-rule: evenodd;"/>
+			<text x="145.26399999999998" y="324.0" style="font-family: Helvetica-Bold; font-size: 16px;fill: rgb(12%,21%,27%); stroke:none;" transform="translate(0,648) scale(1,-1)">Renal pathway subset with a proposed selection overlay</text>
+		</g>
+	</g>
+</svg>

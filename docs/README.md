@@ -8,6 +8,8 @@ the examples and research code.
 
 | file | contents |
 | --- | --- |
+| [`playbook/study-guide.pdf`](playbook/study-guide.pdf) ([text](playbook/study-guide.md)) | Manuscript-aligned method sequence, optional discovery, graph surgery and causal attribution |
+| [`playbook/method-choices.md`](playbook/method-choices.md) | Conditional method choices and bounded comparisons for the appendix |
 | [`playbook/protocol.md`](playbook/protocol.md) | 13-step protocol, implementation paths and status |
 | [`playbook/central-workflow.md`](playbook/central-workflow.md) | Central workflow, exact classroom calculation, simulation mapping and limits |
 | [`classroom/README.md`](classroom/README.md) | Educator guide, worksheet, interactive lab and Python examples |
@@ -16,7 +18,7 @@ the examples and research code.
 | [`notes/2026-09-01-whiteboard-transcription.md`](notes/2026-09-01-whiteboard-transcription.md) | Transcription of the 1 September 2026 notes the memo is built from |
 | [`references/claims-to-citations.md`](references/claims-to-citations.md) | Verified citations for the reframing's claims, with what each supports and what is unsupported |
 | [`lumawarp/README.md`](lumawarp/README.md) | Placeholder outline for the expanded LumaWarp detector treatment and the dichromatic sensitivity filter |
-| [`playbook/README.md`](playbook/README.md) | Framework and protocol mappings; [`playbook/dag-harvest-protocol.md`](playbook/dag-harvest-protocol.md) is rung 0 |
+| [`playbook/README.md`](playbook/README.md) | Method workflow and protocol mappings; graph sourcing is described in the [DAG harvest protocol](playbook/dag-harvest-protocol.md) |
 | [`references/manuscript-references.md`](references/manuscript-references.md) | Venue, NASA DAG-program references, and the epidemiology framing citations |
 
 ## The working subgraph (14 nodes; `config/`, `pipeline/`, `r/`, `python/`)
@@ -44,6 +46,7 @@ the examples and research code.
 
 - [Reproduction routes and commands](../REPRODUCIBILITY.md).
 - [Do-Shapley math tutorial and benchmark targets](technical/do-shapley.md).
+- [Selection mechanisms, population targets and exact stress test](technical/selection-mechanism.md).
 - [Path length, causal credit, response shape and splines](technical/path-length-and-response-shape.md).
 - [Technical BibTeX](references/technical-companion.bib).
 

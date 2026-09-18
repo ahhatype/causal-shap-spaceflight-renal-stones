@@ -1,7 +1,7 @@
 # Causal SHAP: a benchmark using a spaceflight risk graph
 
 [![Python tests](https://github.com/ahhatype/causal-shap-spaceflight-renal-stones/actions/workflows/python-tests.yml/badge.svg)](https://github.com/ahhatype/causal-shap-spaceflight-renal-stones/actions/workflows/python-tests.yml)
-[Reproducibility guide](REPRODUCIBILITY.md) · [Teaching companion](docs/classroom/README.md) · [Technical notes](docs/technical/path-length-and-response-shape.md)
+[Study guide](docs/playbook/study-guide.pdf) · [Reproducibility guide](REPRODUCIBILITY.md) · [Technical notes](docs/technical/path-length-and-response-shape.md)
 
 A prediction ranking explains a fitted model. To assess what would happen
 after changing a variable, we also need assumptions about the causal
@@ -17,23 +17,26 @@ their totals are not comparable across phases.
 
 ## The central workflow
 
-These seven stages connect prediction explanations to causal analysis.
-The simulations test parts of the workflow; the complete sequence has not
-been validated. A supplied graph can be evaluated directly, and causal
-analysis does not require running SHAP first.
+The manuscript compares a predictive reference with a causal route. Seven
+stages make the method sequence explicit, with discovery optional when a
+suitable graph is supplied.
 
-| Stage | Purpose | Current evidence |
-| --- | --- | --- |
-| 1. Define the study | Specify the outcome, graph assumptions and intervention contrasts. | Two renal simulations with known mechanisms. |
-| 2. Fit and explain predictions | Compare what fitted models credit. | Five model–explainer pairings on the working subgraph. |
-| 3. Examine candidate graphs | Assess structures under discovery assumptions. | A disconnected-outcome diagnostic; broader comparisons pending. |
-| 4. Reconsider excluded candidates | Investigate discarded variables and filter noise. | Detector and filter placeholders; no evaluated results. |
-| 5. Review graph assumptions | Assess biological evidence and unresolved directions. | Scripted revisions only; human review pending. |
-| 6. Follow changes through the graph | Calculate causal attributions and intervention contrasts. | Ordering-only comparison and a separate propagation prototype. |
-| 7. Evaluate feasible actions | Estimate benefit, uncertainty, feasibility and cost. | Scaffold only; outside completed article scope. |
+| Stage | Method task |
+| --- | --- |
+| 0. Define the target | Choose prediction, an intervention effect or causal allocation. |
+| 1. Prepare data and the predictive reference | Specify the DAG and simulation, fit a model and compute ordinary SHAP. |
+| 2. Discover candidate structures (optional) | PC and alternatives; bypass this step for a supplied graph. |
+| 3. Review the graph and estimate mechanisms | Assess edges, retain uncertainty and record revisions. |
+| 4. Define the causal game and graph surgery | Specify interventions and the method's coalition construction. |
+| 5. Calculate causal attributions | Compare the selected causal-SHAP families on their declared targets. |
+| 6. Compare under data degradation | Evaluate matched targets and repeat selected comparisons under spaceflight data constraints. |
 
-The [workflow and evidence map](docs/playbook/central-workflow.md) connects
-these stages to the examples, implementations and assumptions.
+The [editable study guide](docs/playbook/study-guide-latex/README.md)
+([PDF](docs/playbook/study-guide-latex/main.pdf)) includes the method flowchart,
+discovery alternatives and graph-surgery example. The
+[workflow and evidence map](docs/playbook/central-workflow.md) connects the stages
+to the original 13-step protocol. The full workflow and degradation experiment
+remain proposed and partially illustrated.
 
 ## Worked example and simulation
 

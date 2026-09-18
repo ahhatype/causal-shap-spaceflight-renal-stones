@@ -114,3 +114,6 @@ PROJECT_MAP.md
 
 # Generated offline teaching packages
 dist/
+
+# Local reading copy; cite the publisher link in the bibliography.
+/references/jung22a.pdf

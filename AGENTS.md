@@ -20,7 +20,8 @@ causal-shap-target-dags (`analysis/`, `apps/`, `docs/full_dag/`).
   teaching companions. Pages is retired; do not deploy or re-enable it.
 - Keep `site/` as a source archive. The root `index.html` redirects to this
   GitHub repository. Current reader entry points are README.md,
-  REPRODUCIBILITY.md and docs/classroom/README.md.
+  REPRODUCIBILITY.md and docs/playbook/study-guide.md. The existing classroom
+  materials remain available; educator-companion development is paused.
 - Keep reader entry points focused on the study and how to use its materials.
   Hosting history, manuscript handoffs and maintenance instructions belong in
   contributor notes or decisions. Avoid repeating caveats already stated with
@@ -61,3 +62,26 @@ which is embedded between labeled comments in `main.tex`. Use
 `python manuscript/build.py` to build its PDF and ZIP; do not create a second
 editing copy at the manuscript root. Coauthor correspondence and the recording
 script live in `manuscript/coauthor-review/`.
+
+## Accepted playbook and restart context (2026-09-17)
+
+- The accepted spine follows the manuscript's method sequence, not a generic
+  analysis framework: (0) goal and population; (1) data and predictive reference;
+  (2) optional causal discovery, explicitly PC and alternatives; (3) graph review
+  and required mechanisms; (4) causal game and do-graph surgery; (5) causal
+  attribution; (6) comparison under data degradation. Preserve its crosswalk to
+  the manuscript's 13-step protocol. Alternatives belong within each stage.
+- A supplied DAG bypasses discovery. Graph review and intervention surgery are
+  distinct. Keep the causal-attribution families' targets and information inputs
+  explicit; prediction and effect-only routes need not compute causal SHAP.
+- The editable guide is docs/playbook/study-guide-latex/main.tex, with a separate
+  references.bib, vector figures and native draw.io sources. Keep this clean
+  LaTeX article format. Do not regenerate or overwrite manual source/diagram
+  edits during a normal build. analysis/build_spine_guide.py also refreshes the
+  compatibility PDF at docs/playbook/study-guide.pdf.
+- Read ORIENTATION.md for the shared restart priorities. On the writing machine,
+  read the latest handoff at the top of ignored docs/STATUS.md before manuscript
+  work. Private sync records and editorial flags remain in coauthor-review/.
+- The latest imported Overleaf snapshot is dated 2026-09-16. Check for newer
+  remote edits before the next sync; do not assume this date establishes current
+  equality. Educator development and Pages deployment remain paused/retired.

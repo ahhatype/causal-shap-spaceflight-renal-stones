@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE svg
+  PUBLIC '-//W3C//DTD SVG 1.0//EN'
+  'http://www.w3.org/TR/2001/REC-SVG-20010904/DTD/svg10.dtd'>
+<svg width="700" height="760" preserveAspectRatio="xMinYMin meet" viewBox="0 0 700 760" xmlns="http://www.w3.org/2000/svg" version="1.0" fill-rule="evenodd" xmlns:xlink="http://www.w3.org/1999/xlink">
+	<title>...</title>
+	<desc>...</desc>
+	<clipPath id="clip">
+		<rect x="0" y="0" width="700" height="760"/>
+	</clipPath>
+	<g id="group" transform="scale(1,-1) translate(0,-760)" style="clip-path: url(#clip)">
+		<g transform="">
+			<rect x="180" y="679" width="500" height="66" rx="7" ry="7" style="stroke: rgb(15%,39%,48%); stroke-linecap: butt; stroke-width: 1.2; fill: rgb(94%,96%,96%); fill-rule: evenodd;"/>
+			<text x="318.36400000000003" y="724.01" style="font-family: Helvetica-Bold; font-size: 14px;fill: rgb(15%,39%,48%); stroke:none;" transform="translate(0,1448) scale(1,-1)">0 Specify the goal and population</text>
+			<text x="288.9625" y="703.99" style="font-family: Helvetica; font-size: 12.5px;fill: rgb(12%,21%,27%); stroke:none;" transform="translate(0,1407) scale(1,-1)">Prediction, intervention effect, or causal allocation?</text>
+			<text x="265.33124999999995" y="688.74" style="font-family: Helvetica; font-size: 12.5px;fill: rgb(12%,21%,27%); stroke:none;" transform="translate(0,1377) scale(1,-1)">Name the outcome, horizon, contrast and target population.</text>
+			<rect x="180" y="579" width="500" height="82" rx="7" ry="7" style="stroke: rgb(15%,39%,48%); stroke-linecap: butt; stroke-width: 1.2; fill: rgb(94%,96%,96%); fill-rule: evenodd;"/>
+			<text x="264.674" y="641.01" style="font-family: Helvetica-Bold; font-size: 14px;fill: rgb(15%,39%,48%); stroke:none;" transform="translate(0,1282) scale(1,-1)">1 Prepare the DAG and data; fit a reference model</text>
+			<text x="305.46875" y="620.99" style="font-family: Helvetica; font-size: 12.5px;fill: rgb(12%,21%,27%); stroke:none;" transform="translate(0,1241) scale(1,-1)">Plausible DAG + observed data or simulation</text>
+			<text x="300.4375" y="605.74" style="font-family: Helvetica; font-size: 12.5px;fill: rgb(12%,21%,27%); stroke:none;" transform="translate(0,1211) scale(1,-1)">Predictive model and ordinary SHAP reference</text>
+			<text x="379.4532" y="587.29" style="font-family: Helvetica; font-size: 10.7px;fill: rgb(34%,40%,45%); stroke:none;" transform="translate(0,1174) scale(1,-1)">Manuscript Steps 1-4</text>
+			<rect x="180" y="479" width="500" height="82" rx="7" ry="7" style="stroke: rgb(22%,48%,44%); stroke-linecap: butt; stroke-width: 1.2; fill: rgb(94%,96%,96%); fill-rule: evenodd;"/>
+			<text x="276.34299999999996" y="541.01" style="font-family: Helvetica-Bold; font-size: 14px;fill: rgb(22%,48%,44%); stroke:none;" transform="translate(0,1082) scale(1,-1)">2 OPTIONAL: learn candidate causal structure</text>
+			<text x="297.99375" y="520.99" style="font-family: Helvetica; font-size: 12.5px;fill: rgb(12%,21%,27%); stroke:none;" transform="translate(0,1041) scale(1,-1)">PC / PC-stable; context-dependent alternatives:</text>
+			<text x="306.7" y="505.74" style="font-family: Helvetica; font-size: 12.5px;fill: rgb(12%,21%,27%); stroke:none;" transform="translate(0,1011) scale(1,-1)">GES, LiNGAM, NOTEARS, mixed-data tests</text>
+			<text x="306.74135" y="487.29" style="font-family: Helvetica; font-size: 10.7px;fill: rgb(34%,40%,45%); stroke:none;" transform="translate(0,974) scale(1,-1)">Ng PC + IDA route: Step 6; structure checks: Step 8</text>
+			<rect x="180" y="379" width="500" height="82" rx="7" ry="7" style="stroke: rgb(22%,48%,44%); stroke-linecap: butt; stroke-width: 1.2; fill: rgb(94%,96%,96%); fill-rule: evenodd;"/>
+			<text x="277.113" y="441.01" style="font-family: Helvetica-Bold; font-size: 14px;fill: rgb(22%,48%,44%); stroke:none;" transform="translate(0,882) scale(1,-1)">3 Review the graph and estimate mechanisms</text>
+			<text x="269.35" y="420.99" style="font-family: Helvetica; font-size: 12.5px;fill: rgb(12%,21%,27%); stroke:none;" transform="translate(0,841) scale(1,-1)">Expert review + temporal constraints; assess identification</text>
+			<text x="300.43125" y="405.74" style="font-family: Helvetica; font-size: 12.5px;fill: rgb(12%,21%,27%); stroke:none;" transform="translate(0,811) scale(1,-1)">Retain uncertain arrows and alternative graphs</text>
+			<text x="369.33635" y="387.29" style="font-family: Helvetica; font-size: 10.7px;fill: rgb(34%,40%,45%); stroke:none;" transform="translate(0,774) scale(1,-1)">Manuscript Steps 2 and 6</text>
+			<rect x="180" y="263" width="500" height="98" rx="7" ry="7" style="stroke: rgb(22%,48%,44%); stroke-linecap: butt; stroke-width: 1.2; fill: rgb(94%,96%,96%); fill-rule: evenodd;"/>
+			<text x="282.951" y="340.635" style="font-family: Helvetica-Bold; font-size: 14px;fill: rgb(22%,48%,44%); stroke:none;" transform="translate(0,681) scale(1,-1)">4 Define the causal game and graph surgery</text>
+			<text x="280.6375" y="320.615" style="font-family: Helvetica; font-size: 12.5px;fill: rgb(12%,21%,27%); stroke:none;" transform="translate(0,641) scale(1,-1)">do: set coalition nodes, remove their incoming arrows,</text>
+			<text x="286.875" y="305.365" style="font-family: Helvetica; font-size: 12.5px;fill: rgb(12%,21%,27%); stroke:none;" transform="translate(0,610) scale(1,-1)">then propagate through the remaining mechanisms.</text>
+			<text x="280.28125" y="290.115" style="font-family: Helvetica; font-size: 12.5px;fill: rgb(12%,21%,27%); stroke:none;" transform="translate(0,580) scale(1,-1)">Ordering- and edge-based games use their own rules.</text>
+			<text x="386.88435" y="271.665" style="font-family: Helvetica; font-size: 10.7px;fill: rgb(34%,40%,45%); stroke:none;" transform="translate(0,543) scale(1,-1)">Manuscript Step 6</text>
+			<rect x="180" y="169" width="500" height="82" rx="7" ry="7" style="stroke: rgb(22%,48%,44%); stroke-linecap: butt; stroke-width: 1.2; fill: rgb(94%,96%,96%); fill-rule: evenodd;"/>
+			<text x="286.08000000000004" y="231.01" style="font-family: Helvetica-Bold; font-size: 14px;fill: rgb(22%,48%,44%); stroke:none;" transform="translate(0,462) scale(1,-1)">5 Compute causal attributions, if requested</text>
+			<text x="331.175" y="210.99" style="font-family: Helvetica; font-size: 12.5px;fill: rgb(12%,21%,27%); stroke:none;" transform="translate(0,421) scale(1,-1)">Heskes / do-Shapley; Ng PC + IDA;</text>
+			<text x="294.54375" y="195.74" style="font-family: Helvetica; font-size: 12.5px;fill: rgb(12%,21%,27%); stroke:none;" transform="translate(0,391) scale(1,-1)">asymmetric Shapley values (ASV); Shapley Flow</text>
+			<text x="280.71895" y="177.29000000000002" style="font-family: Helvetica; font-size: 10.7px;fill: rgb(34%,40%,45%); stroke:none;" transform="translate(0,354) scale(1,-1)">Methods allocate different quantities; match the target (Step 6).</text>
+			<rect x="180" y="42" width="500" height="96" rx="7" ry="7" style="stroke: rgb(15%,39%,48%); stroke-linecap: butt; stroke-width: 1.2; fill: rgb(94%,96%,96%); fill-rule: evenodd;"/>
+			<text x="251.451" y="118.63499999999999" style="font-family: Helvetica-Bold; font-size: 14px;fill: rgb(15%,39%,48%); stroke:none;" transform="translate(0,237) scale(1,-1)">6 Compare and validate on a shared degradation path</text>
+			<text x="272.48125000000005" y="98.61500000000001" style="font-family: Helvetica; font-size: 12.5px;fill: rgb(12%,21%,27%); stroke:none;" transform="translate(0,197) scale(1,-1)">Clean -&gt; smaller sample / selection / measurement noise</text>
+			<text x="293.81875" y="83.36500000000001" style="font-family: Helvetica; font-size: 12.5px;fill: rgb(12%,21%,27%); stroke:none;" transform="translate(0,166) scale(1,-1)">Match causal targets and computational budgets.</text>
+			<text x="312.59375" y="68.11500000000001" style="font-family: Helvetica; font-size: 12.5px;fill: rgb(12%,21%,27%); stroke:none;" transform="translate(0,136) scale(1,-1)">Report uncertainty, failures and sensitivity.</text>
+			<text x="376.47860000000003" y="49.665000000000006" style="font-family: Helvetica; font-size: 10.7px;fill: rgb(34%,40%,45%); stroke:none;" transform="translate(0,99) scale(1,-1)">Manuscript Steps 8-11</text>
+			<path d="M 430,679 L 430,661 Z" style="stroke: rgb(15%,39%,48%); stroke-linecap: butt; stroke-width: 1.3;"/>
+			<polygon points="430 661, 433 668, 427 668" style="stroke: rgb(15%,39%,48%); stroke-linecap: butt; stroke-width: 1; fill: rgb(15%,39%,48%); fill-rule: evenodd;"/>
+			<path d="M 430,579 L 430,561 Z" style="stroke: rgb(22%,48%,44%); stroke-linecap: butt; stroke-width: 1.3;"/>
+			<polygon points="430 561, 433 568, 427 568" style="stroke: rgb(22%,48%,44%); stroke-linecap: butt; stroke-width: 1; fill: rgb(22%,48%,44%); fill-rule: evenodd;"/>
+			<path d="M 430,479 L 430,461 Z" style="stroke: rgb(22%,48%,44%); stroke-linecap: butt; stroke-width: 1.3;"/>
+			<polygon points="430 461, 433 468, 427 468" style="stroke: rgb(22%,48%,44%); stroke-linecap: butt; stroke-width: 1; fill: rgb(22%,48%,44%); fill-rule: evenodd;"/>
+			<path d="M 430,379 L 430,361 Z" style="stroke: rgb(22%,48%,44%); stroke-linecap: butt; stroke-width: 1.3;"/>
+			<polygon points="430 361, 433 368, 427 368" style="stroke: rgb(22%,48%,44%); stroke-linecap: butt; stroke-width: 1; fill: rgb(22%,48%,44%); fill-rule: evenodd;"/>
+			<path d="M 430,263 L 430,251 Z" style="stroke: rgb(22%,48%,44%); stroke-linecap: butt; stroke-width: 1.3;"/>
+			<polygon points="430 251, 433 258, 427 258" style="stroke: rgb(22%,48%,44%); stroke-linecap: butt; stroke-width: 1; fill: rgb(22%,48%,44%); fill-rule: evenodd;"/>
+			<path d="M 430,169 L 430,138 Z" style="stroke: rgb(15%,39%,48%); stroke-linecap: butt; stroke-width: 1.3;"/>
+			<polygon points="430 138, 433 145, 427 145" style="stroke: rgb(15%,39%,48%); stroke-linecap: butt; stroke-width: 1; fill: rgb(15%,39%,48%); fill-rule: evenodd;"/>
+			<path d="M 180,634.76 L 5,634.76 Z" style="stroke: rgb(15%,39%,48%); stroke-linecap: butt; stroke-width: 1.3;"/>
+			<path d="M 5,634.76 L 5,90 Z" style="stroke: rgb(15%,39%,48%); stroke-linecap: butt; stroke-width: 1.3;"/>
+			<path d="M 5,90 L 180,90 Z" style="stroke: rgb(15%,39%,48%); stroke-linecap: butt; stroke-width: 1.3;"/>
+			<polygon points="180 90, 173 93, 173 87" style="stroke: rgb(15%,39%,48%); stroke-linecap: butt; stroke-width: 1; fill: rgb(15%,39%,48%); fill-rule: evenodd;"/>
+			<text x="37.4586" y="535.2090000000001" style="font-family: Helvetica; font-size: 12.3px;fill: rgb(15%,39%,48%); stroke:none;" transform="translate(0,1070) scale(1,-1)">Prediction only:</text>
+			<text x="23.098350000000003" y="520.2030000000001" style="font-family: Helvetica; font-size: 12.3px;fill: rgb(15%,39%,48%); stroke:none;" transform="translate(0,1040) scale(1,-1)">skip the causal route</text>
+			<text x="24.45749999999999" y="505.19700000000006" style="font-family: Helvetica; font-size: 12.3px;fill: rgb(15%,39%,48%); stroke:none;" transform="translate(0,1010) scale(1,-1)">and go to validation.</text>
+			<path d="M 180,599.5 L 158,599.5 Z" style="stroke: rgb(22%,48%,44%); stroke-linecap: butt; stroke-width: 1.3;"/>
+			<path d="M 158,599.5 L 158,420 Z" style="stroke: rgb(22%,48%,44%); stroke-linecap: butt; stroke-width: 1.3;"/>
+			<path d="M 158,420 L 180,420 Z" style="stroke: rgb(22%,48%,44%); stroke-linecap: butt; stroke-width: 1.3;"/>
+			<polygon points="180 420, 173 423, 173 417" style="stroke: rgb(22%,48%,44%); stroke-linecap: butt; stroke-width: 1; fill: rgb(22%,48%,44%); fill-rule: evenodd;"/>
+			<text x="40.3239" y="443.209" style="font-family: Helvetica; font-size: 12.3px;fill: rgb(22%,48%,44%); stroke:none;" transform="translate(0,886) scale(1,-1)">Supplied DAG:</text>
+			<text x="32.125949999999996" y="428.203" style="font-family: Helvetica; font-size: 12.3px;fill: rgb(22%,48%,44%); stroke:none;" transform="translate(0,856) scale(1,-1)">bypass discovery;</text>
+			<text x="25.293299999999995" y="413.197" style="font-family: Helvetica; font-size: 12.3px;fill: rgb(22%,48%,44%); stroke:none;" transform="translate(0,826) scale(1,-1)">review assumptions.</text>
+			<rect x="18" y="202" width="126" height="137" rx="7" ry="7" style="stroke: rgb(34%,40%,45%); stroke-linecap: butt; stroke-width: 1.2; fill: rgb(94%,96%,96%); fill-rule: evenodd;"/>
+			<text x="54.635999999999996" y="297.849" style="font-family: Helvetica-Bold; font-size: 13px;fill: rgb(34%,40%,45%); stroke:none;" transform="translate(0,595) scale(1,-1)">Optional</text>
+			<text x="35.851" y="282.509" style="font-family: Helvetica-Bold; font-size: 13px;fill: rgb(34%,40%,45%); stroke:none;" transform="translate(0,565) scale(1,-1)">detector / filter</text>
+			<text x="35.533049999999996" y="262.869" style="font-family: Helvetica; font-size: 12.3px;fill: rgb(12%,21%,27%); stroke:none;" transform="translate(0,525) scale(1,-1)">Separate branch</text>
+			<text x="38.95245" y="247.863" style="font-family: Helvetica; font-size: 12.3px;fill: rgb(12%,21%,27%); stroke:none;" transform="translate(0,495) scale(1,-1)">(Steps 5 and 7)</text>
+			<text x="46.4739" y="232.85700000000003" style="font-family: Helvetica; font-size: 12.3px;fill: rgb(12%,21%,27%); stroke:none;" transform="translate(0,465) scale(1,-1)">Unevaluated</text>
+			<path d="M 680,90 L 693,90 Z" style="stroke: rgb(34%,40%,45%); stroke-linecap: butt; stroke-width: 1.3; stroke-dasharray: 4, 3;"/>
+			<path d="M 693,90 L 693,420 Z" style="stroke: rgb(34%,40%,45%); stroke-linecap: butt; stroke-width: 1.3; stroke-dasharray: 4, 3;"/>
+			<path d="M 693,420 L 680,420 Z" style="stroke: rgb(34%,40%,45%); stroke-linecap: butt; stroke-width: 1.3; stroke-dasharray: 4, 3;"/>
+			<polygon points="680 420, 687 417, 687 423" style="stroke: rgb(34%,40%,45%); stroke-linecap: butt; stroke-width: 1; fill: rgb(34%,40%,45%); fill-rule: evenodd;"/>
+			<text x="44.19535" y="158.712" style="font-family: Helvetica; font-size: 12.3px;fill: rgb(34%,40%,45%); stroke:none;" transform="translate(0,317) scale(1,-1)">Failed checks:</text>
+			<text x="38.039199999999994" y="143.706" style="font-family: Helvetica; font-size: 12.3px;fill: rgb(34%,40%,45%); stroke:none;" transform="translate(0,287) scale(1,-1)">revisit the graph,</text>
+			<text x="33.59889999999999" y="128.7" style="font-family: Helvetica; font-size: 12.3px;fill: rgb(34%,40%,45%); stroke:none;" transform="translate(0,257) scale(1,-1)">mechanisms, data</text>
+			<text x="58.887699999999995" y="113.69399999999999" style="font-family: Helvetica; font-size: 12.3px;fill: rgb(34%,40%,45%); stroke:none;" transform="translate(0,227) scale(1,-1)">or target.</text>
+			<text x="110.89999999999998" y="12.82000000000005" style="font-family: Helvetica; font-size: 12px;fill: rgb(34%,40%,45%); stroke:none;" transform="translate(0,25) scale(1,-1)">Method families are alternatives, not a mandatory ensemble or an exhaustive comparison.</text>
+		</g>
+	</g>
+</svg>

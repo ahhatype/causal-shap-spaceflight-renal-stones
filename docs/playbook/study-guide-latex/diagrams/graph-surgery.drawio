@@ -1,0 +1,65 @@
+<?xml version='1.0' encoding='utf-8'?>
+<mxfile host="app.diagrams.net" type="device" version="26.0.0">
+  <diagram id="graph-surgery" name="Graph Surgery">
+    <mxGraphModel grid="1" gridSize="10" guides="1" connect="1" arrows="1" page="1" pageScale="1" pageWidth="700" pageHeight="330" math="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="title" value="Graph surgery for a node intervention" vertex="1" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;spacing=0;fontFamily=Helvetica;fontSize=18;fontColor=#203647;fontStyle=1;align=center;verticalAlign=middle;">
+          <mxGeometry as="geometry" x="10" y="5" width="680" height="29" />
+        </mxCell>
+        <mxCell id="observational-title" value="Observational system" vertex="1" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;spacing=0;fontFamily=Helvetica;fontSize=15;fontColor=#27647b;fontStyle=1;align=center;verticalAlign=middle;">
+          <mxGeometry as="geometry" x="20" y="52" width="315" height="25" />
+        </mxCell>
+        <mxCell id="intervention-title" value="Intervened system: do(M = m)" vertex="1" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;spacing=0;fontFamily=Helvetica;fontSize=15;fontColor=#397b71;fontStyle=1;align=center;verticalAlign=middle;">
+          <mxGeometry as="geometry" x="365" y="52" width="315" height="25" />
+        </mxCell>
+        <mxCell id="obs-X" value="X" vertex="1" parent="1" style="ellipse;html=1;fillColor=#f0f5f6;strokeColor=#27647b;fontFamily=Helvetica;fontSize=17;fontStyle=1;fontColor=#27647b;">
+          <mxGeometry as="geometry" x="48" y="101" width="44" height="44" />
+        </mxCell>
+        <mxCell id="obs-M" value="M" vertex="1" parent="1" style="ellipse;html=1;fillColor=#f0f5f6;strokeColor=#27647b;fontFamily=Helvetica;fontSize=17;fontStyle=1;fontColor=#27647b;">
+          <mxGeometry as="geometry" x="155" y="101" width="44" height="44" />
+        </mxCell>
+        <mxCell id="obs-Y" value="Y" vertex="1" parent="1" style="ellipse;html=1;fillColor=#f0f5f6;strokeColor=#27647b;fontFamily=Helvetica;fontSize=17;fontStyle=1;fontColor=#27647b;">
+          <mxGeometry as="geometry" x="262" y="101" width="44" height="44" />
+        </mxCell>
+        <mxCell id="obs-M-Y" edge="1" parent="1" source="obs-M" target="obs-Y" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#27647b;strokeWidth=1.3;endArrow=block;endFill=1;endSize=7;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;">
+          <mxGeometry as="geometry" relative="1" />
+        </mxCell>
+        <mxCell id="do-X" value="X" vertex="1" parent="1" style="ellipse;html=1;fillColor=#f0f5f6;strokeColor=#397b71;fontFamily=Helvetica;fontSize=17;fontStyle=1;fontColor=#397b71;">
+          <mxGeometry as="geometry" x="393" y="101" width="44" height="44" />
+        </mxCell>
+        <mxCell id="do-M" value="M" vertex="1" parent="1" style="ellipse;html=1;fillColor=#f0f5f6;strokeColor=#397b71;fontFamily=Helvetica;fontSize=17;fontStyle=1;fontColor=#397b71;">
+          <mxGeometry as="geometry" x="500" y="101" width="44" height="44" />
+        </mxCell>
+        <mxCell id="do-Y" value="Y" vertex="1" parent="1" style="ellipse;html=1;fillColor=#f0f5f6;strokeColor=#397b71;fontFamily=Helvetica;fontSize=17;fontStyle=1;fontColor=#397b71;">
+          <mxGeometry as="geometry" x="607" y="101" width="44" height="44" />
+        </mxCell>
+        <mxCell id="do-M-Y" edge="1" parent="1" source="do-M" target="do-Y" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#397b71;strokeWidth=1.3;endArrow=block;endFill=1;endSize=7;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;">
+          <mxGeometry as="geometry" relative="1" />
+        </mxCell>
+        <mxCell id="obs-X-M" edge="1" parent="1" source="obs-X" target="obs-M" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#27647b;strokeWidth=1.3;endArrow=block;endFill=1;endSize=7;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;">
+          <mxGeometry as="geometry" relative="1" />
+        </mxCell>
+        <mxCell id="removed-X-M" edge="1" parent="1" source="do-X" target="do-M" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#a1473c;strokeWidth=1.3;endArrow=none;endFill=1;endSize=7;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;dashed=1;dashPattern=4 3;">
+          <mxGeometry as="geometry" relative="1" />
+        </mxCell>
+        <mxCell id="removed-cross" value="x" vertex="1" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;spacing=0;fontFamily=Helvetica;fontSize=22;fontColor=#a1473c;fontStyle=1;align=center;verticalAlign=middle;">
+          <mxGeometry as="geometry" x="453" y="105" width="30" height="33" />
+        </mxCell>
+        <mxCell id="removed-label" value="removed" vertex="1" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;spacing=0;fontFamily=Helvetica;fontSize=11.5;fontColor=#a1473c;fontStyle=0;align=center;verticalAlign=middle;">
+          <mxGeometry as="geometry" x="430" y="153" width="78" height="25" />
+        </mxCell>
+        <mxCell id="obs-equation" value="M = f_M(X, U_M)&lt;br&gt;Y = f_Y(M, U_Y)" vertex="1" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;spacing=0;fontFamily=Helvetica;fontSize=14;fontColor=#203647;fontStyle=0;align=center;verticalAlign=middle;">
+          <mxGeometry as="geometry" x="20" y="189" width="315" height="48" />
+        </mxCell>
+        <mxCell id="do-equation" value="M = m&lt;br&gt;Y = f_Y(M, U_Y) (unchanged)" vertex="1" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;spacing=0;fontFamily=Helvetica;fontSize=14;fontColor=#203647;fontStyle=0;align=center;verticalAlign=middle;">
+          <mxGeometry as="geometry" x="365" y="189" width="315" height="48" />
+        </mxCell>
+        <mxCell id="explanation" value="Replace only the equation for M with a constant.&lt;br&gt;Remove X -&amp;gt; M; keep M -&amp;gt; Y and propagate the intervention downstream." vertex="1" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;spacing=0;fontFamily=Helvetica;fontSize=13.5;fontColor=#203647;fontStyle=0;align=center;verticalAlign=middle;">
+          <mxGeometry as="geometry" x="20" y="263" width="660" height="53" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

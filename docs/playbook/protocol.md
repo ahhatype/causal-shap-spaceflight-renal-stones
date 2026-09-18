@@ -21,7 +21,7 @@ Code paths below are relative to the repository root.
 | 12 | Longitudinal extension (g-methods) | future work | not undertaken |
 | 13 | Cost-constrained recourse | `apps/causal_shap/policy.py`, `action_costs.py`, `shift_estimation.py` | scaffolded, out of the paper's scope |
 
-The full-DAG comparison also contributes to central-workflow stage 6 through
+The full-DAG comparison also contributes to central-workflow stages 5 and 6 through
 `analysis/07_run_shap_comparison.R` and `apps/causal_shap/build/stages.py`;
 these are separate from the numbered working-subgraph drivers.
 

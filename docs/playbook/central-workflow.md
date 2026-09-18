@@ -1,33 +1,40 @@
-# The central workflow and its evidence
+# The causal-SHAP workflow and its evidence
 
-The seven stages organize the analysis; they are not a required order
-for every causal analysis, and the complete workflow has not been validated
-end to end. The [protocol crosswalk](README.md#protocol-crosswalk)
-maps them to the original 13-step methods plan. Discovery and graph review
-can be revisited as evidence changes; a supplied graph can also be evaluated
-directly. The detector remains optional and unevaluated.
+The playbook follows the manuscript's method sequence. The goal gate routes a
+prediction question to the predictive reference and validation, while the causal
+route makes discovery, graph review, intervention construction and allocation
+explicit. These are seven stages numbered 0–6, grouping the original protocol.
 
-| Stage | What the analyst does | Connection to the examples and current evidence |
+![Manuscript-aligned method workflow](study-guide-latex/figures/method-workflow.png)
+
+The [editable LaTeX article](study-guide-latex/README.md) and its
+[PDF](study-guide-latex/main.pdf) develop the steps; the
+[method appendix](method-choices.md) compares alternatives within them.
+
+| Stage | Method operation | Manuscript protocol |
 | --- | --- | --- |
-| 1. Define the study | Choose an outcome, candidate variables, graph assumptions and intervention contrasts. | The teaching chain specifies its equations. The renal study uses a 14-node working subgraph and a separate full 51-node source DAG. NASA supplies topology; coefficients are simulation choices. |
-| 2. Fit and explain predictions | Fit a predictor and calculate which inputs receive credit. | Five model–explainer pairings have run on the working subgraph. The direction of misplaced credit depends on the model and chain. |
-| 3. Examine candidate graphs | Compare structures supported by data under stated assumptions. | One working-subgraph PC configuration isolated the binary outcome at n = 1,000. The broader Step 8 comparison on this subgraph remains pending. |
-| 4. Reconsider excluded candidates | Investigate whether discarded variables warrant further examination, then filter noise. | The proposed detector and two-channel filter have no evaluated results; they are placeholders, not an established correction. |
-| 5. Review graph assumptions | Use temporal knowledge, biological evidence and expert review to resolve or retain uncertainty. | Step 6 rounds two and three used a scripted heuristic standing in for expert review. Real expert review is outstanding. |
-| 6. Follow changes through the graph | Propagate specified interventions through the assumed mechanisms; distinguish effects from structural attribution. | The full-DAG ordering-only comparison found no detected improvement. With true mechanisms additionally supplied, the propagation prototype reached tau 0.794; this does not establish superiority over methods receiving less causal information. The Heskes-style prototype has not run on the working subgraph. |
-| 7. Evaluate feasible actions | Specify an action, its expected benefit, uncertainty, feasibility and cost. | A scaffold exists, but action evaluation is outside the current article's completed results. Attribution is only a prototype input to this stage. |
+| 0. Define the target | Prediction, an individual intervention effect or allocation of a joint contrast; population and timing. | Step 1 and target definitions |
+| 1. Prepare data and the predictive reference | Supplied DAG, specified simulation mechanisms, synthetic data, fitted model and ordinary SHAP. | Steps 2–4 |
+| 2. Discover candidate structures (optional) | PC is the existing starting point; consider PC-stable, appropriate mixed-data tests, GES, LiNGAM or NOTEARS. A supplied DAG bypasses discovery. | Discovery within Step 6; broader Step 8 comparison |
+| 3. Review the graph and estimate mechanisms | Review timing, evidence and uncertain edges; record revisions; estimate mechanisms where the selected method requires them. | Step 2 and review within Step 6 |
+| 4. Define the causal game and graph surgery | Specify coalition, background, scale and intervention; a do-game replaces assignment mechanisms and removes incoming arrows to intervened nodes. | Value-function component of Step 6 |
+| 5. Calculate causal attributions | Causal Shapley/do-Shapley, Ng et al., ASV and Shapley Flow use distinct allocation rules and information. | Attribution component of Step 6 |
+| 6. Compare under data degradation | Assess prediction, structure, attribution and individual-effect ranking separately; repeat selected comparisons under smaller samples, selection and measurement changes. | Evaluation in Steps 4/6/8; proposed robustness in 9–11 |
 
-Stage 3 draws its existing PC diagnostic from protocol Step 6; protocol
-Step 8 is the broader comparison that remains pending. Gaussian PC's
-conditional-independence test is part of that diagnostic, especially with a
-binary outcome. The crosswalk describes how the work is organized, not the
-chronological execution of every experiment.
+Expert graph revision changes the hypothesized observational structure.
+Do-surgery represents a specified intervention on that structure. Ordering-only
+or edge-allocation methods must not silently be presented as the same
+interventional game. An effect-only question can omit Shapley allocation.
 
-Stage 6 also draws on the separate full-DAG analysis pipeline: the matched
-comparison in `analysis/07_run_shap_comparison.R` and the prototype in
-`apps/causal_shap/build/stages.py`. It is not exhausted by protocol Steps 6
-and 8. The hand example illustrates stage 2 with an ideal predictor rather
-than a fitted one.
+The optional detector/filter sits beside the comparisons (Steps 5 and 7) and
+can feed future graph review; it remains unevaluated. Longitudinal analysis
+(Step 12) and action/recourse evaluation (Step 13) are extensions, not completed
+endpoints. The systematic degradation comparison is proposed, not a new result.
+
+The existing PC diagnostic comes from protocol Step 6; Step 8 is the broader
+working-subgraph comparison that remains pending. The full-DAG ordering and
+propagation analyses are separate pipelines feeding stages 5 and 6. The
+crosswalk groups analytical operations rather than renumbering experiments.
 
 The Step 2 augmentation uses Robert Reynolds's supplied graph files. No
 human reviewed the Step 6 rounds. Round 1 uses the unrevised inputs:
