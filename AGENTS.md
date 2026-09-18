@@ -60,8 +60,10 @@ manuscript source is `manuscript/prism-upload/`, gitignored for now (ADR 009);
 never force-add it, and never machine-rewrite its human-written introduction,
 which is embedded between labeled comments in `main.tex`. Use
 `python manuscript/build.py` to build its PDF and ZIP; do not create a second
-editing copy at the manuscript root. Coauthor correspondence and the recording
-script live in `manuscript/coauthor-review/`.
+editing copy at the manuscript root. Coauthor correspondence and open review notes live in `manuscript/coauthor-review/`.
+Keep that folder concise: consolidate existing notes instead of adding dated
+handoff files. Orientation belongs in conversation; do not recreate the deleted
+orientation folder or upload an orientation document to Overleaf.
 
 ## Accepted playbook and restart context (2026-09-17)
 

@@ -16,7 +16,7 @@ Source locations and current development priorities for the Space SHAP project.
 | Method playbook and manuscript crosswalk | [Playbook](docs/playbook/README.md), [central workflow](docs/playbook/central-workflow.md) |
 | Archived presentations and repository history | [Archive guide](site/README.md), [preservation map](docs/decisions/010-repository-companion.md) |
 | Private manuscript on the writing machine | manuscript/prism-upload/: main.tex, references.bib, figures/ and main.pdf |
-| Private writing export and recording script | manuscript/causal-shap-prism.zip; manuscript/coauthor-review/recording-script.md |
+| Private writing export and correspondence | manuscript/causal-shap-prism.zip; manuscript/coauthor-review/correspondence.md |
 
 ## Restart point — 18 September 2026
 
@@ -92,7 +92,7 @@ data/             raw, interim, simulated (gitignored, regenerated from a seed);
 results/          attributions, discovery, evaluation, figures; detector/ (gitignored)
 site/             Archived presentations and assets
 manuscript/       Private article: prism-upload/ is the sole source; build.py builds
-                   its PDF and ZIP; coauthor-review/ holds the recording script and notes
+                   its PDF and ZIP; coauthor-review/ holds correspondence and open review notes
 docs/             framing memo, playbook, notes, references, LumaWarp placeholder,
                    decisions, step results, full-DAG record. Index: docs/README.md
 ```
