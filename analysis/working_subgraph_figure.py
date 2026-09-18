@@ -20,6 +20,7 @@ import matplotlib.pyplot as plt
 import networkx as nx
 import yaml
 from matplotlib.patches import FancyArrowPatch
+from matplotlib.lines import Line2D
 
 REPO = Path(__file__).resolve().parents[1]
 OUT = REPO / "docs" / "images"
@@ -75,14 +76,18 @@ def main() -> None:
         ax.text(x, y, label, ha="center", va="center", fontsize=5.9, zorder=4,
                 color=PAPER if kind == "outcome" else INK, linespacing=1.05)
     ax.set_xlim(-2.0, max(x for x, _ in pos.values()) + 2.0)
-    ax.set_ylim(min(y for _, y in pos.values()) - 1.5, max(y for _, y in pos.values()) + 3.4)
+    ax.set_ylim(min(y for _, y in pos.values()) - 1.5, max(y for _, y in pos.values()) + 4.0)
     ax.text(0.0, 1.0, "The 14-node working subgraph of NASA SA-07566", transform=ax.transAxes,
             fontsize=11, color=INK, va="top")
-    ax.text(0.0, 0.955,
-            "Thick green: mechanism described in the NASA source; black solid: magnitude estimate; black dashed: direction only.\n"
-            "Orange dotted: calcium x hydration interaction. Edge widths denote categories, not effect sizes.\n"
-            "Node fills: teal exposure; blue mediators; orange other baseline inputs; black outcome.",
-            transform=ax.transAxes, fontsize=7.2, color=MUTE, va="top")
+    handles = [
+        Line2D([], [], color="#00897b", lw=2.4, label="Green: pathway described in NASA source"),
+        Line2D([], [], color=INK, lw=1.4, label="Black solid: simulation magnitude estimate"),
+        Line2D([], [], color=INK, lw=1.2, ls="--", label="Black dashed: direction only"),
+        Line2D([], [], color="#e07020", lw=1.2, ls=":", label="Orange dotted: calcium-hydration interaction"),
+    ]
+    ax.legend(handles=handles, loc="upper left", bbox_to_anchor=(0, 0.958),
+              ncol=2, frameon=False, fontsize=10, handlelength=3, borderaxespad=0,
+              columnspacing=2.5, labelspacing=0.6)
     OUT.mkdir(parents=True, exist_ok=True)
     fig.savefig(OUT / "working_subgraph_dag.png", dpi=200, bbox_inches="tight", facecolor=PAPER)
     fig.savefig(OUT / "working_subgraph_dag.pdf", bbox_inches="tight", facecolor=PAPER)
