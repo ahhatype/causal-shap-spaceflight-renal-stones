@@ -1,7 +1,7 @@
 # Causal SHAP: a benchmark using a spaceflight risk graph
 
 [![Python tests](https://github.com/ahhatype/causal-shap-spaceflight-renal-stones/actions/workflows/python-tests.yml/badge.svg)](https://github.com/ahhatype/causal-shap-spaceflight-renal-stones/actions/workflows/python-tests.yml)
-[Study guide](docs/playbook/study-guide.pdf) · [Reproducibility guide](REPRODUCIBILITY.md) · [Technical notes](docs/technical/path-length-and-response-shape.md)
+[Supplementary Information](docs/playbook/supplementary-information/main.pdf) · [Reproducibility guide](REPRODUCIBILITY.md) · [Technical notes](docs/technical/path-length-and-response-shape.md)
 
 A prediction ranking explains a fitted model. To assess what would happen
 after changing a variable, we also need assumptions about the causal
@@ -17,26 +17,25 @@ their totals are not comparable across phases.
 
 ## The central workflow
 
-The manuscript compares a predictive reference with a causal route. Seven
-stages make the method sequence explicit, with discovery optional when a
-suitable graph is supplied.
+The manuscript and explanatory supplement use the same Steps 0–6. The question
+selects the prediction or causal route; discovery and attribution are optional
+when the target does not require them.
 
-| Stage | Method task |
+| Step | Operation |
 | --- | --- |
-| 0. Define the target | Choose prediction, an intervention effect or causal allocation. |
-| 1. Prepare data and the predictive reference | Specify the DAG and simulation, fit a model and compute ordinary SHAP. |
-| 2. Discover candidate structures (optional) | PC and alternatives; bypass this step for a supplied graph. |
-| 3. Review the graph and estimate mechanisms | Assess edges, retain uncertainty and record revisions. |
-| 4. Define the causal game and graph surgery | Specify interventions and the method's coalition construction. |
-| 5. Calculate causal attributions | Compare the selected causal-SHAP families on their declared targets. |
-| 6. Compare under data degradation | Evaluate matched targets and repeat selected comparisons under spaceflight data constraints. |
+| 0. Define the question and target population | Prediction, an intervention contrast or allocation; specify population and timing. |
+| 1. Prepare the data and predictive reference | Declared data or simulation, fitted predictor and ordinary SHAP comparator. |
+| 2. Discover candidate causal structure (optional) | PC or a justified alternative; a supplied graph bypasses discovery. |
+| 3. Review the graph and specify required mechanisms | Document evidence and revisions; retain uncertainty and identify required mechanisms. |
+| 4. Define interventions and construct the causal game | State the target, intervention values, background and scale; do-surgery where applicable. |
+| 5. Calculate causal attributions | Apply the selected allocation rule and state the causal information supplied. |
+| 6. Evaluate results under the relevant data conditions | Assess the declared targets; rerun relevant steps when data conditions change. |
 
-The [editable study guide](docs/playbook/study-guide-latex/README.md)
-([PDF](docs/playbook/study-guide-latex/main.pdf)) includes the method flowchart,
-discovery alternatives and graph-surgery example. The
-[workflow and evidence map](docs/playbook/central-workflow.md) connects the stages
-to the original 13-step protocol. The full workflow and degradation experiment
-remain proposed and partially illustrated.
+The [Supplementary Information](docs/playbook/supplementary-information/main.pdf)
+([editable source](docs/playbook/supplementary-information/README.md)) develops
+these choices. The [workflow and evidence map](docs/playbook/central-workflow.md)
+records which components have been evaluated. The systematic comparison under
+changing data conditions remains proposed.
 
 ## Worked example and simulation
 
@@ -117,7 +116,7 @@ The [research apps](apps/README.md) provide interactive exploration.
 
 ## Protocol
 
-The [13-step protocol](docs/playbook/protocol.md) lists implementation paths
+The [Implementation crosswalk](docs/playbook/protocol.md) lists implementation paths
 and completion status. The [documentation index](docs/README.md) covers
 methods, results, references and provenance; [contributor orientation](ORIENTATION.md)
 locates the source files and development priorities.

@@ -1,8 +1,10 @@
-# Viewing the working DAG in DAGitty
+# Viewing the earlier working DAG in DAGitty
 
-`renal_stone_working_subgraph.txt` is the 11-node working subgraph from
-[`config/dag_spec.yaml`](../config/dag_spec.yaml), exported in DAGitty's
-native model syntax.
+`renal_stone_working_subgraph.txt` is an earlier 11-node working-subgraph
+snapshot in DAGitty's native model syntax. The current
+[`config/dag_spec.yaml`](../config/dag_spec.yaml) has 14 nodes. Use that
+configuration for the current graph; this snapshot has not been regenerated
+to include the later additions.
 
 ## How to view it
 
@@ -14,24 +16,23 @@ native model syntax.
    d-separation) directly from the code view.
 
 `duration` is tagged as the exposure and `nephrolithiasis` as the outcome,
-matching `config/dag_spec.yaml`'s `outcome:` field - dagitty's own path- and
+matching the exposure and outcome in `config/dag_spec.yaml` - DAGitty's path- and
 adjustment-set-finding features key off those two tags.
 
 ## Generated, not hand-edited
 
-This file is a generated artifact, not a second source of truth. It's
-produced by [`r/R/dag_utils.R`](../r/R/dag_utils.R)'s
+This snapshot was produced by [`r/R/dag_utils.R`](../r/R/dag_utils.R)'s
 `dag_spec_to_dagitty()` / `write_dagitty()`, driven by
 [`pipeline/step02_dag_construction.R`](../pipeline/step02_dag_construction.R),
-which reads `config/dag_spec.yaml` and writes the same file to
+which reads `config/dag_spec.yaml` and writes an export to
 `data/interim/renal_stone_working_dag.txt` (gitignored, since everything
-under `data/` is regenerated rather than committed - this docs copy exists
-so a browsable version is normally available without running the pipeline).
+under `data/` is regenerated rather than committed).
 Positions are a deterministic layered layout (see `dag_spec_positions()` in
 `r/R/dag_utils.R`) - regenerating always produces byte-identical output, so
 this file only changes when the graph itself does.
 
-If the DAG changes, edit `config/dag_spec.yaml` and regenerate both copies:
+To replace the historical snapshot with the current graph, regenerate and
+review the export from `config/dag_spec.yaml`:
 
 ```bash
 make step02

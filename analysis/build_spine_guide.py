@@ -1,21 +1,18 @@
-"""Build the current LaTeX playbook and refresh its compatibility PDF link.
+"""Build the explanatory supplement in its self-contained working folder.
 
 Does not regenerate article text, diagrams, or manuscript files.
 """
 from pathlib import Path
-import shutil
 import subprocess
 import sys
 
 ROOT = Path(__file__).resolve().parents[1]
-GUIDE = ROOT / 'docs' / 'playbook' / 'study-guide-latex'
+GUIDE = ROOT / 'docs' / 'playbook' / 'supplementary-information'
 
 
 def main():
     subprocess.run([sys.executable, str(GUIDE / 'build.py')], check=True)
-    target = GUIDE.parent / 'study-guide.pdf'
-    shutil.copyfile(GUIDE / 'main.pdf', target)
-    print(f'Refreshed {target}')
+    print(f'Built {GUIDE / "main.pdf"}')
 
 
 if __name__ == '__main__':

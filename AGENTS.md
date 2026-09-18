@@ -20,7 +20,7 @@ causal-shap-target-dags (`analysis/`, `apps/`, `docs/full_dag/`).
   teaching companions. Pages is retired; do not deploy or re-enable it.
 - Keep `site/` as a source archive. The root `index.html` redirects to this
   GitHub repository. Current reader entry points are README.md,
-  REPRODUCIBILITY.md and docs/playbook/study-guide.md. The existing classroom
+  REPRODUCIBILITY.md and docs/playbook/README.md. The existing classroom
   materials remain available; educator-companion development is paused.
 - Keep reader entry points focused on the study and how to use its materials.
   Hosting history, manuscript handoffs and maintenance instructions belong in
@@ -69,19 +69,25 @@ script live in `manuscript/coauthor-review/`.
   analysis framework: (0) goal and population; (1) data and predictive reference;
   (2) optional causal discovery, explicitly PC and alternatives; (3) graph review
   and required mechanisms; (4) causal game and do-graph surgery; (5) causal
-  attribution; (6) comparison under data degradation. Preserve its crosswalk to
-  the manuscript's 13-step protocol. Alternatives belong within each stage.
+  attribution; (6) comparison under data degradation. Use this numbering in the manuscript and supplement. The original 13 IDs
+  remain only as implementation work-package references. Alternatives belong
+  within each step.
 - A supplied DAG bypasses discovery. Graph review and intervention surgery are
   distinct. Keep the causal-attribution families' targets and information inputs
   explicit; prediction and effect-only routes need not compute causal SHAP.
-- The editable guide is docs/playbook/study-guide-latex/main.tex, with a separate
+- The editable Supplementary Information is docs/playbook/supplementary-information/main.tex, with a separate
   references.bib, vector figures and native draw.io sources. Keep this clean
   LaTeX article format. Do not regenerate or overwrite manual source/diagram
-  edits during a normal build. analysis/build_spine_guide.py also refreshes the
-  compatibility PDF at docs/playbook/study-guide.pdf.
+  edits during a normal build. analysis/build_spine_guide.py compiles
+  docs/playbook/supplementary-information/main.pdf.
 - Read ORIENTATION.md for the shared restart priorities. On the writing machine,
   read the latest handoff at the top of ignored docs/STATUS.md before manuscript
   work. Private sync records and editorial flags remain in coauthor-review/.
-- The latest imported Overleaf snapshot is dated 2026-09-16. Check for newer
-  remote edits before the next sync; do not assume this date establishes current
-  equality. Educator development and Pages deployment remain paused/retired.
+- Read manuscript/coauthor-review/overleaf-sync.json for the last verified
+  Overleaf baseline. Fetch current remote edits before each sync; never assume
+  continuing equality. Educator development and Pages deployment remain paused/retired.
+
+- As of 2026-09-18, the guide is titled Supplementary Information: Analytical
+  Workflow and Method Choices. npj Microgravity prohibits Supplementary Methods;
+  reproducible study methods stay in the main manuscript. Preserve this division
+  when syncing the companion and article.

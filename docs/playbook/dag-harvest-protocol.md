@@ -177,7 +177,7 @@ The protocol includes a **paired example** showing how primary studies and metho
 
 #### Primary study (the harvest target)
 
-[`harvests/3-hernandez-diaz-2000.md`](harvests/3-hernandez-diaz-2000.md) — **CSER 3, Primary study**
+Historical harvest `harvests/3-hernandez-diaz-2000.md` (not included here) — **CSER 3, Primary study**
 
 > Hernandez-Diaz S, Werler MM, Walker AM, Mitchell AA. Folic acid antagonists during pregnancy and the risk of birth defects. *N Engl J Med.* 2000;343(22):1608-1614.
 
@@ -187,7 +187,7 @@ Key structural features: confounding by indication (infection → drug use → b
 
 #### Methodological companion (not a harvest target)
 
-[`harvests/5-hernan-2002.md`](harvests/5-hernan-2002.md) — **CSER 5, Methodological + reanalysis**
+Historical harvest `harvests/5-hernan-2002.md` (not included here) — **CSER 5, Methodological + reanalysis**
 
 > Hernan MA, Hernandez-Diaz S, Werler MM, Mitchell AA. Causal Knowledge as a Prerequisite for Confounding Evaluation. *Am J Epidemiol.* 2002;155(2):176-184.
 

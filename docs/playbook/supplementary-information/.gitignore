@@ -7,3 +7,6 @@
 *.log
 *.out
 *.synctex.gz
+
+# draw.io recovery copies remain local.
+diagrams/.$*.bkp

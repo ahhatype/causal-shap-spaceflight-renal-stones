@@ -1,7 +1,7 @@
-# Editable study guide
+# Editable Supplementary Information
 
 Start with **main.tex**. This is a self-contained LaTeX `article` version of
-the seven-stage manuscript-aligned method guide, with editable text, tables, equations and BibTeX citations.
+the explanatory companion, Analytical Workflow and Method Choices, with editable text, tables, equations and BibTeX citations.
 The compiled preview is **main.pdf**.
 
 | File or folder | Purpose |
@@ -24,13 +24,13 @@ python build.py
 Or, from the repository root:
 
 ```text
-python docs/playbook/study-guide-latex/build.py
+python docs/playbook/supplementary-information/build.py
 ```
 
 This runs pdfLaTeX, BibTeX, then pdfLaTeX twice, and refreshes `main.pdf`.
 It does not regenerate `main.tex` from Markdown or overwrite diagram edits.
-The article source is authoritative. The repository-root compatibility command
-`python analysis/build_spine_guide.py` also refreshes the linked `study-guide.pdf` copy.
+The article source is authoritative. From the repository root,
+`python analysis/build_spine_guide.py` compiles the same document.
 For Overleaf, upload `main.tex`, `references.bib` and the `figures` folder to
 a project and choose pdfLaTeX with `main.tex` as its main document.
 
@@ -40,14 +40,14 @@ Open `method-workflow.drawio` or `graph-surgery.drawio` in `diagrams/` using dra
 is editable. Export a cropped PDF with the same filename into `figures/`, then
 rebuild the article. See [diagram instructions](diagrams/README.md).
 
-Draw.io is installed on this computer as a Brave web app. Inkscape 1.4.2 and
-PowerPoint are also installed. Inkscape can edit the original SVGs in
-`../../images/`; draw.io is the more direct option for moving connected nodes.
+The [workflow overview](../README.md) links the supporting method and evidence
+notes. The main manuscript and shared Overleaf project are separate.
 
-## Source and linked PDF
+## Journal placement
 
-This folder holds the current manuscript-aligned guide, revised on 16 September
-2026. `../study-guide.md` is its entry page; `../study-guide.pdf` is a compatibility
-copy of `main.pdf`. Use `python analysis/build_spine_guide.py` from the repository
-root to compile the article and refresh both PDFs. The main manuscript and
-shared Overleaf project are separate.
+npj Microgravity does not permit Supplementary Methods: the study's methods
+must remain in the main manuscript. This document is explanatory Supplementary
+Information and uses the same Step 0–6 sequence. See the
+[journal guidance](https://www.nature.com/npjmgrav/for-authors-and-referees/submission-guidelines#supplementary-information).
+The final submission should combine any additional supplementary content into
+one PDF. This working draft is not a claim of complete submission compliance.

@@ -1,11 +1,24 @@
-# Research protocol and implementation
+# Implementation crosswalk and work-package status
 
-The 13-step research protocol, with implementation paths and current status.
-The [central workflow](central-workflow.md) groups these steps by analytical
-purpose; [pipeline_status.yaml](../../config/pipeline_status.yaml) records status.
-Code paths below are relative to the repository root.
+The manuscript and explanatory supplement use **Steps 0–6**. The original
+13 numbers below are retained as **legacy work-package IDs**, because existing
+scripts and result files use them. They are not a second reader-facing process.
+Code paths are relative to the repository root; the status ledger remains
+[config/pipeline_status.yaml](../../config/pipeline_status.yaml).
 
-| Step | What | Where | Status |
+| Current analytical step | Legacy work-package IDs |
+| --- | --- |
+| 0. Question and target | 1 |
+| 1. Data and predictive reference | 2–4 |
+| 2. Optional discovery | Discovery components of 6; comparison in 8 |
+| 3. Graph and mechanism review | 2 and review components of 6 |
+| 4. Interventions and causal game | Value-function components of 6 |
+| 5. Causal attribution | Allocation components of 6 |
+| 6. Evaluation under data conditions | Evaluation in 4, 6, 8; planned 9–11 |
+| Optional detector | 5 and 7 |
+| Future extensions | 12 and 13 |
+
+| Legacy work-package ID | Task | Implementation | Status |
 | --- | --- | --- | --- |
 | 1 | Exposure and outcome: cumulative mission days; nephrolithiasis (binary) | `config/dag_spec.yaml` | done |
 | 2 | DAG construction and augmentation from Robert Reynolds's supplied files | `config/dag_spec.yaml`, `r/R/dag_utils.R`, `analysis/10_ingest_robert_dags.R` | done |
@@ -21,7 +34,7 @@ Code paths below are relative to the repository root.
 | 12 | Longitudinal extension (g-methods) | future work | not undertaken |
 | 13 | Cost-constrained recourse | `apps/causal_shap/policy.py`, `action_costs.py`, `shift_estimation.py` | scaffolded, out of the paper's scope |
 
-The full-DAG comparison also contributes to central-workflow stages 5 and 6 through
+The full-DAG comparison also contributes to analytical Steps 5 and 6 through
 `analysis/07_run_shap_comparison.R` and `apps/causal_shap/build/stages.py`;
 these are separate from the numbered working-subgraph drivers.
 
@@ -30,4 +43,4 @@ Working-subgraph records: [simulation checks](../step03_simulation_review.md),
 [scripted causal-attribution revisions](../step06_results.md).
 See the [full-DAG research record](../full_dag/RESEARCH_RECORD.md) for its
 separate methods and results, and the [detector interface](../lumawarp/README.md)
-for the unevaluated Steps 5 and 7.
+for the unevaluated legacy work packages 5 and 7.

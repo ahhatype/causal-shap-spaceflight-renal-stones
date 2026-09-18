@@ -8,9 +8,9 @@ the examples and research code.
 
 | file | contents |
 | --- | --- |
-| [`playbook/study-guide.pdf`](playbook/study-guide.pdf) ([text](playbook/study-guide.md)) | Manuscript-aligned method sequence, optional discovery, graph surgery and causal attribution |
+| [Supplementary Information](playbook/supplementary-information/main.pdf) | Manuscript-aligned method sequence, optional discovery, graph surgery and causal attribution |
 | [`playbook/method-choices.md`](playbook/method-choices.md) | Conditional method choices and bounded comparisons for the appendix |
-| [`playbook/protocol.md`](playbook/protocol.md) | 13-step protocol, implementation paths and status |
+| [`playbook/protocol.md`](playbook/protocol.md) | Legacy implementation IDs, current-step crosswalk and status |
 | [`playbook/central-workflow.md`](playbook/central-workflow.md) | Central workflow, exact classroom calculation, simulation mapping and limits |
 | [`classroom/README.md`](classroom/README.md) | Educator guide, worksheet, interactive lab and Python examples |
 | [`../ORIENTATION.md`](../ORIENTATION.md) | Project orientation: the premise, workflow, code, results and next steps |
@@ -18,18 +18,18 @@ the examples and research code.
 | [`notes/2026-09-01-whiteboard-transcription.md`](notes/2026-09-01-whiteboard-transcription.md) | Transcription of the 1 September 2026 notes the memo is built from |
 | [`references/claims-to-citations.md`](references/claims-to-citations.md) | Verified citations for the reframing's claims, with what each supports and what is unsupported |
 | [`lumawarp/README.md`](lumawarp/README.md) | Placeholder outline for the expanded LumaWarp detector treatment and the dichromatic sensitivity filter |
-| [`playbook/README.md`](playbook/README.md) | Method workflow and protocol mappings; graph sourcing is described in the [DAG harvest protocol](playbook/dag-harvest-protocol.md) |
+| [`playbook/README.md`](playbook/README.md) | Shared analytical workflow and implementation mappings; graph sourcing is described in the [DAG harvest protocol](playbook/dag-harvest-protocol.md) |
 | [`references/manuscript-references.md`](references/manuscript-references.md) | Venue, NASA DAG-program references, and the epidemiology framing citations |
 
 ## The working subgraph (14 nodes; `config/`, `pipeline/`, `r/`, `python/`)
 
 | file | contents |
 | --- | --- |
-| [`../config/pipeline_status.yaml`](../config/pipeline_status.yaml) | Step-by-step status against the 13-step protocol |
+| [`../config/pipeline_status.yaml`](../config/pipeline_status.yaml) | Status by legacy implementation work-package ID |
 | [`step03_simulation_review.md`](step03_simulation_review.md) | Coefficient recovery and marginals for the simulated data |
 | [`step04_results.md`](step04_results.md) | Baseline SHAP, five pairings, the mediator inversions |
 | [`step06_results.md`](step06_results.md) | Three causal SHAP methods over three scripted revision rounds; PC leaving the outcome disconnected |
-| [`dag_README.md`](dag_README.md), [`renal_stone_working_subgraph.txt`](renal_stone_working_subgraph.txt) | The working DAG in DAGitty syntax |
+| [`dag_README.md`](dag_README.md), [`renal_stone_working_subgraph.txt`](renal_stone_working_subgraph.txt) | Earlier 11-node DAGitty snapshot; current 14-node graph is in `config/dag_spec.yaml` |
 | [`provenance.md`](provenance.md) | DAG source and coefficient sourcing for the working subgraph |
 | [`../dag-candidates/`](../dag-candidates/) | Core-graph CSVs plus the July 2026 harvest notes and provisional renal and SANS edge lists |
 

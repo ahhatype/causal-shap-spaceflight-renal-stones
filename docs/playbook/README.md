@@ -1,52 +1,40 @@
-# Method playbook and manuscript crosswalk
+# Analytical workflow and method choices
 
-The [editable LaTeX article](study-guide-latex/README.md)
-([PDF](study-guide-latex/main.pdf)) follows the manuscript's method sequence.
-The [central workflow](central-workflow.md) maps that sequence to the evidence;
-[method choices](method-choices.md) keeps alternatives inside their relevant stage.
+The [Supplementary Information](supplementary-information/main.pdf) and manuscript
+share Steps 0–6. Refine the [LaTeX source](supplementary-information/main.tex),
+[BibTeX](supplementary-information/references.bib) and
+[editable schematics](supplementary-information/diagrams/README.md), using the
+[build instructions](supplementary-information/README.md).
 
-## Protocol crosswalk
+The [evidence map](central-workflow.md) records results and remaining work;
+[method choices](method-choices.md) discusses alternatives. Study procedures
+remain in the main manuscript; the supplement explains analytical choices
+and interpretation.
 
-| Playbook stage | Manuscript protocol | Main method role |
-| --- | --- | --- |
-| 0. Define the target | 1 and target definitions throughout | Population, timing, prediction/effect/allocation |
-| 1. Prepare data and predictive reference | 2–4 | Plausible DAG, simulation mechanisms, data, fitted model and ordinary SHAP |
-| 2. Discover candidate structures (optional) | Discovery in 6; broader comparison in 8 | PC and conditional alternatives; supplied-DAG bypass |
-| 3. Review graph and estimate mechanisms | 2 and graph revision in 6 | Temporal/domain evidence, revision ledger, unresolved alternatives |
-| 4. Define causal game and graph surgery | Value-function components of 6 | Interventions and identification; do-surgery where the game calls for it |
-| 5. Calculate causal attributions | Attribution components of 6 | Heskes/Jung-style games, Ng et al., ASV and Shapley Flow with distinct semantics |
-| 6. Compare under data degradation | Evaluation in 4/6/8; proposed 9–11 | Separate predictive, graph, allocation and intervention-ranking checks; repeated settings and uncertainty |
+![Analytical workflow](supplementary-information/figures/method-workflow.png)
 
-The [13-step protocol](protocol.md) retains implementation paths and status.
-Its numbering identifies work packages; this playbook separates the operations
-within Step 6 rather than silently changing the manuscript's step numbers.
+| Step | Operation |
+| --- | --- |
+| 0. Define the question and target population | Prediction, an intervention contrast or allocation; specify population and timing. |
+| 1. Prepare the data and predictive reference | Declared data or simulation, fitted predictor and ordinary SHAP comparator. |
+| 2. Discover candidate causal structure (optional) | PC or a justified alternative; a supplied graph bypasses discovery. |
+| 3. Review the graph and specify required mechanisms | Document evidence and revisions; retain uncertainty and identify required mechanisms. |
+| 4. Define interventions and construct the causal game | State the target, intervention values, background and scale; do-surgery where applicable. |
+| 5. Calculate causal attributions | Apply the selected allocation rule and state the causal information supplied. |
+| 6. Evaluate results under the relevant data conditions | Assess the declared targets; rerun relevant steps when data conditions change. |
 
-The supplied-graph route enters review without discovery. A prediction question
-can proceed from Stage 1 to predictive validation; an effect-only question can
-omit Shapley allocation. Expert graph revision and do-intervention surgery are
-different operations. The [DAG harvest protocol](dag-harvest-protocol.md) supports
-source and evidence review.
+A supplied DAG enters graph review directly. The prediction route reaches
+predictive evaluation after Step 1; an effect-only question can omit Step 5.
+Graph review assesses the observational model; do-surgery represents a
+specified intervention within it.
 
-## Optional and unfinished components
+The detector and filter are optional, unevaluated extensions. Longitudinal
+analysis and recourse also remain outside the completed comparisons. The
+[selection note](../technical/selection-mechanism.md) provides an illustrative
+overlay and an exact calculation separate from either renal simulation.
 
-The detector and filter in protocol Steps 5 and 7 sit beside attribution and may
-flag candidates for future graph review. They remain unevaluated; the
-[public interface](../lumawarp/README.md) is the relevant implementation boundary.
-Rounds two and three of the current expert loop are scripted heuristics.
-Longitudinal methods (Step 12) and action/recourse evaluation (Step 13) remain
-extensions beyond the completed analyses.
-
-The proposed degradation path reruns selected comparisons as sample size,
-selection and measurement conditions change. It is the common experimental
-axis, not evidence that every causal method is more robust. Keep the 14-node and
-51-node simulations distinct, preserve nulls and report each method's target,
-information, budget and uncertainty. The [selection note](../technical/selection-mechanism.md)
-provides the observation-process overlay and a separate hypothetical calculation.
-
-## Supporting schematics
-
-The article includes editable draw.io sources for the method workflow and
-intervention surgery. Earlier simulation-specific schematics remain available:
-[discovery benchmark](../images/fig1_space_shap_spine.png) and
-[identification checks](../images/fig2_sufficiency_transfer.png). They describe a
-particular analysis design, rather than a compulsory path for every question.
+For implementation, the [legacy work-package crosswalk](protocol.md) preserves
+script IDs and result paths. Those IDs no longer number the manuscript's
+Methods. [Graph sourcing](dag-harvest-protocol.md) and the earlier
+[structural-recovery schematic](../images/fig1_space_shap_spine.png) remain
+available as supporting documentation.

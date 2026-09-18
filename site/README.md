@@ -9,3 +9,7 @@ target-dags.qmd preserves its predecessor. SVGs, animation source, recorded-data
 figure renderer and styling remain available for reuse. Rendering with
 `quarto render site` is an optional local archive preview, not a deployment.
 The root HTML redirect points to the master GitHub repository.
+
+The [5 September handoff](archive-notes/2026-09-05-handoff.md) preserves the
+earlier presentation review and session history; its deployment instructions
+are superseded.

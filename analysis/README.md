@@ -33,8 +33,8 @@ differences. Ordering alone does not recover the distributed total-effect truth.
 The small structural prototype is substantially closer to the frozen truth
 (Kendall tau 0.794; top-five recovery 1.00; PBI -0.113), while remaining explicitly
 exploratory pending scale-up and bootstrap uncertainty. See
-the [current results](../docs/RESEARCH_RECORD.md#current-results) and
-[methods](../docs/RESEARCH_RECORD.md#methods) in the consolidated research
+the [current results](../docs/full_dag/RESEARCH_RECORD.md#current-results) and
+[methods](../docs/full_dag/RESEARCH_RECORD.md#methods) in the consolidated research
 record.
 
 ## Canonical versions for the SHAP pilot
@@ -146,7 +146,7 @@ The scripts require `simcausal`, `igraph`, `xgboost`, `dagitty`, `ggdag`, and
 Exact results are seed-stable using the seeds in the generation scripts.
 
 Graph-validation and source versioning are summarized in
-[`../docs/PROVENANCE_AND_REFERENCES.md`](../docs/PROVENANCE_AND_REFERENCES.md)
+[`../docs/full_dag/PROVENANCE_AND_REFERENCES.md`](../docs/full_dag/PROVENANCE_AND_REFERENCES.md)
 and checked in under `output/dag_validation/`.
 
 ## Important limitation
@@ -154,4 +154,4 @@ and checked in under `output/dag_validation/`.
 These are simulation-design parameters, not NASA estimates. The structure and
 coefficients need domain review before substantive interpretation. See
 the consolidated [limitations and
-guardrails](../docs/RESEARCH_RECORD.md#limitations-and-guardrails).
+guardrails](../docs/full_dag/RESEARCH_RECORD.md#limitations-and-guardrails).

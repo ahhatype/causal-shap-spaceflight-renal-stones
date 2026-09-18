@@ -75,12 +75,13 @@ def main() -> None:
         ax.text(x, y, label, ha="center", va="center", fontsize=5.9, zorder=4,
                 color=PAPER if kind == "outcome" else INK, linespacing=1.05)
     ax.set_xlim(-2.0, max(x for x, _ in pos.values()) + 2.0)
-    ax.set_ylim(min(y for _, y in pos.values()) - 1.5, max(y for _, y in pos.values()) + 2.4)
+    ax.set_ylim(min(y for _, y in pos.values()) - 1.5, max(y for _, y in pos.values()) + 3.4)
     ax.text(0.0, 1.0, "The 14-node working subgraph of NASA SA-07566", transform=ax.transAxes,
             fontsize=11, color=INK, va="top")
     ax.text(0.0, 0.955,
-            "green: NASA-confirmed mechanism; solid: literature-informed magnitude; dashed: direction only; "
-            "orange dotted: calcium x hydration interaction. Fills: teal exposure, blue mediators, orange confounders, black outcome.",
+            "Thick green: mechanism described in the NASA source; black solid: magnitude estimate; black dashed: direction only.\n"
+            "Orange dotted: calcium x hydration interaction. Edge widths denote categories, not effect sizes.\n"
+            "Node fills: teal exposure; blue mediators; orange other baseline inputs; black outcome.",
             transform=ax.transAxes, fontsize=7.2, color=MUTE, va="top")
     OUT.mkdir(parents=True, exist_ok=True)
     fig.savefig(OUT / "working_subgraph_dag.png", dpi=200, bbox_inches="tight", facecolor=PAPER)

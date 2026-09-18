@@ -1,26 +1,26 @@
 # Method choices and bounded comparisons
 
-This methods appendix follows the manuscript-aligned [study guide](study-guide.pdf): prepare the predictive reference, optionally discover structure, review the graph and mechanisms, define a causal game, calculate attributions, and evaluate them as data conditions change. The seven stages group the manuscript's 13-step protocol; they do not replace its numbering.
+This comparison accompanies the [Supplementary Information](supplementary-information/main.pdf): prepare the predictive reference, optionally discover structure, review the graph and mechanisms, define a causal game, calculate attributions, and evaluate them as data conditions change. The manuscript and supplement use the same Steps 0–6; legacy script numbers are recorded separately in the implementation crosswalk.
 
-The table gives an **established comparator** and a **conditional choice**, rather than a universal recommendation or an unverified “most-cited” ranking. The proposed comparisons below are not new renal results. Fuller algorithms and sensitivity settings belong in the supplement; the complete grid of methods and data-generating settings is outside this study.
+The table gives an **established comparator** and a **conditional choice**, rather than a universal recommendation or an unverified “most-cited” ranking. The proposed comparisons below are not new renal results. Study procedures and reproducibility details belong in the main Methods; the complete grid of methods and data-generating settings is outside this study.
 
 ## The method sequence
 
-| Stage | Established comparator | Conditional choice and concrete output |
+| Step | Established comparator | Conditional choice and concrete output |
 | --- | --- | --- |
-| **0. Set the goal** | A prediction or predictive-attribution question with a specified outcome and population. | Distinguish predicted risk, an individual intervention contrast, and allocation of a joint causal contrast. Record population, timing, exposure settings, outcome scale and intended interpretation. |
-| **1. Prepare data and the predictive reference** | The study's ordinary SHAP pairings: random forest and XGBoost TreeExplainer, logistic-regression LinearExplainer, and KernelExplainer or PermutationExplainer for XGBoost. | Generate a declared plausible system and fit the reference predictors. State each explainer's background, dependence treatment, output scale and global aggregation. Prefer a common output scale for a new comparison; retain labels on existing differing scales. |
-| **2. Discover candidate structures (optional)** | PC, including the discovery component of Ng et al.'s Causal SHAP. | Start a focused comparison with PC-stable and a conditional-independence test suitable for the mixed data; consider GES, LiNGAM or NOTEARS when their assumptions fit. Retain unresolved directions. A supplied graph bypasses discovery and enters Stage 3. |
-| **3. Review the graph and estimate mechanisms** | The unrevised discovered or supplied graph, with the downstream method fixed. | Record domain and temporal evidence for each revision, retain alternative graphs, and estimate the conditional mechanisms required downstream. Distinguish fitted mechanisms from supplied simulation mechanisms. |
-| **4. Define the causal game and graph surgery** | The declared predictive coalition construction from Stage 1. | For an identified do-game, replace intervened assignment mechanisms, retain the others, and estimate or propagate the resulting distribution. Declare players, baseline, intervention values and whether the output is an outcome or a fitted prediction. |
-| **5. Calculate causal attributions** | Ordinary SHAP from Stage 1, with its predictive target visible. | Compare selected causal Shapley/do-Shapley, asymmetric Shapley, discovery-based Causal SHAP and Shapley Flow constructions. Choose according to available information and the desired node, ordering or edge attribution; these are not interchangeable estimators. |
-| **6. Compare under data degradation** | The clean-data analysis with its stated uncertainty. | Repeat selected comparisons under smaller samples, selection, measurement error, missingness or population/mechanism shift. Separate prediction performance, graph recovery, matched-game attribution accuracy and individual-intervention ranking agreement. |
+| **0. Define the question and target population** | A prediction or predictive-attribution question with a specified outcome and population. | Distinguish predicted risk, an individual intervention contrast, and allocation of a joint causal contrast. Record population, timing, exposure settings, outcome scale and intended interpretation. |
+| **1. Prepare the data and predictive reference** | The study's ordinary SHAP pairings: random forest and XGBoost TreeExplainer, logistic-regression LinearExplainer, and KernelExplainer or PermutationExplainer for XGBoost. | Generate a declared plausible system and fit the reference predictors. State each explainer's background, dependence treatment, output scale and global aggregation. Prefer a common output scale for a new comparison; retain labels on existing differing scales. |
+| **2. Discover candidate causal structure (optional)** | PC, including the discovery component of Ng et al.'s Causal SHAP. | Start a focused comparison with PC-stable and a conditional-independence test suitable for the mixed data; consider GES, LiNGAM or NOTEARS when their assumptions fit. Retain unresolved directions. A supplied graph bypasses discovery and enters Step 3. |
+| **3. Review the graph and specify required mechanisms** | The unrevised discovered or supplied graph, with the downstream method fixed. | Record domain and temporal evidence for each revision, retain alternative graphs, and estimate the conditional mechanisms required downstream. Distinguish fitted mechanisms from supplied simulation mechanisms. |
+| **4. Define interventions and construct the causal game** | The declared predictive coalition construction from Step 1. | For an identified do-game, replace intervened assignment mechanisms, retain the others, and estimate or propagate the resulting distribution. Declare players, baseline, intervention values and whether the output is an outcome or a fitted prediction. |
+| **5. Calculate causal attributions** | Ordinary SHAP from Step 1, with its predictive target visible. | Compare selected causal Shapley/do-Shapley, asymmetric Shapley, discovery-based Causal SHAP and Shapley Flow constructions. Choose according to available information and the desired node, ordering or edge attribution; these are not interchangeable estimators. |
+| **6. Evaluate results under the relevant data conditions** | The clean-data analysis with its stated uncertainty. | Repeat selected comparisons under smaller samples, selection, measurement error, missingness or population/mechanism shift. Separate prediction performance, graph recovery, matched-game attribution accuracy and individual-intervention ranking agreement. |
 
-The prediction route goes from Stage 1 to predictive evaluation in Stage 6. An intervention-effect analysis needs appropriate causal assumptions and an effect calculation, but can omit Shapley allocation. Ordinary SHAP is a study comparator, not a prerequisite for causal inference.
+The prediction route goes from Step 1 to predictive evaluation in Step 6. An intervention-effect analysis needs appropriate causal assumptions and an effect calculation, but can omit Shapley allocation. Ordinary SHAP is a study comparator, not a prerequisite for causal inference.
 
 Harrell's three uses of models are **hypothesis testing, estimation and prediction**. Modeling serves all three. The routing here also uses Hernán, Hsu and Healy's distinction between description, prediction and counterfactual prediction. An adjusted regression coefficient is not automatically a causal effect. [Harrell, RMS chapter 1](https://hbiostat.org/rmsc/intro.html), [Hernán et al., 2019](https://doi.org/10.1080/09332480.2019.1579578)
 
-## Stage 1: establish a reproducible reference
+## Step 1: establish a reproducible reference
 
 Keep the 14-node working subgraph and 51-node source DAG separate. NASA supplies plausible topology; the simulated coefficients and response forms are study assumptions. In a blinded discovery comparison, withhold the generating graph and mechanisms from the algorithms. Record separately any method receiving an ordering, a graph, estimated mechanisms or the generating mechanisms.
 
@@ -28,7 +28,7 @@ A prespecified regression with supported nonlinear terms is a useful predictive 
 
 The existing random-forest TreeSHAP result uses probabilities; other reported pairings use log odds. Ranking comparisons do not make their magnitudes commensurate. Harmonizing a future comparison requires recomputing explanations for the chosen output; a nonlinear conversion of an existing additive decomposition does not generally preserve that decomposition.
 
-## Stage 2: concrete discovery choices
+## Step 2: concrete discovery choices
 
 | Method | Operation and justified use | Limit to retain |
 | --- | --- | --- |
@@ -43,7 +43,7 @@ Primary sources: [Kalisch et al., 2012 (PC/pcalg)](https://doi.org/10.18637/jss.
 
 A focused first comparison would separate the change from PC to PC-stable from the change in independence test, so an improvement is not assigned to the wrong component. Supply the same observations and prior information, record tuning choices, and evaluate both structural recovery and consequences for the target. A supplied-graph route remains legitimate when the study asks about attribution conditional on that graph; it does not claim to recover structure from data.
 
-## Stages 3–4: graph review is distinct from an intervention
+## Steps 3–4: graph review is distinct from an intervention
 
 **Graph review** revises a hypothesis about the observational system. An edge may be added, removed or oriented using documented timing and subject-matter evidence. The comparison is unrevised versus revised graph under the same downstream method. If observations leave directions unresolved, retain the relevant alternatives and examine whether they imply different adjustment sets or intervention effects. The existing working-subgraph revision rounds two and three are scripted heuristics; human expert review remains pending.
 
@@ -58,7 +58,7 @@ These need not agree. A DAG by itself does not provide the needed coefficients, 
 
 The full-DAG propagation prototype scores a fitted prediction model after propagating interventions with supplied simulation mechanisms. It also uses graph-respecting orders. It is not the same estimand or information setting as symmetric, outcome-based do-Shapley estimated from observations.
 
-## Stage 5: allocation rules and causal information
+## Step 5: allocation rules and causal information
 
 | Family | What is being computed | What must be fixed for a valid comparison |
 | --- | --- | --- |
@@ -71,11 +71,11 @@ Sources: [Heskes et al., 2020](https://proceedings.neurips.cc/paper_files/paper/
 
 The [do-Shapley tutorial](../technical/do-shapley.md) gives the exact example and definitions. Allocating a joint intervention contrast is different from estimating the effect of intervening on one variable. Jung's estimator development focuses on discrete variables under its stated identification and estimation assumptions; extending it to the renal setting requires additional work. No renal matched-game oracle or DML estimator is reported as completed.
 
-## Stage 6: bounded comparisons along a common degradation path
+## Step 6: bounded comparisons along a common degradation path
 
 Use a fixed target and a declared starting system, then rerun selected comparisons as data conditions change. A change in selected population can change the true target itself, so recompute the appropriate simulated reference rather than counting that change as estimator error. Missingness, measurement error and smaller samples are distinct mechanisms.
 
-| Stage being examined | One bounded comparison | Main assessment |
+| Step being examined | One bounded comparison | Main assessment |
 | --- | --- | --- |
 | **0: target definition** | Report a risk forecast and a specified intervention contrast for the same example. | Whether each output answers its declared question; this is not an accuracy contest between different targets. |
 | **1: predictive reference** | Compare a prespecified regression with one selected flexible predictor using matched training and evaluation data. | Calibration, prediction error and attribution stability, with output scale and explanation game controlled. |

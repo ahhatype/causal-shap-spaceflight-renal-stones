@@ -1,49 +1,18 @@
-# The causal-SHAP workflow and its evidence
+# The causal-attribution workflow and its evidence
 
-The playbook follows the manuscript's method sequence. The goal gate routes a
-prediction question to the predictive reference and validation, while the causal
-route makes discovery, graph review, intervention construction and allocation
-explicit. These are seven stages numbered 0–6, grouping the original protocol.
+The [analytical workflow](README.md) defines the shared Steps 0–6 and links
+the explanatory supplement and method alternatives. This evidence map
+connects those steps to the worked examples, completed comparisons and
+remaining checks. The broader data-degradation comparison is proposed.
 
-![Manuscript-aligned method workflow](study-guide-latex/figures/method-workflow.png)
-
-The [editable LaTeX article](study-guide-latex/README.md) and its
-[PDF](study-guide-latex/main.pdf) develop the steps; the
-[method appendix](method-choices.md) compares alternatives within them.
-
-| Stage | Method operation | Manuscript protocol |
-| --- | --- | --- |
-| 0. Define the target | Prediction, an individual intervention effect or allocation of a joint contrast; population and timing. | Step 1 and target definitions |
-| 1. Prepare data and the predictive reference | Supplied DAG, specified simulation mechanisms, synthetic data, fitted model and ordinary SHAP. | Steps 2–4 |
-| 2. Discover candidate structures (optional) | PC is the existing starting point; consider PC-stable, appropriate mixed-data tests, GES, LiNGAM or NOTEARS. A supplied DAG bypasses discovery. | Discovery within Step 6; broader Step 8 comparison |
-| 3. Review the graph and estimate mechanisms | Review timing, evidence and uncertain edges; record revisions; estimate mechanisms where the selected method requires them. | Step 2 and review within Step 6 |
-| 4. Define the causal game and graph surgery | Specify coalition, background, scale and intervention; a do-game replaces assignment mechanisms and removes incoming arrows to intervened nodes. | Value-function component of Step 6 |
-| 5. Calculate causal attributions | Causal Shapley/do-Shapley, Ng et al., ASV and Shapley Flow use distinct allocation rules and information. | Attribution component of Step 6 |
-| 6. Compare under data degradation | Assess prediction, structure, attribution and individual-effect ranking separately; repeat selected comparisons under smaller samples, selection and measurement changes. | Evaluation in Steps 4/6/8; proposed robustness in 9–11 |
-
-Expert graph revision changes the hypothesized observational structure.
-Do-surgery represents a specified intervention on that structure. Ordering-only
-or edge-allocation methods must not silently be presented as the same
-interventional game. An effect-only question can omit Shapley allocation.
-
-The optional detector/filter sits beside the comparisons (Steps 5 and 7) and
-can feed future graph review; it remains unevaluated. Longitudinal analysis
-(Step 12) and action/recourse evaluation (Step 13) are extensions, not completed
-endpoints. The systematic degradation comparison is proposed, not a new result.
-
-The existing PC diagnostic comes from protocol Step 6; Step 8 is the broader
-working-subgraph comparison that remains pending. The full-DAG ordering and
-propagation analyses are separate pipelines feeding stages 5 and 6. The
-crosswalk groups analytical operations rather than renumbering experiments.
-
-The Step 2 augmentation uses Robert Reynolds's supplied graph files. No
-human reviewed the Step 6 rounds. Round 1 uses the unrevised inputs:
+The graph augmentation uses Robert Reynolds's supplied graph files. No
+human reviewed the causal-attribution revision rounds. Round 1 uses the unrevised inputs:
 depth-tier ordering for ASV, PC output for Ng et al., and no inter-feature
 edges for Shapley Flow. After the scripted heuristic in rounds two and three,
 XGBoost rank agreement changes from 0.231 to 0.205 for ASV, from 0.077 to
 0.154 for Shapley Flow, and from undefined (all-zero attribution) to 0.714
 for Ng et al. These are different revision rules and method budgets, not a
-controlled test of expert review. See the complete [Step 6 record](../step06_results.md).
+controlled test of expert review. See the complete [scripted-revision record](../step06_results.md).
 
 The matched full-DAG ordering comparison uses 64 evaluation records, 128
 background records and 128 permutations for each method. The propagation
@@ -94,7 +63,7 @@ The **14-node working subgraph** adds multiple pathways, a binary outcome,
 an interaction and competing predictors. It tests whether attributions agree
 with fixed simulated intervention contrasts. The [Step 4 record](../step04_results.md)
 shows credit shifting in both directions across chains and model classes;
-it does not establish universal upstream suppression. The [Step 6 record](../step06_results.md)
+it does not establish universal upstream suppression. The [scripted-revision record](../step06_results.md)
 retains the disconnected-outcome diagnostic and scripted revisions.
 
 The **51-node full-DAG simulation** carries a separate matched comparison:

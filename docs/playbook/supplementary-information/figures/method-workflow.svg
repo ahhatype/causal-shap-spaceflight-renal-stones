@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE svg
+  PUBLIC '-//W3C//DTD SVG 1.0//EN'
+  'http://www.w3.org/TR/2001/REC-SVG-20010904/DTD/svg10.dtd'>
+<svg width="700.0" height="710.0" preserveAspectRatio="xMinYMin meet" viewBox="0 0 700 710" xmlns="http://www.w3.org/2000/svg" version="1.0" fill-rule="evenodd" xmlns:xlink="http://www.w3.org/1999/xlink">
+	<title>...</title>
+	<desc>...</desc>
+	<clipPath id="clip">
+		<rect x="0" y="0" width="700.0" height="710.0"/>
+	</clipPath>
+	<g id="group" transform="scale(1,-1) translate(0,-710)" style="clip-path: url(#clip)">
+		<g transform="">
+			<path d="M 367.5,630 L 367.5,612 Z" style="stroke: rgb(15%,39%,48%); stroke-linecap: butt; stroke-width: 1.3;"/>
+			<polygon points="367.5 612, 370.5 619, 364.5 619" style="stroke: rgb(15%,39%,48%); stroke-linecap: butt; stroke-width: 1; fill: rgb(15%,39%,48%); fill-rule: evenodd;"/>
+			<path d="M 367.5,536 L 367.5,518 Z" style="stroke: rgb(22%,48%,44%); stroke-linecap: butt; stroke-width: 1.3;"/>
+			<polygon points="367.5 518, 370.5 525, 364.5 525" style="stroke: rgb(22%,48%,44%); stroke-linecap: butt; stroke-width: 1; fill: rgb(22%,48%,44%); fill-rule: evenodd;"/>
+			<path d="M 367.5,442 L 367.5,424 Z" style="stroke: rgb(22%,48%,44%); stroke-linecap: butt; stroke-width: 1.3;"/>
+			<polygon points="367.5 424, 370.5 431, 364.5 431" style="stroke: rgb(22%,48%,44%); stroke-linecap: butt; stroke-width: 1; fill: rgb(22%,48%,44%); fill-rule: evenodd;"/>
+			<path d="M 367.5,338 L 367.5,320 Z" style="stroke: rgb(22%,48%,44%); stroke-linecap: butt; stroke-width: 1.3;"/>
+			<polygon points="367.5 320, 370.5 327, 364.5 327" style="stroke: rgb(22%,48%,44%); stroke-linecap: butt; stroke-width: 1; fill: rgb(22%,48%,44%); fill-rule: evenodd;"/>
+			<path d="M 367.5,234 L 367.5,216 Z" style="stroke: rgb(22%,48%,44%); stroke-linecap: butt; stroke-width: 1.3;"/>
+			<polygon points="367.5 216, 370.5 223, 364.5 223" style="stroke: rgb(22%,48%,44%); stroke-linecap: butt; stroke-width: 1; fill: rgb(22%,48%,44%); fill-rule: evenodd;"/>
+			<path d="M 367.5,140 L 367.5,122 Z" style="stroke: rgb(15%,39%,48%); stroke-linecap: butt; stroke-width: 1.3;"/>
+			<polygon points="367.5 122, 370.5 129, 364.5 129" style="stroke: rgb(15%,39%,48%); stroke-linecap: butt; stroke-width: 1; fill: rgb(15%,39%,48%); fill-rule: evenodd;"/>
+			<path d="M 155,589.2 L 8,589.2 Z" style="stroke: rgb(15%,39%,48%); stroke-linecap: butt; stroke-width: 1.3;"/>
+			<path d="M 8,589.2 L 8,56.2 Z" style="stroke: rgb(15%,39%,48%); stroke-linecap: butt; stroke-width: 1.3;"/>
+			<path d="M 8,56.2 L 155,56.2 Z" style="stroke: rgb(15%,39%,48%); stroke-linecap: butt; stroke-width: 1.3;"/>
+			<polygon points="155 56.2, 148 59.2, 148 53.2" style="stroke: rgb(15%,39%,48%); stroke-linecap: butt; stroke-width: 1; fill: rgb(15%,39%,48%); fill-rule: evenodd;"/>
+			<path d="M 155,551.2 L 143,551.2 Z" style="stroke: rgb(22%,48%,44%); stroke-linecap: butt; stroke-width: 1.3;"/>
+			<path d="M 143,551.2 L 143,381 Z" style="stroke: rgb(22%,48%,44%); stroke-linecap: butt; stroke-width: 1.3;"/>
+			<path d="M 143,381 L 155,381 Z" style="stroke: rgb(22%,48%,44%); stroke-linecap: butt; stroke-width: 1.3;"/>
+			<polygon points="155 381, 148 384, 148 378" style="stroke: rgb(22%,48%,44%); stroke-linecap: butt; stroke-width: 1; fill: rgb(22%,48%,44%); fill-rule: evenodd;"/>
+			<path d="M 580,46.8 L 693,46.8 Z" style="stroke: rgb(34%,40%,45%); stroke-linecap: butt; stroke-width: 1.3; stroke-dasharray: 4, 3;"/>
+			<path d="M 693,46.8 L 693,574 Z" style="stroke: rgb(34%,40%,45%); stroke-linecap: butt; stroke-width: 1.3; stroke-dasharray: 4, 3;"/>
+			<path d="M 693,574 L 580,574 Z" style="stroke: rgb(34%,40%,45%); stroke-linecap: butt; stroke-width: 1.3; stroke-dasharray: 4, 3;"/>
+			<polygon points="580 574, 587 571, 587 577" style="stroke: rgb(34%,40%,45%); stroke-linecap: butt; stroke-width: 1; fill: rgb(34%,40%,45%); fill-rule: evenodd;"/>
+			<path d="M 580,277 L 600,277 Z" style="stroke: rgb(22%,48%,44%); stroke-linecap: butt; stroke-width: 1.3;"/>
+			<path d="M 600,277 L 600,93.8 Z" style="stroke: rgb(22%,48%,44%); stroke-linecap: butt; stroke-width: 1.3;"/>
+			<path d="M 600,93.8 L 580,93.8 Z" style="stroke: rgb(22%,48%,44%); stroke-linecap: butt; stroke-width: 1.3;"/>
+			<polygon points="580 93.8, 587 90.8, 587 96.8" style="stroke: rgb(22%,48%,44%); stroke-linecap: butt; stroke-width: 1; fill: rgb(22%,48%,44%); fill-rule: evenodd;"/>
+			<rect x="155.0" y="630.0" width="425.0" height="70.0" rx="7" ry="7" style="stroke: rgb(15%,39%,48%); stroke-linecap: butt; stroke-width: 1.2; fill: rgb(94%,96%,96%); fill-rule: evenodd;"/>
+			<text x="212.89499999999998" y="670.08" style="font-family: Helvetica-Bold; font-size: 15.0px;fill: rgb(15%,39%,48%); stroke:none;" transform="translate(0,1340) scale(1,-1)">0 Define the question and target population</text>
+			<text x="220.821" y="647.78" style="font-family: Helvetica; font-size: 13.0px;fill: rgb(12%,21%,27%); stroke:none;" transform="translate(0,1295) scale(1,-1)">Prediction, intervention effect, or causal allocation?</text>
+			<rect x="155.0" y="536.0" width="425.0" height="76.0" rx="7" ry="7" style="stroke: rgb(15%,39%,48%); stroke-linecap: butt; stroke-width: 1.2; fill: rgb(94%,96%,96%); fill-rule: evenodd;"/>
+			<text x="213.69" y="587.01" style="font-family: Helvetica-Bold; font-size: 15.0px;fill: rgb(15%,39%,48%); stroke:none;" transform="translate(0,1174) scale(1,-1)">1 Prepare the data and predictive reference</text>
+			<text x="249.005" y="564.71" style="font-family: Helvetica; font-size: 13.0px;fill: rgb(12%,21%,27%); stroke:none;" transform="translate(0,1129) scale(1,-1)">Observed data or simulation; fitted model</text>
+			<text x="267.79" y="548.8499999999999" style="font-family: Helvetica; font-size: 13.0px;fill: rgb(12%,21%,27%); stroke:none;" transform="translate(0,1097) scale(1,-1)">and ordinary SHAP when relevant.</text>
+			<rect x="155.0" y="442.0" width="425.0" height="76.0" rx="7" ry="7" style="stroke: rgb(22%,48%,44%); stroke-linecap: butt; stroke-width: 1.2; fill: rgb(94%,96%,96%); fill-rule: evenodd;"/>
+			<text x="196.2" y="485.08" style="font-family: Helvetica-Bold; font-size: 15.0px;fill: rgb(22%,48%,44%); stroke:none;" transform="translate(0,970) scale(1,-1)">2 Discover candidate causal structure (optional)</text>
+			<text x="282.974" y="462.78" style="font-family: Helvetica; font-size: 13.0px;fill: rgb(12%,21%,27%); stroke:none;" transform="translate(0,925) scale(1,-1)">For example, PC / PC-stable.</text>
+			<rect x="155.0" y="338.0" width="425.0" height="86.0" rx="7" ry="7" style="stroke: rgb(22%,48%,44%); stroke-linecap: butt; stroke-width: 1.2; fill: rgb(94%,96%,96%); fill-rule: evenodd;"/>
+			<text x="176.1825" y="394.01" style="font-family: Helvetica-Bold; font-size: 15.0px;fill: rgb(22%,48%,44%); stroke:none;" transform="translate(0,788) scale(1,-1)">3 Review the graph and specify required mechanisms</text>
+			<text x="243.59699999999998" y="371.71" style="font-family: Helvetica; font-size: 13.0px;fill: rgb(12%,21%,27%); stroke:none;" transform="translate(0,743) scale(1,-1)">Review assumptions and uncertain arrows;</text>
+			<text x="275.369" y="355.84999999999997" style="font-family: Helvetica; font-size: 13.0px;fill: rgb(12%,21%,27%); stroke:none;" transform="translate(0,711) scale(1,-1)">establish what can be identified.</text>
+			<rect x="155.0" y="234.0" width="425.0" height="86.0" rx="7" ry="7" style="stroke: rgb(22%,48%,44%); stroke-linecap: butt; stroke-width: 1.2; fill: rgb(94%,96%,96%); fill-rule: evenodd;"/>
+			<text x="177.03" y="290.01" style="font-family: Helvetica-Bold; font-size: 15.0px;fill: rgb(22%,48%,44%); stroke:none;" transform="translate(0,580) scale(1,-1)">4 Define interventions and construct the causal game</text>
+			<text x="230.5775" y="267.71" style="font-family: Helvetica; font-size: 13.0px;fill: rgb(12%,21%,27%); stroke:none;" transform="translate(0,535) scale(1,-1)">For node interventions, apply do-graph surgery.</text>
+			<text x="241.4065" y="251.84999999999997" style="font-family: Helvetica; font-size: 13.0px;fill: rgb(12%,21%,27%); stroke:none;" transform="translate(0,503) scale(1,-1)">Match the rules to the chosen causal target.</text>
+			<rect x="155.0" y="140.0" width="425.0" height="76.0" rx="7" ry="7" style="stroke: rgb(22%,48%,44%); stroke-linecap: butt; stroke-width: 1.2; fill: rgb(94%,96%,96%); fill-rule: evenodd;"/>
+			<text x="259.1325" y="191.01" style="font-family: Helvetica-Bold; font-size: 15.0px;fill: rgb(22%,48%,44%); stroke:none;" transform="translate(0,382) scale(1,-1)">5 Calculate causal attributions</text>
+			<text x="255.8625" y="168.71000000000004" style="font-family: Helvetica; font-size: 13.0px;fill: rgb(12%,21%,27%); stroke:none;" transform="translate(0,337) scale(1,-1)">Use the method and information inputs</text>
+			<text x="273.5555" y="152.85000000000002" style="font-family: Helvetica; font-size: 13.0px;fill: rgb(12%,21%,27%); stroke:none;" transform="translate(0,305) scale(1,-1)">appropriate to the defined game.</text>
+			<rect x="155.0" y="28.0" width="425.0" height="94.0" rx="7" ry="7" style="stroke: rgb(15%,39%,48%); stroke-linecap: butt; stroke-width: 1.2; fill: rgb(94%,96%,96%); fill-rule: evenodd;"/>
+			<text x="179.10750000000002" y="88.00999999999999" style="font-family: Helvetica-Bold; font-size: 15.0px;fill: rgb(15%,39%,48%); stroke:none;" transform="translate(0,176) scale(1,-1)">6 Evaluate results under the relevant data conditions</text>
+			<text x="231.286" y="65.71000000000004" style="font-family: Helvetica; font-size: 13.0px;fill: rgb(12%,21%,27%); stroke:none;" transform="translate(0,131) scale(1,-1)">Repeat relevant stages for each data condition.</text>
+			<text x="217.5645" y="49.85000000000002" style="font-family: Helvetica; font-size: 13.0px;fill: rgb(12%,21%,27%); stroke:none;" transform="translate(0,99) scale(1,-1)">Compare matched targets, budgets and uncertainty.</text>
+			<text x="35.373000000000005" y="618.9300000000001" style="font-family: Helvetica; font-size: 13.0px;fill: rgb(15%,39%,48%); stroke:none;" transform="translate(0,1237) scale(1,-1)">Prediction only</text>
+			<text x="33.009" y="471.36" style="font-family: Helvetica; font-size: 13.0px;fill: rgb(22%,48%,44%); stroke:none;" transform="translate(0,942) scale(1,-1)">Supplied DAG:</text>
+			<text x="26.1515" y="455.5" style="font-family: Helvetica; font-size: 13.0px;fill: rgb(22%,48%,44%); stroke:none;" transform="translate(0,911) scale(1,-1)">bypass discovery</text>
+			<text x="604.702" y="450.22" style="font-family: Helvetica; font-size: 13.0px;fill: rgb(34%,40%,45%); stroke:none;" transform="translate(0,900) scale(1,-1)">Repeat the</text>
+			<text x="613.3795" y="434.36" style="font-family: Helvetica; font-size: 13.0px;fill: rgb(34%,40%,45%); stroke:none;" transform="translate(0,868) scale(1,-1)">relevant</text>
+			<text x="595.6735" y="418.5" style="font-family: Helvetica; font-size: 13.0px;fill: rgb(34%,40%,45%); stroke:none;" transform="translate(0,837) scale(1,-1)">pipeline under</text>
+			<text x="597.11" y="402.64" style="font-family: Helvetica; font-size: 13.0px;fill: rgb(34%,40%,45%); stroke:none;" transform="translate(0,805) scale(1,-1)">changed data</text>
+			<text x="615.3445" y="203.29000000000002" style="font-family: Helvetica; font-size: 13.0px;fill: rgb(22%,48%,44%); stroke:none;" transform="translate(0,406) scale(1,-1)">Effect only:</text>
+			<text x="635.943" y="187.43" style="font-family: Helvetica; font-size: 13.0px;fill: rgb(22%,48%,44%); stroke:none;" transform="translate(0,374) scale(1,-1)">skip</text>
+			<text x="618.9585" y="171.57000000000005" style="font-family: Helvetica; font-size: 13.0px;fill: rgb(22%,48%,44%); stroke:none;" transform="translate(0,343) scale(1,-1)">attribution</text>
+		</g>
+	</g>
+</svg>

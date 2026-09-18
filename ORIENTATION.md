@@ -17,27 +17,28 @@ Source locations and current development priorities for the Space SHAP project.
 | Private manuscript on the writing machine | manuscript/prism-upload/: main.tex, references.bib, figures/ and main.pdf |
 | Private writing export and recording script | manuscript/causal-shap-prism.zip; manuscript/coauthor-review/recording-script.md |
 
-## Restart point — 17 September 2026
+## Restart point — 18 September 2026
 
-The accepted [seven-stage article](docs/playbook/study-guide-latex/main.pdf)
+The [Supplementary Information](docs/playbook/supplementary-information/main.pdf)
 follows the manuscript's methods: goal; data and predictive reference; optional
 PC discovery; graph review; causal game and surgery; causal attribution;
-validation under data constraints. Refine its [LaTeX source](docs/playbook/study-guide-latex/main.tex)
-and [native diagrams](docs/playbook/study-guide-latex/diagrams/README.md) directly.
+validation under data constraints. Refine its [LaTeX source](docs/playbook/supplementary-information/main.tex)
+and [native diagrams](docs/playbook/supplementary-information/diagrams/README.md) directly.
 The [method appendix](docs/playbook/method-choices.md) expands alternatives within
 stages. The [selection example](docs/technical/selection-mechanism.md) is an exact
 illustration, separate from both renal simulations.
 
-The 16 September Overleaf changes were imported locally and verified. Before
-further manuscript edits, compare against the latest Overleaf version and the
-private sync manifest. The human-written introduction remains protected.
-Private handoff details and editorial flags are in docs/STATUS.md and
-manuscript/coauthor-review/. No playbook changes have been sent to Overleaf.
+The manuscript and supplement share Step 0–6 numbering; original work-package
+IDs remain only in the implementation crosswalk. Before syncing, compare the
+latest Overleaf source with the private sync manifest and local source. The
+human-written introduction remains protected. Current sync status, reviewer
+findings and editorial flags are in docs/STATUS.md and manuscript/coauthor-review/.
 
 ## Current priorities
 
-1. Align the manuscript's presentation with the accepted method sequence and
-   review abstract claims against completed evidence before strengthening them.
+1. Audit IDA edge-direction/weight consistency and the reported tau/interval
+   discrepancy; reconcile abstract claims with completed evidence. Preserve frozen
+   results until any corrective run is documented.
 2. Review the graph with Robert. Step 6 rounds two and three remain scripted
    heuristics; their results are not evidence of human expert review.
 3. Prespecify a bounded comparison across clean and degraded data: mixed-data
