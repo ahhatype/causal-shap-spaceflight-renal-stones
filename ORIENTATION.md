@@ -9,6 +9,7 @@ Source locations and current development priorities for the Space SHAP project.
 | Path-length math, detection, causal credit and splines | [Technical note](docs/technical/path-length-and-response-shape.md) |
 | Existing classroom materials (development paused) | [Teaching companion](docs/classroom/README.md) |
 | Public technical citations | [BibTeX](docs/references/technical-companion.bib), [reference map](docs/references/manuscript-references.md) |
+| Supplied graph and working-model adaptations | [Graph provenance and edge crosswalk](docs/technical/graph-provenance.md) |
 | 14-node working-subgraph findings | [Step 4](docs/step04_results.md), [scripted Step 6](docs/step06_results.md) |
 | 51-node full-DAG findings | [Research record](docs/full_dag/RESEARCH_RECORD.md) |
 | Pipeline status | [config/pipeline_status.yaml](config/pipeline_status.yaml) |
@@ -39,7 +40,9 @@ findings and editorial flags are in docs/STATUS.md and manuscript/coauthor-revie
 1. Audit IDA edge-direction/weight consistency and the reported tau/interval
    discrepancy; reconcile abstract claims with completed evidence. Preserve frozen
    results until any corrective run is documented.
-2. Review the graph with Robert. Step 6 rounds two and three remain scripted
+2. Review the 14-node model adaptations against Robert's complete 53-node source
+   graph using the edge crosswalk. The existing full-DAG results use the earlier
+   51-node version. Step 6 rounds two and three remain scripted
    heuristics; their results are not evidence of human expert review.
 3. Prespecify a bounded comparison across clean and degraded data: mixed-data
    discovery, matched attribution targets and causal information, repeated fits,

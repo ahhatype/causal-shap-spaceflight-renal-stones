@@ -31,8 +31,23 @@ This runs pdfLaTeX, BibTeX, then pdfLaTeX twice, and refreshes `main.pdf`.
 It does not regenerate `main.tex` from Markdown or overwrite diagram edits.
 The article source is authoritative. From the repository root,
 `python analysis/build_spine_guide.py` compiles the same document.
-For Overleaf, upload `main.tex`, `references.bib` and the `figures` folder to
-a project and choose pdfLaTeX with `main.tex` as its main document.
+For a separate Overleaf project, upload this folder's `main.tex`,
+`references.bib` and `figures/`, and select `main.tex`. In the shared manuscript
+project these files live under `supplementary-information/`. The root
+`supplement.tex` launcher contains:
+
+```tex
+\def\SupplementRoot{supplementary-information/}
+\input{supplementary-information/main.tex}
+```
+
+Choose `supplement.tex` as the main document and open that launcher in the
+editor before compiling the supplement. To compile the manuscript, choose
+and open the root `main.tex`. Overleaf can compile an open standalone document
+in preference to the configured main file. Edit the source inside the
+supplement folder, not the launcher. Its bibliography and figures stay separate
+from the manuscript's files. Bring any collaborator edits back from Overleaf
+before replacing an uploaded version.
 
 ## Refine the schematics
 
@@ -41,7 +56,8 @@ is editable. Export a cropped PDF with the same filename into `figures/`, then
 rebuild the article. See [diagram instructions](diagrams/README.md).
 
 The [workflow overview](../README.md) links the supporting method and evidence
-notes. The main manuscript and shared Overleaf project are separate.
+notes. The manuscript and this supplement have separate LaTeX entry points within the
+shared Overleaf project.
 
 ## Journal placement
 

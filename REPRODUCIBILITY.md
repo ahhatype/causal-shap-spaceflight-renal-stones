@@ -46,7 +46,10 @@ coalition game, outcome scale and order distribution. The exact two-player
 oracle is complete; a renal do-Shapley oracle and DML comparison remain pending.
 
 - The 14-node working graph is scoped and augmented, with separate
-  coefficients from the 51-node source graph. NASA supplies topology.
+  coefficients from the earlier 51-node source graph. The complete supplied
+  graph has 53 nodes; the working model is not its induced subgraph. See the
+  [edge crosswalk](docs/technical/graph-provenance.md) for retained, collapsed
+  and study-adapted relationships.
 - Working-subgraph data use n=1,000, seed 20260812. Full-DAG clean-v3 uses
   n=10,000, generation seed 20260710. Keep their scores separate.
 - The matched full-DAG ordering comparison uses the same predictor and

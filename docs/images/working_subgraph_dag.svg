@@ -1,0 +1,223 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="984pt" height="528.0pt" viewBox="0 0 984.0 528.0">
+<g id="graph0" class="graph" transform="scale(1 1) rotate(0) translate(10.08 476.28)">
+<polygon fill="white" stroke="none" points="-10.08,10.08 -10.08,-476.28 973.73,-476.28 973.73,10.08 -10.08,10.08" />
+
+<g id="edge20" class="edge">
+<title>duration-&gt;vitamin_d_inflight</title>
+<path fill="none" stroke="#717171" stroke-width="1.5" stroke-dasharray="1,5" d="M96.32,-290.28C156.98,-311.32 276.22,-352.67 343.63,-376.05" />
+<polygon fill="#717171" stroke="#717171" stroke-width="1.5" points="342.82,-378.36 350.24,-378.34 344.43,-373.73 342.82,-378.36" />
+</g>
+
+<g id="edge2" class="edge">
+<title>duration-&gt;bone_formation</title>
+<path fill="none" stroke="#717171" stroke-width="1.5" stroke-dasharray="1,5" d="M96.18,-269.26C113.64,-265.57 134.97,-261.06 155.17,-256.79" />
+<polygon fill="#717171" stroke="#717171" stroke-width="1.5" points="155.49,-259.23 161.83,-255.38 154.47,-254.44 155.49,-259.23" />
+</g>
+
+<g id="edge1" class="edge">
+<title>duration-&gt;bone_resorption</title>
+<path fill="none" stroke="#717171" stroke-width="1.5" stroke-dasharray="1,5" d="M86.9,-258.81C107.57,-245.54 136.37,-227.36 162.19,-212.2 168.59,-208.45 175.41,-204.57 182.12,-200.84" />
+<polygon fill="#717171" stroke="#717171" stroke-width="1.5" points="182.96,-203.17 187.9,-197.65 180.59,-198.89 182.96,-203.17" />
+</g>
+
+<g id="edge11" class="edge">
+<title>duration-&gt;nephrolithiasis</title>
+<path fill="none" stroke="#717171" stroke-width="1.5" stroke-dasharray="1,5" d="M75.49,-295.32C121.53,-342.63 255.02,-466.2 393.09,-466.2 393.09,-466.2 393.09,-466.2 562.68,-466.2 731.03,-466.2 852.37,-256.43 890.6,-180.9" />
+<polygon fill="#717171" stroke="#717171" stroke-width="1.5" points="892.7,-182.17 893.63,-174.81 888.32,-179.98 892.7,-182.17" />
+</g>
+
+<g id="edge12" class="edge">
+<title>sex-&gt;nephrolithiasis</title>
+<path fill="none" stroke="#717171" stroke-width="1.5" stroke-dasharray="1,5" d="M761.54,-106.95C782.12,-113.81 811.66,-123.65 838.46,-132.57" />
+<polygon fill="#717171" stroke="#717171" stroke-width="1.5" points="837.48,-134.83 844.9,-134.72 839.03,-130.18 837.48,-134.83" />
+</g>
+
+<g id="edge9" class="edge">
+<title>urinary_calcium_excretion-&gt;urine_chemistry</title>
+<path fill="none" stroke="#717171" stroke-width="1.5" stroke-dasharray="1,5" d="M605.86,-125.71C611.83,-129.47 617.83,-133.36 623.43,-137.2 645.14,-152.06 649.12,-157.76 670.43,-173.2 679.38,-179.68 689.19,-186.52 698.33,-192.78" />
+<polygon fill="#717171" stroke="#717171" stroke-width="1.5" points="696.79,-194.69 703.95,-196.61 699.55,-190.64 696.79,-194.69" />
+</g>
+
+<g id="edge10" class="edge">
+<title>urinary_calcium_excretion-&gt;nephrolithiasis</title>
+<path fill="none" stroke="#717171" stroke-width="1.5" stroke-dasharray="1,5" d="M623.55,-118.36C638.76,-122.4 655.1,-126.33 670.43,-129.2 725.53,-139.51 788.82,-145.96 835.51,-149.72" />
+<polygon fill="#717171" stroke="#717171" stroke-width="1.5" points="835.18,-152.16 842.35,-150.26 835.57,-147.27 835.18,-152.16" />
+</g>
+
+<g id="edge6" class="edge">
+<title>parathyroid_suppression-&gt;urinary_calcium_excretion</title>
+<path fill="none" stroke="#717171" stroke-width="1.5" stroke-dasharray="1,5" d="M444.77,-107.9C459.18,-106.94 475.2,-105.88 490.61,-104.85" />
+<polygon fill="#717171" stroke="#717171" stroke-width="1.5" points="490.52,-107.32 497.34,-104.41 490.19,-102.43 490.52,-107.32" />
+</g>
+
+<g id="edge8" class="edge">
+<title>hypercalciuria_predisposition-&gt;urinary_calcium_excretion</title>
+<path fill="none" stroke="#717171" stroke-width="1.5" stroke-dasharray="1,5" d="M115.51,-117.95C191.97,-88.37 332.21,-44.57 452.92,-64.2 465.5,-66.25 478.58,-69.55 491.13,-73.35" />
+<polygon fill="#717171" stroke="#717171" stroke-width="1.5" points="490.13,-75.6 497.55,-75.37 491.6,-70.93 490.13,-75.6" />
+</g>
+
+<g id="edge7" class="edge">
+<title>hypercalciuria_predisposition-&gt;bone_resorption</title>
+<path fill="none" stroke="#717171" stroke-width="1.5" stroke-dasharray="1,5" d="M115.13,-154.49C127.39,-157.15 140.51,-160 153.24,-162.77" />
+<polygon fill="#717171" stroke="#717171" stroke-width="1.5" points="152.4,-165.1 159.76,-164.19 153.44,-160.31 152.4,-165.1" />
+</g>
+
+<g id="edge15" class="edge">
+<title>history_of_nephrolithiasis-&gt;urine_chemistry</title>
+<path fill="none" stroke="#717171" stroke-width="1.5" stroke-dasharray="1,5" d="M623.3,-189.77C635.67,-192.74 648.8,-195.9 661.52,-198.96" />
+<polygon fill="#717171" stroke="#717171" stroke-width="1.5" points="660.66,-201.27 668.04,-200.52 661.81,-196.5 660.66,-201.27" />
+</g>
+
+<g id="edge16" class="edge">
+<title>vitamin_d_inflight-&gt;urine_chemistry</title>
+<path fill="none" stroke="#717171" stroke-width="1.5" stroke-dasharray="1,5" d="M435.6,-403.65C483.7,-413.7 564.8,-423.03 623.43,-390.2 680.26,-358.38 711.85,-283.65 725.33,-243.25" />
+<polygon fill="#717171" stroke="#717171" stroke-width="1.5" points="727.65,-244.05 727.46,-236.63 722.98,-242.55 727.65,-244.05" />
+</g>
+
+<g id="edge18" class="edge">
+<title>nutrients_risk-&gt;urinary_oxalate_excretion</title>
+<path fill="none" stroke="#717171" stroke-width="1.5" stroke-dasharray="1,5" d="M453,-321.64C465.58,-325.21 479,-329.02 491.95,-332.69" />
+<polygon fill="#717171" stroke="#717171" stroke-width="1.5" points="491.24,-335.04 498.64,-334.59 492.58,-330.33 491.24,-335.04" />
+</g>
+
+<g id="edge17" class="edge">
+<title>nutrients_risk-&gt;urine_chemistry</title>
+<path fill="none" stroke="#717171" stroke-width="1.5" stroke-dasharray="1,5" d="M452.92,-295.52C499.44,-287.15 566.24,-273.78 623.43,-257.2 642.25,-251.74 662.44,-244.59 680.32,-237.8" />
+<polygon fill="#717171" stroke="#717171" stroke-width="1.5" points="681.12,-240.11 686.77,-235.31 679.36,-235.54 681.12,-240.11" />
+</g>
+
+<g id="edge19" class="edge">
+<title>urinary_oxalate_excretion-&gt;urine_chemistry</title>
+<path fill="none" stroke="#717171" stroke-width="1.5" stroke-dasharray="1,5" d="M598.65,-326.79C606.87,-320.8 615.52,-314.36 623.43,-308.2 652.11,-285.85 683.85,-259.03 705.81,-240.13" />
+<polygon fill="#717171" stroke="#717171" stroke-width="1.5" points="707.16,-242.2 710.86,-235.77 703.96,-238.49 707.16,-242.2" />
+</g>
+
+<g id="edge3" class="edge">
+<title>bone_formation-&gt;urine_chemistry</title>
+<path fill="none" stroke="#202020" stroke-width="1.5" d="M286.38,-239.12C380.12,-234.31 560.7,-225.05 661.24,-219.89" />
+<polygon fill="#202020" stroke="#202020" stroke-width="1.5" points="661.28,-222.34 668.15,-219.54 661.03,-217.45 661.28,-222.34" />
+</g>
+
+<g id="edge4" class="edge">
+<title>bone_resorption-&gt;urinary_calcium_excretion</title>
+<path fill="none" stroke="#717171" stroke-width="1.5" stroke-dasharray="1,5" d="M288.59,-179.41C334.85,-178.72 398.98,-174.35 452.92,-158.2 464.7,-154.67 487.87,-142.47 509.71,-130.17" />
+<polygon fill="#717171" stroke="#717171" stroke-width="1.5" points="510.82,-132.35 515.7,-126.76 508.4,-128.09 510.82,-132.35" />
+</g>
+
+<g id="edge5" class="edge">
+<title>bone_resorption-&gt;parathyroid_suppression</title>
+<path fill="none" stroke="#717171" stroke-width="1.5" stroke-dasharray="1,5" d="M271.82,-159.89C291.32,-152.06 314.33,-142.82 335.03,-134.51" />
+<polygon fill="#717171" stroke="#717171" stroke-width="1.5" points="335.76,-136.86 341.34,-131.98 333.93,-132.31 335.76,-136.86" />
+</g>
+
+<g id="edge13" class="edge">
+<title>hydration_fluid_intake-&gt;urine_chemistry</title>
+<path fill="none" stroke="#2166a0" stroke-width="1.5" stroke-dasharray="5,2" d="M608.32,-50.09C613.66,-53.83 618.84,-57.89 623.43,-62.2 649.97,-87.07 649.34,-99.57 670.43,-129.2 685.14,-149.87 701.98,-173.16 714.52,-190.44" />
+<polygon fill="#2166a0" stroke="#2166a0" stroke-width="1.5" points="712.53,-191.86 718.62,-196.09 716.49,-188.98 712.53,-191.86" />
+</g>
+
+<g id="edge14" class="edge">
+<title>hydration_fluid_intake-&gt;nephrolithiasis</title>
+<path fill="none" stroke="#717171" stroke-width="1.5" stroke-dasharray="1,5" d="M608.1,-26.49C657.08,-29.4 736.32,-38.59 798.11,-67.2 830.2,-82.06 860.63,-109.13 880.44,-129.14" />
+<polygon fill="#717171" stroke="#717171" stroke-width="1.5" points="878.52,-130.69 885.16,-134 882.04,-127.28 878.52,-130.69" />
+</g>
+
+<g id="edge21" class="edge">
+<title>urine_chemistry-&gt;nephrolithiasis</title>
+<path fill="none" stroke="#2166a0" stroke-width="1.5" stroke-dasharray="5,2" d="M784.8,-197.93C803.36,-191.09 824.64,-183.24 844,-176.1" />
+<polygon fill="#2166a0" stroke="#2166a0" stroke-width="1.5" points="844.61,-178.49 850.33,-173.77 842.91,-173.89 844.61,-178.49" />
+</g>
+
+<g id="node1" class="node">
+<title>duration</title>
+<path fill="#ffffff" stroke="#555555" stroke-width="0.8" d="M84.02,-295.2C84.02,-295.2 31.17,-295.2 31.17,-295.2 25.17,-295.2 19.17,-289.2 19.17,-283.2 19.17,-283.2 19.17,-271.2 19.17,-271.2 19.17,-265.2 25.17,-259.2 31.17,-259.2 31.17,-259.2 84.02,-259.2 84.02,-259.2 90.02,-259.2 96.02,-265.2 96.02,-271.2 96.02,-271.2 96.02,-283.2 96.02,-283.2 96.02,-289.2 90.02,-295.2 84.02,-295.2" />
+<text xml:space="preserve" text-anchor="middle" x="57.6" y="-272.7" font-family="Arial" font-size="15.00">Duration</text>
+</g>
+
+<g id="node2" class="node">
+<title>sex</title>
+<path fill="#ffffff" stroke="#555555" stroke-width="0.8" d="M749.27,-116.2C749.27,-116.2 719.27,-116.2 719.27,-116.2 713.27,-116.2 707.27,-110.2 707.27,-104.2 707.27,-104.2 707.27,-92.2 707.27,-92.2 707.27,-86.2 713.27,-80.2 719.27,-80.2 719.27,-80.2 749.27,-80.2 749.27,-80.2 755.27,-80.2 761.27,-86.2 761.27,-92.2 761.27,-92.2 761.27,-104.2 761.27,-104.2 761.27,-110.2 755.27,-116.2 749.27,-116.2" />
+<text xml:space="preserve" text-anchor="middle" x="734.27" y="-93.7" font-family="Arial" font-size="15.00">Sex</text>
+</g>
+
+<g id="node3" class="node">
+<title>urinary_calcium_excretion</title>
+<path fill="#ffffff" stroke="#555555" stroke-width="0.8" d="M611.43,-125.4C611.43,-125.4 511.92,-125.4 511.92,-125.4 505.92,-125.4 499.92,-119.4 499.92,-113.4 499.92,-113.4 499.92,-87 499.92,-87 499.92,-81 505.92,-75 511.92,-75 511.92,-75 611.43,-75 611.43,-75 617.43,-75 623.43,-81 623.43,-87 623.43,-87 623.43,-113.4 623.43,-113.4 623.43,-119.4 617.43,-125.4 611.43,-125.4" />
+<text xml:space="preserve" text-anchor="middle" x="561.68" y="-104.7" font-family="Arial" font-size="15.00">Urinary calcium</text>
+<text xml:space="preserve" text-anchor="middle" x="561.68" y="-86.7" font-family="Arial" font-size="15.00">excretion</text>
+</g>
+
+<g id="node4" class="node">
+<title>parathyroid_suppression</title>
+<path fill="#ffffff" stroke="#555555" stroke-width="0.8" d="M432.61,-145.4C432.61,-145.4 355.57,-145.4 355.57,-145.4 349.57,-145.4 343.57,-139.4 343.57,-133.4 343.57,-133.4 343.57,-89 343.57,-89 343.57,-83 349.57,-77 355.57,-77 355.57,-77 432.61,-77 432.61,-77 438.61,-77 444.61,-83 444.61,-89 444.61,-89 444.61,-133.4 444.61,-133.4 444.61,-139.4 438.61,-145.4 432.61,-145.4" />
+<text xml:space="preserve" text-anchor="middle" x="394.09" y="-124.7" font-family="Arial" font-size="15.00">Parathyroid</text>
+<text xml:space="preserve" text-anchor="middle" x="394.09" y="-106.7" font-family="Arial" font-size="15.00">hormone</text>
+<text xml:space="preserve" text-anchor="middle" x="394.09" y="-88.7" font-family="Arial" font-size="15.00">suppression</text>
+</g>
+
+<g id="node5" class="node">
+<title>hypercalciuria_predisposition</title>
+<path fill="#ffffff" stroke="#555555" stroke-width="0.8" d="M103.19,-167.4C103.19,-167.4 12,-167.4 12,-167.4 6,-167.4 0,-161.4 0,-155.4 0,-155.4 0,-129 0,-129 0,-123 6,-117 12,-117 12,-117 103.19,-117 103.19,-117 109.19,-117 115.19,-123 115.19,-129 115.19,-129 115.19,-155.4 115.19,-155.4 115.19,-161.4 109.19,-167.4 103.19,-167.4" />
+<text xml:space="preserve" text-anchor="middle" x="57.6" y="-146.7" font-family="Arial" font-size="15.00">Hypercalciuria</text>
+<text xml:space="preserve" text-anchor="middle" x="57.6" y="-128.7" font-family="Arial" font-size="15.00">predisposition</text>
+</g>
+
+<g id="node6" class="node">
+<title>history_of_nephrolithiasis</title>
+<path fill="#ffffff" stroke="#555555" stroke-width="0.8" d="M611.03,-200.4C611.03,-200.4 512.33,-200.4 512.33,-200.4 506.33,-200.4 500.33,-194.4 500.33,-188.4 500.33,-188.4 500.33,-162 500.33,-162 500.33,-156 506.33,-150 512.33,-150 512.33,-150 611.03,-150 611.03,-150 617.03,-150 623.03,-156 623.03,-162 623.03,-162 623.03,-188.4 623.03,-188.4 623.03,-194.4 617.03,-200.4 611.03,-200.4" />
+<text xml:space="preserve" text-anchor="middle" x="561.68" y="-179.7" font-family="Arial" font-size="15.00">Personal/family</text>
+<text xml:space="preserve" text-anchor="middle" x="561.68" y="-161.7" font-family="Arial" font-size="15.00">stone history</text>
+</g>
+
+<g id="node7" class="node">
+<title>vitamin_d_inflight</title>
+<path fill="#ffffff" stroke="#555555" stroke-width="0.8" d="M423.42,-418.4C423.42,-418.4 364.75,-418.4 364.75,-418.4 358.75,-418.4 352.75,-412.4 352.75,-406.4 352.75,-406.4 352.75,-380 352.75,-380 352.75,-374 358.75,-368 364.75,-368 364.75,-368 423.42,-368 423.42,-368 429.42,-368 435.42,-374 435.42,-380 435.42,-380 435.42,-406.4 435.42,-406.4 435.42,-412.4 429.42,-418.4 423.42,-418.4" />
+<text xml:space="preserve" text-anchor="middle" x="394.09" y="-397.7" font-family="Arial" font-size="15.00">In-flight</text>
+<text xml:space="preserve" text-anchor="middle" x="394.09" y="-379.7" font-family="Arial" font-size="15.00">vitamin D</text>
+</g>
+
+<g id="node8" class="node">
+<title>nutrients_risk</title>
+<path fill="#ffffff" stroke="#555555" stroke-width="0.8" d="M440.92,-323.2C440.92,-323.2 347.25,-323.2 347.25,-323.2 341.25,-323.2 335.25,-317.2 335.25,-311.2 335.25,-311.2 335.25,-299.2 335.25,-299.2 335.25,-293.2 341.25,-287.2 347.25,-287.2 347.25,-287.2 440.92,-287.2 440.92,-287.2 446.92,-287.2 452.92,-293.2 452.92,-299.2 452.92,-299.2 452.92,-311.2 452.92,-311.2 452.92,-317.2 446.92,-323.2 440.92,-323.2" />
+<text xml:space="preserve" text-anchor="middle" x="394.09" y="-300.7" font-family="Arial" font-size="15.00">Nutrients (risk)</text>
+</g>
+
+<g id="node9" class="node">
+<title>urinary_oxalate_excretion</title>
+<path fill="#ffffff" stroke="#555555" stroke-width="0.8" d="M610.19,-377.4C610.19,-377.4 513.16,-377.4 513.16,-377.4 507.16,-377.4 501.16,-371.4 501.16,-365.4 501.16,-365.4 501.16,-339 501.16,-339 501.16,-333 507.16,-327 513.16,-327 513.16,-327 610.19,-327 610.19,-327 616.19,-327 622.19,-333 622.19,-339 622.19,-339 622.19,-365.4 622.19,-365.4 622.19,-371.4 616.19,-377.4 610.19,-377.4" />
+<text xml:space="preserve" text-anchor="middle" x="561.68" y="-356.7" font-family="Arial" font-size="15.00">Urinary oxalate</text>
+<text xml:space="preserve" text-anchor="middle" x="561.68" y="-338.7" font-family="Arial" font-size="15.00">excretion</text>
+</g>
+
+<g id="node10" class="node">
+<title>bone_formation</title>
+<path fill="#ffffff" stroke="#555555" stroke-width="0.8" d="M274.17,-260.2C274.17,-260.2 176.28,-260.2 176.28,-260.2 170.28,-260.2 164.28,-254.2 164.28,-248.2 164.28,-248.2 164.28,-236.2 164.28,-236.2 164.28,-230.2 170.28,-224.2 176.28,-224.2 176.28,-224.2 274.17,-224.2 274.17,-224.2 280.17,-224.2 286.17,-230.2 286.17,-236.2 286.17,-236.2 286.17,-248.2 286.17,-248.2 286.17,-254.2 280.17,-260.2 274.17,-260.2" />
+<text xml:space="preserve" text-anchor="middle" x="225.22" y="-237.7" font-family="Arial" font-size="15.00">Bone formation</text>
+</g>
+
+<g id="node11" class="node">
+<title>bone_resorption</title>
+<path fill="#ffffff" stroke="#555555" stroke-width="0.8" d="M276.25,-196.2C276.25,-196.2 174.19,-196.2 174.19,-196.2 168.19,-196.2 162.19,-190.2 162.19,-184.2 162.19,-184.2 162.19,-172.2 162.19,-172.2 162.19,-166.2 168.19,-160.2 174.19,-160.2 174.19,-160.2 276.25,-160.2 276.25,-160.2 282.25,-160.2 288.25,-166.2 288.25,-172.2 288.25,-172.2 288.25,-184.2 288.25,-184.2 288.25,-190.2 282.25,-196.2 276.25,-196.2" />
+<text xml:space="preserve" text-anchor="middle" x="225.22" y="-173.7" font-family="Arial" font-size="15.00">Bone resorption</text>
+</g>
+
+<g id="node12" class="node">
+<title>hydration_fluid_intake</title>
+<path fill="#ffffff" stroke="#555555" stroke-width="0.8" d="M596.02,-50.4C596.02,-50.4 527.33,-50.4 527.33,-50.4 521.33,-50.4 515.33,-44.4 515.33,-38.4 515.33,-38.4 515.33,-12 515.33,-12 515.33,-6 521.33,0 527.33,0 527.33,0 596.02,0 596.02,0 602.02,0 608.02,-6 608.02,-12 608.02,-12 608.02,-38.4 608.02,-38.4 608.02,-44.4 602.02,-50.4 596.02,-50.4" />
+<text xml:space="preserve" text-anchor="middle" x="561.68" y="-29.7" font-family="Arial" font-size="15.00">Hydration /</text>
+<text xml:space="preserve" text-anchor="middle" x="561.68" y="-11.7" font-family="Arial" font-size="15.00">fluid intake</text>
+</g>
+
+<g id="node13" class="node">
+<title>urine_chemistry</title>
+<path fill="#ffffff" stroke="#555555" stroke-width="0.8" d="M786.11,-234.2C786.11,-234.2 682.43,-234.2 682.43,-234.2 676.43,-234.2 670.43,-228.2 670.43,-222.2 670.43,-222.2 670.43,-210.2 670.43,-210.2 670.43,-204.2 676.43,-198.2 682.43,-198.2 682.43,-198.2 786.11,-198.2 786.11,-198.2 792.11,-198.2 798.11,-204.2 798.11,-210.2 798.11,-210.2 798.11,-222.2 798.11,-222.2 798.11,-228.2 792.11,-234.2 786.11,-234.2" />
+<text xml:space="preserve" text-anchor="middle" x="734.27" y="-211.7" font-family="Arial" font-size="15.00">Urine Chemistry</text>
+</g>
+
+<g id="node14" class="node">
+<title>nephrolithiasis</title>
+<path fill="#eaf0f5" stroke="#555555" stroke-width="1.6" d="M951.65,-172.2C951.65,-172.2 857.11,-172.2 857.11,-172.2 851.11,-172.2 845.11,-166.2 845.11,-160.2 845.11,-160.2 845.11,-148.2 845.11,-148.2 845.11,-142.2 851.11,-136.2 857.11,-136.2 857.11,-136.2 951.65,-136.2 951.65,-136.2 957.65,-136.2 963.65,-142.2 963.65,-148.2 963.65,-148.2 963.65,-160.2 963.65,-160.2 963.65,-166.2 957.65,-172.2 951.65,-172.2" />
+<text xml:space="preserve" text-anchor="middle" x="904.38" y="-149.7" font-family="Arial" font-size="15.00">Nephrolithiasis</text>
+</g>
+</g>
+<line stroke-width="1.5" x1="12.0" x2="47.0" y1="506.0" y2="506.0" stroke="#202020" /><text font-family="Arial" font-size="12" x="53.0" y="510.0" fill="#202020">Retained source edge</text><line stroke-width="1.5" x1="332.0" x2="367.0" y1="506.0" y2="506.0" stroke="#2166a0" stroke-dasharray="5 3" /><text font-family="Arial" font-size="12" x="373.0" y="510.0" fill="#202020">Collapsed source pathway</text><line stroke-width="1.5" x1="652.0" x2="687.0" y1="506.0" y2="506.0" stroke="#717171" stroke-dasharray="1 3" /><text font-family="Arial" font-size="12" x="693.0" y="510.0" fill="#202020">Study-added or adapted</text></svg>

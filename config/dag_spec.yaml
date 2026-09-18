@@ -5,14 +5,12 @@
 # 53 nodes/83 edges per Robert's version, 51 nodes/75 edges in the prior
 # source-aligned reference, Cohen's kappa 0.978 after semantic mapping).
 #
-# This file holds the 14-node working subgraph scoped down from the full
-# 51-node source graph for tractability (docs/methods, Step 2). Graph
-# topology is source-aligned to the published NASA DAG. All quantitative
-# values here are estimates for training and simulation purposes, informed
-# by the literature where available, not empirical NASA effect estimates.
-#
-# This is a subset and modification of the original DAG, scaled for
-# learning purposes; to be extended to the full DAG for the final paper.
+# This file holds the 14-node adapted working simulation graph. It includes
+# study-added variables and shortcuts, rather than an induced source subgraph.
+# See docs/technical/graph-provenance.md and the edge crosswalk. All numerical
+# values are study assumptions, informed by literature where available,
+# not empirical NASA effect estimates. Separate full-DAG simulations use
+# the earlier 51-node source version.
 
 outcome: nephrolithiasis
 outcome_type: binary   # incidence, sole modeled outcome; logit link throughout.
@@ -131,8 +129,8 @@ nodes:
     source: "NASA narrative and Andy's repo confirm as target; OCHMO-MTB-003; Goodenow-Messman et al., npj Microgravity 2022 (https://www.nature.com/articles/s41526-021-00187-z) for the collapsed intermediate step"
 
 # Directed edges. magnitude/direction fields mirror docs/methods section 3.
-# status flags:
-#   confirmed_mechanism  - stated directly in the NASA narrative
+# Legacy modeling-status flags (not source-provenance or NASA evidence classes):
+#   confirmed_mechanism  - legacy narrative tag; does not establish a source edge
 #   magnitude_estimate    - literature-informed estimate, for training purposes
 #   directional_only      - direction estimated, no magnitude assigned
 edges:

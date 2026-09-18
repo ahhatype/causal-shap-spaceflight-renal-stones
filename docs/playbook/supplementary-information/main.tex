@@ -14,6 +14,7 @@
 \captionsetup{font=small,labelfont=bf,hypcap=false}
 \renewcommand{\figurename}{Supplementary Figure}
 \newcolumntype{L}[1]{>{\raggedright\arraybackslash}p{#1}}
+\providecommand{\SupplementRoot}{}
 \newcommand{\dox}{\operatorname{do}}
 \title{Supplementary Information\\[5pt]\large Analytical Workflow and Method Choices}
 \author{AW, LP, RR, IS, AH}
@@ -27,7 +28,7 @@
 This explanatory companion follows the same Steps~0--6 as the manuscript's Methods. It distinguishes prediction, intervention effects and causal attribution, then discusses common method choices and conditional recommendations. The study's procedures and reproducibility details remain in the main manuscript. The comparisons below are selective; they do not survey every combination of method and data setting.
 
 \begin{center}
-\includegraphics[width=\linewidth,height=0.68\textheight,keepaspectratio]{figures/method-workflow.pdf}
+\includegraphics[width=\linewidth,height=0.68\textheight,keepaspectratio]{\SupplementRoot figures/method-workflow.pdf}
 \captionof{figure}{The shared analytical sequence. Step~0 defines the question; Steps~1--6 specify the analysis. Prediction reaches evaluation directly, a supplied graph bypasses discovery, and an effect-only analysis can omit allocation. Changed data conditions require rerunning the relevant steps.}
 \label{fig:workflow}
 \end{center}
@@ -61,7 +62,7 @@ The proposed detector is an optional research extension that could flag candidat
 
 \textbf{Step 0.} Specify the quantity before selecting a method. The manuscript's primary exposure is cumulative mission duration and its outcome is nephrolithiasis. A risk forecast, a high-versus-low mission-duration effect and an allocation of a joint intervention contrast are different targets. A hydration-policy contrast can be a separate worked intervention, with its own timing and comparator. Harrell's purposes are hypothesis testing, estimation and prediction; modeling supports all three \citep{HarrellRMSIntroduction}. The prediction/intervention distinction concerns the claim we need to make \citep{HernanHsuHealy2019}.
 
-\textbf{Step 1.} Use the supplied renal topology to define a plausible system, then state the numerical mechanisms used to generate data. Keep the 14-node working subgraph and 51-node source DAG separate. For a blinded discovery comparison, hold the generating graph and reference quantities apart from the data given to the algorithm. An oracle-assisted calculation may use them, but must be labeled accordingly.
+\textbf{Step 1.} Use the supplied renal topology to define a plausible system, then state the numerical mechanisms used to generate data. Distinguish the complete supplied graph (53 nodes, 83 edges), the earlier 51-node version used for full-DAG simulations, and the adapted 14-node working model. The working model adds variables and shortcuts; it is not an induced subgraph. Source relationships and numerical simulation assumptions require separate documentation. For a blinded discovery comparison, hold the generating graph and reference quantities apart from the data given to the algorithm. An oracle-assisted calculation may use them, but must be labeled accordingly.
 
 Fit the predictive reference on those data and compute ordinary SHAP with its background distribution and output scale stated. The existing study includes random forest and XGBoost TreeSHAP, logistic-regression LinearExplainer, and model-agnostic explanations. A prespecified regression is a useful reference; additional model flexibility is conditional on sample size and response shape. A mediator receiving large predictive credit can be correct for prediction even when an upstream intervention changes the outcome.
 
@@ -93,7 +94,7 @@ Review candidate or supplied graphs against timing, biological evidence and the 
 Graph review changes our hypothesis about the observational system. \emph{Graph surgery} instead represents a specified intervention on that system: replace the assignment equation of each intervened node by its imposed value and remove its incoming arrows. Keep the remaining mechanisms and propagate their consequences. This is the do-operator construction, not another discovery algorithm \citep{HernanRobins2020}.
 
 \begin{center}
-\includegraphics[width=\linewidth,height=0.20\textheight,keepaspectratio]{figures/graph-surgery.pdf}
+\includegraphics[width=\linewidth,height=0.20\textheight,keepaspectratio]{\SupplementRoot figures/graph-surgery.pdf}
 \captionof{figure}{For $\dox(M=m)$ in a simple $X\to M\to Y$ chain, remove the incoming $X\to M$ arrow and replace the equation for $M$. The outgoing $M\to Y$ path remains. Observing $M=m$ does not perform this operation.}
 \end{center}
 
@@ -163,5 +164,5 @@ Report predictive performance, graph recovery, causal-attribution accuracy and i
 \clearpage
 \small
 \bibliographystyle{unsrtnat}
-\bibliography{references}
+\bibliography{\SupplementRoot references}
 \end{document}

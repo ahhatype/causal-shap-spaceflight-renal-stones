@@ -30,6 +30,7 @@ the examples and research code.
 | [`step04_results.md`](step04_results.md) | Baseline SHAP, five pairings, the mediator inversions |
 | [`step06_results.md`](step06_results.md) | Three causal SHAP methods over three scripted revision rounds; PC leaving the outcome disconnected |
 | [`dag_README.md`](dag_README.md), [`renal_stone_working_subgraph.txt`](renal_stone_working_subgraph.txt) | Earlier 11-node DAGitty snapshot; current 14-node graph is in `config/dag_spec.yaml` |
+| [Graph versions and edge crosswalk](technical/graph-provenance.md) | Supplied 53-node graph, earlier 51-node simulation graph and adapted 14-node model |
 | [`provenance.md`](provenance.md) | DAG source and coefficient sourcing for the working subgraph |
 | [`../dag-candidates/`](../dag-candidates/) | Core-graph CSVs plus the July 2026 harvest notes and provisional renal and SANS edge lists |
 

@@ -55,8 +55,11 @@ defines the games and derives the numbers. This is an exact teaching example,
 separate from the renal simulations and their attribution methods.
 
 The renal simulations add competing predictors, multiple pathways, an
-interaction and a binary outcome. NASA supplies topology; effect sizes
-come from the chosen simulation mechanisms.
+interaction and a binary outcome. The supplied NASA graph has 53 nodes and
+83 edges. Existing full-DAG simulations use an earlier 51-node source version;
+the 14-node working model adds variables and modifies pathways. Numerical
+mechanisms are study assumptions. The [graph provenance and edge crosswalk](docs/technical/graph-provenance.md)
+show what each version retains and changes.
 
 | Testbed | Finding | Evidence and limits |
 | --- | --- | --- |
