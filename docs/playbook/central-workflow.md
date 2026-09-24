@@ -11,8 +11,10 @@ depth-tier ordering for ASV, PC output for Ng et al., and no inter-feature
 edges for Shapley Flow. After the scripted heuristic in rounds two and three,
 XGBoost rank agreement changes from 0.231 to 0.205 for ASV, from 0.077 to
 0.154 for Shapley Flow, and from undefined (all-zero attribution) to 0.714
-for Ng et al. These are different revision rules and method budgets, not a
-controlled test of expert review. See the complete [scripted-revision record](../step06_results.md).
+for the historical Ng implementation. Its direction/weight defects were
+subsequently corrected; 0.714 awaits revalidation. These are different revision
+rules and method budgets, not a controlled test of expert review. See the
+[scripted-revision record and audit](../step06_results.md).
 
 The matched full-DAG ordering comparison uses 64 evaluation records, 128
 background records and 128 permutations for each method. The propagation

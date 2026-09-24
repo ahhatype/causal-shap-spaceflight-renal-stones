@@ -1,21 +1,66 @@
 # Step 6 results — causal SHAP methods, 3-round scripted iteration
 
-`results/attributions/step06a_causal_shapley_asv.parquet` (R, shapr),
+The historical run reported `results/attributions/step06a_causal_shapley_asv.parquet` (R, shapr),
 `step06b_shapley_flow.parquet` (Python, shapflow), `step06c_causal_shap_ng_et_al.parquet`
 (Python, custom Algorithm 1 implementation), `step06d_pc_ida_edges.parquet` (R, pcalg -
 Ng et al.'s PC/IDA input stage), and `step06_hitl_summary.parquet` (the scored summary
-below) from this run. Ground truth is `data/frozen_truth/ground_truth_total_effects.parquet`,
-unchanged from Step 4. Every number below is computed directly from these files, not
-asserted.
+below). Ground truth is `data/frozen_truth/ground_truth_total_effects.parquet`,
+unchanged from Step 4. The tables retain the historical reported values. The
+original Step 6 parquet files and simulated dataset were unavailable in this
+checkout during the 19 September audit, so exact historical reproduction has
+not been verified.
 
 **Run:** n = 1,000 · seed = 20260812 · 14-node DAG (same as `docs/step04_results.md`).
+
+## Direction audit: historical Ng results require revalidation
+
+The 19 September audit found two implementation defects: IDA was requested in
+column-index order even when the stored arrow pointed the other way, and the
+scripted reversal of an unresolved edge retained its old weight. Both are fixed
+in `r/R/discovery_pcalg.R`, with direction and reversal regression checks in
+`r/tests/test_discovery_pcalg.R`. Reweighting uses the original CPDAG; it does
+not condition that graph on the scripted revisions.
+
+A separate reconstruction at the configured n = 1,000 and seed = 20260812
+held data, covariance, discovered graph and DAG extension fixed across legacy
+and corrected code. Four of thirteen initial weights changed. Three stored
+arrows previously had zero weights because IDA was requested in reverse:
+bone resorption to duration, parathyroid suppression to calcium excretion,
+and hypercalciuria predisposition to calcium excretion. After the scripted
+outcome reconnection, correcting those weights gives the three corresponding
+features nonzero path scores. The initially disconnected outcome persists.
+For the single undirected pair, the two historical mistakes happened to cancel
+after reversal; fixing only the first would leave the wrong reversed weight.
+
+A paired attribution diagnostic used six explained records per engine,
+M = 64 and T = 150, holding the fitted model, parent regressions, records and
+coalition draws fixed across weight variants. After both corrections, the
+three features have the following mean absolute attributions; all three were
+exactly zero under the legacy weights in this same diagnostic:
+
+| Feature | Corrected gamma | XGBoost | Random forest |
+| --- | ---: | ---: | ---: |
+| Bone resorption | 0.016281 | 0.009834 | 0.007676 |
+| Hypercalciuria predisposition | 0.044420 | 0.034482 | 0.014544 |
+| Parathyroid suppression | 0.064908 | 0.019867 | 0.015326 |
+
+This small, single-seed diagnostic isolates weight handling, not method
+performance. It uses a scripted round-two graph, not human expert review.
+The paired reweighting calculation was checked against direct calls to the
+existing attribution helper (maximum absolute difference 1.39e-17).
+
+The [separate audit outputs](../analysis/output/numerical_audit_20260919/)
+record edge comparisons, inputs and runtime provenance. They do not replace
+the historical tables below, and **0.714 is not a validated score for the
+corrected implementation**. The original dataset is not available to establish
+byte-identical reconstruction. Rounds two and three remain scripted heuristics.
 
 ## Read this before the results tables: what's real review and what isn't
 
 The methods doc's 3-round design calls for a human expert ("Robert") reviewing each
 method's attributions against ground truth and revising its causal input between
 rounds. No human did that here. Every round-2/3 number below instead comes from a
-**scripted heuristic** written for this implementation - defensible, but an LLM's
+**scripted heuristic** written for this implementation - an LLM's
 design choice standing in for domain judgment, not a finding from any paper or
 package. Round 1 is the one round where every method's input is genuinely naive
 (nothing was revised yet); treat round 1 as the real baseline and rounds 2-3 as "what
@@ -43,10 +88,9 @@ edges touching `nephrolithiasis` survived skeleton pruning. Marginal (unconditio
 correlations with the outcome are real and significant (`urine_chemistry` p=4e-9,
 `hydration_fluid_intake` p=3e-4, `urinary_calcium_excretion` p=3e-5, `duration`
 p=0.002 - checked directly), but every one gets pruned once PC conditions on other
-variables, most likely `urine_chemistry` itself: it is a hub with many neighbors, and
-testing every higher-order conditioning subset at a fixed alpha means one spurious
-non-significant result is enough to drop an edge, even a real, strong, direct one.
-Binary outcomes are also a known weak spot for `gaussCItest`'s Gaussian assumption.
+variables. The precise conditioning sets and causes of these pruning decisions
+were not isolated. The binary outcome also violates the Gaussian test's model
+assumption; this diagnostic does not isolate its contribution to the disconnect.
 
 Algorithm 1 weights every feature's causal SHAP value by `gamma_i`, itself entirely a
 function of paths reaching the outcome in the discovered graph. With no edges to the
@@ -150,10 +194,9 @@ For reference, Step 4's five *causality-blind* pairings ranged τ = 0.205-0.359 
 Three real patterns, not fabricated to make a point:
 
 1. **Ng et al.'s method jumps from undefined to the best rank agreement of every
-   method in this project (0.714) the moment the outcome is reconnected to the
-   graph** - a striking illustration that this method's whole output lives or dies on
-   discovery quality. Round 1 isn't "bad," it's *undefined* - the method has no
-   opinion at all when its input graph doesn't reach the outcome.
+   method in this historical comparison (0.714) after the scripted outcome
+   reconnection**. That score predates the direction fixes and needs revalidation.
+   The all-zero initial result remains a diagnostic of a disconnected outcome.
 2. **ASV gets slightly worse, not better, across its 2 revision rounds** (0.231 ->
    0.205). The "promote the highest-error feature" heuristic isn't guaranteed to help,
    and here it doesn't - a real, honest result of this specific scripted rule, not
@@ -172,9 +215,16 @@ Three real patterns, not fabricated to make a point:
   before using any of these numbers for a real methods conclusion.
 - **Heskes Causal Shapley Values has no results this round at all** - blocked, see
   `docs/decisions/006-shapr-heskes-blocked.md`. 3 of 4 methods have real output, not 4.
-- **IDA's edge weights are equivalence-class means, not point estimates** - `w_jk` in
-  `step06d_pc_ida_edges.parquet` is `mean(|ida() effect estimates|)` across every DAG
-  consistent with PC's CPDAG, per `?pcalg::ida`.
+- **IDA total effects are not direct-edge coefficients.** The study uses
+  `mean(abs(ida(..., method="local", type="cpdag")))` over local parent
+  configurations. Their multiplicities are not uniform frequencies of DAGs in
+  the equivalence class ([pcalg reference manual](https://cran.r-project.org/web/packages/pcalg/refman/pcalg.html)).
+  This absolute-value summary and its path products are heuristic scores.
+  For example, in a linear DAG with X→M = 0.5, M→Y = 0.4 and X→Y = 0.3,
+  the total X→Y effect is 0.5. Using that total as the X→Y edge weight and
+  then adding the X→M→Y path gives 0.7, counting the mediated 0.2 twice.
+  The regression test verifies this example; directional correction does not
+  solve this methodological limitation.
 - **Explained-sample sizes differ by method** (ASV ~200 rows, Ng et al. ~10 rows per
   round/engine, Shapley Flow ~200 rows) - a tractability trade-off (see each module's
   own docstring), not a claim that these are equally precise estimates.
@@ -189,6 +239,15 @@ Three real patterns, not fabricated to make a point:
 
 ## Reproduce
 
+The commands below use the corrected implementation and will not recreate the
+legacy Ng table unchanged. The bounded audit avoids overwriting historical files:
+
+```bash
+Rscript --vanilla analysis/audit_ida_direction.R  # requires pcalg and graph
+Rscript --vanilla r/tests/test_discovery_pcalg.R
+python analysis/audit_ida_attribution.py         # scientific Python environment
+```
+
 ```bash
 make step02   # regenerate the DAG
 make step03   # regenerate the simulated data
@@ -196,7 +255,7 @@ make step04   # regenerate ground truth + Step 4 baseline
 make step06   # run all 4 methods' 3-round drivers + the HITL scoring summary
 ```
 
-`results/attributions/step06d_pc_ida_edges.parquet`'s `weight` column and every
+The original run record stated that `results/attributions/step06d_pc_ida_edges.parquet`'s `weight` column and every
 `step06a`/`step06d` `attribution_value` reproduce exactly at the fixed seed (20260812)
 - verified via repeated reruns. `step06b` (Shapley Flow) does not fully reproduce -
 see its results table's own note above and the module's docstring for what was tried

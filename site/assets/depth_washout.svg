@@ -25,7 +25,7 @@ L 792 316.8
 L 792 0
 L 0 0
 z
-" style="fill: #fbf7ef"/>
+" style="fill: #ffffff"/>
   </g>
   <g id="axes_1">
    <g id="patch_2">
@@ -34,7 +34,7 @@ L 282.103493 263.125773
 L 282.103493 25.157422
 L 46.402227 25.157422
 z
-" style="fill: #fbf7ef"/>
+" style="fill: #ffffff"/>
    </g>
    <g id="patch_3">
     <path d="M 57.115921 263.125773
@@ -1113,7 +1113,7 @@ L 776.338127 263.125773
 L 776.338127 25.157422
 L 328.50572 25.157422
 z
-" style="fill: #fbf7ef"/>
+" style="fill: #ffffff"/>
    </g>
    <g id="matplotlib.axis_3">
     <g id="xtick_6">
@@ -1124,7 +1124,7 @@ z
      </g>
      <g id="text_22">
       <!-- n=4000 -->
-      <g style="fill: #6b6258" transform="translate(312.303933 276.963664) scale(0.09 -0.09)">
+      <g style="fill: #6b6258" transform="translate(294.228699 276.963664) scale(0.09 -0.09)">
        <use xlink:href="#DejaVuSans-51"/>
        <use xlink:href="#DejaVuSans-20" transform="translate(63.375 0)"/>
        <use xlink:href="#DejaVuSans-17" transform="translate(147.171875 0)"/>

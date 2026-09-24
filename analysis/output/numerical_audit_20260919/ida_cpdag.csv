@@ -1,0 +1,15 @@
+"","duration","sex","urinary_calcium_excretion","parathyroid_suppression","hypercalciuria_predisposition","history_of_nephrolithiasis","vitamin_d_inflight","nutrients_risk","urinary_oxalate_excretion","bone_formation","bone_resorption","hydration_fluid_intake","urine_chemistry","nephrolithiasis"
+"duration",0,0,0,0,0,0,1,0,0,0,0,0,0,0
+"sex",0,0,0,0,0,0,0,0,0,0,0,0,0,0
+"urinary_calcium_excretion",0,0,0,0,0,0,0,0,0,0,1,0,1,0
+"parathyroid_suppression",0,0,1,0,0,0,0,0,0,0,1,0,0,0
+"hypercalciuria_predisposition",0,0,1,0,0,0,0,0,0,0,0,0,0,0
+"history_of_nephrolithiasis",0,0,0,0,0,0,0,0,0,0,0,0,1,0
+"vitamin_d_inflight",0,0,0,0,0,0,0,0,0,0,0,0,1,0
+"nutrients_risk",0,0,0,0,0,0,0,0,1,0,0,0,1,0
+"urinary_oxalate_excretion",0,0,0,0,0,0,0,1,0,0,0,0,1,0
+"bone_formation",0,0,0,0,0,0,0,0,0,0,0,0,0,0
+"bone_resorption",1,0,0,0,0,0,0,0,0,0,0,0,0,0
+"hydration_fluid_intake",0,0,0,0,0,0,0,0,0,0,0,0,1,0
+"urine_chemistry",0,0,0,0,0,0,0,0,0,0,0,0,0,0
+"nephrolithiasis",0,0,0,0,0,0,0,0,0,0,0,0,0,0

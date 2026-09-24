@@ -1,0 +1,2 @@
+"bootstrap_replicates","bootstrap_seed","evaluation_records","ranked_features","resampling_unit","fixed_quantities","interval_method","comparison","interpretation"
+2000,20260718,64,28,"evaluation record, paired across methods","Fitted predictor, SHAP values, graph, backgrounds, permutation samples, and intervention-effect reference","Percentile interval, quantile type 7; not a repeated-fit or simulation-seed interval","Matched-background unrestricted ordinary SHAP versus DAG-constrained asymmetric SHAP","Positive deltas/improvements favor DAG-constrained asymmetric SHAP"

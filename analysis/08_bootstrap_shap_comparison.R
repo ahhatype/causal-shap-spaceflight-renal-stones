@@ -10,17 +10,24 @@ local({                                   # locate + source paths.R from anywher
 
 source(file.path(analysis_dir, "R", "shap_distance_metrics.R"))
 
-output_dir <- file.path(analysis_dir, "output", "shap_nephrolithiasis_clean_v3")
-truth <- read.csv(file.path(output_dir, "interventional_truth.csv"), check.names = FALSE)
-ancestors <- read.csv(file.path(output_dir, "target_ancestor_table.csv"), check.names = FALSE)
+input_dir <- file.path(analysis_dir, "output", "shap_nephrolithiasis_clean_v3")
+# Set this for an audit/reanalysis so the frozen historical outputs are preserved.
+output_dir <- Sys.getenv("SHAP_BOOTSTRAP_OUTPUT_DIR", unset = input_dir)
+dir.create(output_dir, recursive = TRUE, showWarnings = FALSE)
+truth <- read.csv(file.path(input_dir, "interventional_truth.csv"), check.names = FALSE)
+ancestors <- read.csv(file.path(input_dir, "target_ancestor_table.csv"), check.names = FALSE)
 ordinary <- read.csv(
-  file.path(output_dir, "ordinary_interventional_shap_values.csv"),
+  file.path(input_dir, "ordinary_interventional_shap_values.csv"),
   check.names = FALSE
 )
-causal <- read.csv(file.path(output_dir, "dag_asymmetric_shap_values.csv"), check.names = FALSE)
+causal <- read.csv(file.path(input_dir, "dag_asymmetric_shap_values.csv"), check.names = FALSE)
 
 features <- setdiff(names(ordinary), "source_row")
-stopifnot(identical(features, setdiff(names(causal), "source_row")))
+stopifnot(
+  identical(features, setdiff(names(causal), "source_row")),
+  identical(ordinary$source_row, causal$source_row),
+  !anyDuplicated(ordinary$source_row)
+)
 ordinary <- as.matrix(ordinary[, features, drop = FALSE])
 causal <- as.matrix(causal[, features, drop = FALSE])
 
@@ -104,10 +111,25 @@ summary_columns <- c(
   "improvement_absolute_poa",
   "reduction_proximal_mass"
 )
+# The bootstrap mean is not the statistic on the original evaluation sample.
+# In particular Kendall tau changes discretely as feature rankings cross.
+ordinary_point <- summarize_one(ordinary)
+causal_point <- summarize_one(causal)
+point_differences <- c(
+  delta_kendall_tau = causal_point$kendall_tau - ordinary_point$kendall_tau,
+  delta_spearman_rho = causal_point$spearman_rho - ordinary_point$spearman_rho,
+  delta_top5_recovery = causal_point$top5_recovery - ordinary_point$top5_recovery,
+  delta_ndcg_at_5 = causal_point$ndcg_at_5 - ordinary_point$ndcg_at_5,
+  improvement_absolute_pbi = abs(ordinary_point$pbi) - abs(causal_point$pbi),
+  improvement_absolute_poa = abs(ordinary_point$poa) - abs(causal_point$poa),
+  reduction_proximal_mass = ordinary_point$proximal_mass_distance_le_2 -
+    causal_point$proximal_mass_distance_le_2
+)
 bootstrap_summary <- do.call(rbind, lapply(summary_columns, function(metric) {
   values <- draws[[metric]]
   data.frame(
     metric = metric,
+    point_estimate = unname(point_differences[metric]),
     bootstrap_mean = mean(values),
     percentile_2_5 = unname(stats::quantile(values, 0.025, type = 7)),
     percentile_97_5 = unname(stats::quantile(values, 0.975, type = 7)),
@@ -127,7 +149,11 @@ write.csv(
   data.frame(
     bootstrap_replicates = n_bootstrap,
     bootstrap_seed = bootstrap_seed,
+    evaluation_records = nrow(ordinary),
+    ranked_features = length(features),
     resampling_unit = "evaluation record, paired across methods",
+    fixed_quantities = "Fitted predictor, SHAP values, graph, backgrounds, permutation samples, and intervention-effect reference",
+    interval_method = "Percentile interval, quantile type 7; not a repeated-fit or simulation-seed interval",
     comparison = "Matched-background unrestricted ordinary SHAP versus DAG-constrained asymmetric SHAP",
     interpretation = "Positive deltas/improvements favor DAG-constrained asymmetric SHAP",
     stringsAsFactors = FALSE

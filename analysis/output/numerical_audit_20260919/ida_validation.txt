@@ -1,0 +1,44 @@
+Diagnostic reconstruction, not a replacement for the historical Step 6 run.
+Original simulated-data and Step 6 edge/attribution parquet files absent in this checkout.
+Generator: current config + simcausal; n=1000, seed=20260812; PC alpha=0.05.
+Both arms use the identical reconstructed dataset, covariance, PC output and DAG extension.
+Rounds 2 and 3 are the same scripted heuristic, NOT human review; only round2 is stored here.
+Fixed weights still average absolute local-IDA TOTAL effects on the original CPDAG.
+They are not direct-edge coefficients, nor conditioned on the scripted orientations.
+Discovered adjacent pairs: 13; undirected: 1
+Outcome connected in round1: FALSE
+Stored reverse-index requests: 4
+Round1 weight changes: 4
+R version 4.5.2 (2025-10-31 ucrt)
+Platform: x86_64-w64-mingw32/x64
+Running under: Windows 11 x64 (build 26200)
+
+Matrix products: default
+  LAPACK version 3.12.1
+
+locale:
+[1] C
+system code page: 65001
+
+time zone: America/Denver
+tzcode source: internal
+
+attached base packages:
+[1] stats     graphics  grDevices utils     datasets  methods   base     
+
+other attached packages:
+[1] graph_1.88.1        BiocGenerics_0.56.0 generics_0.1.4     
+[4] pcalg_2.7-12        igraph_2.2.1        dagitty_0.3-4      
+[7] yaml_2.3.10         simcausal_0.5.7    
+
+loaded via a namespace (and not attached):
+ [1] corpcor_1.6.10      cli_3.6.5           rlang_1.1.7        
+ [4] ggm_2.5.4           RBGL_1.86.0         DEoptimR_1.2-1     
+ [7] assertthat_0.2.1    clue_0.3-68         jsonlite_2.0.0     
+[10] data.table_1.18.2.1 V8_8.0.1            stats4_4.5.2       
+[13] fastICA_1.2-8       abind_1.4-8         MASS_7.3-65        
+[16] lifecycle_1.0.4     BiocManager_1.30.27 cluster_2.1.8.1    
+[19] compiler_4.5.2      robustbase_0.99-7   Rcpp_1.1.1         
+[22] pkgconfig_2.0.3     R6_2.6.1            curl_7.0.0         
+[25] magrittr_2.0.4      tools_4.5.2         sfsmisc_1.1-25     
+[28] bdsmatrix_1.3-7     boot_1.3-32        

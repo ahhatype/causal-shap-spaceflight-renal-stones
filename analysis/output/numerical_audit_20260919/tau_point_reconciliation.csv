@@ -1,0 +1,3 @@
+"method","point_tau_b","bootstrap_mean_tau_b","concordant_pairs","discordant_pairs","score_tied_pairs","truth_tied_pairs"
+"Ordinary interventional SHAP",0.505868807289958,0.523354272585415,267,83,28,0
+"DAG-constrained asymmetric SHAP",0.527863103259086,0.530969797564726,271,79,28,0

@@ -315,6 +315,19 @@ PBI, POA, and proximal mass between matched ordinary and DAG-asymmetric SHAP.
 Restricting feature order therefore does not, by itself, support a causal
 recovery claim.
 
+The observed tau-b difference is **0.021994** (0.527863 minus 0.505869).
+The mean across 2,000 paired bootstrap resamples is **0.007616**, with a 95%
+percentile interval of **[-0.010997, 0.027493]**. These are different summaries
+of the same comparison; the bootstrap mean is not the observed difference.
+The resampling unit is one of 64 evaluation records, with the same records
+drawn for both methods and 28 ancestor features ranked. The predictor,
+attributions, graph, background, permutation samples and intervention-effect
+reference stay fixed, so the interval excludes repeated fits, graph discovery,
+simulation-seed variation and reference Monte Carlo error. The
+[reconciliation audit](../../analysis/output/numerical_audit_20260919/tau_validation.txt)
+reproduced all historical bootstrap draws within numerical precision without
+changing frozen outputs; `analysis/audit_bootstrap_reconciliation.R` reruns it.
+
 ### Structural prototype
 
 | Metric | Structural prototype | Ordering-only DAG-asymmetric |

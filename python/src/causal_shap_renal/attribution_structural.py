@@ -12,6 +12,10 @@ Algorithm, as implemented:
      outcome (in the round's discovered/revised DAG extension from
      step06d), of the product of p's edge weights (IDA's mean(|effect|)
      per edge). Paths are enumerated with networkx.all_simple_paths.
+     These are heuristic scores: local IDA supplies possible TOTAL effects,
+     not direct-edge coefficients. Multiplying them along paths can count
+     mediated effects twice. The mean absolute local summary is a study
+     choice, not a uniform average over all DAGs in the equivalence class.
   2. gamma_i = |W_i| / sum_j |W_j| - the causal weight factor (Eq. ~9-10).
   3. v_c(S), the causal value function: Monte Carlo estimate over M
      samples. For features not in S, sample in the graph's own
@@ -74,8 +78,10 @@ def causal_weights(graph: nx.DiGraph, features: list[str]) -> dict[str, float]:
     """W_i (path-product-sum to TARGET) and gamma_i (normalized) per
     feature. A feature absent from the graph, or with no path to TARGET
     in the discovered structure, gets W_i = gamma_i = 0 - a real
-    consequence of PC missing that feature's connection to the outcome,
-    not a bug (see docs/step06_results.md's discussion of PC's recall).
+    consequence of the supplied structure/weights. Zero edge weights can
+    also remove a feature's score despite structural connectivity. This is
+    a heuristic path score, not an identified total causal effect; see the
+    direction audit and weight limitations in docs/step06_results.md.
     """
     w = {}
     for f in features:

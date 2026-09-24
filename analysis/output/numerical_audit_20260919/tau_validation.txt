@@ -1,0 +1,13 @@
+R version: R version 4.5.2 (2025-10-31 ucrt)
+Maximum absolute difference across all historical bootstrap draw fields: 5.107026e-15
+Maximum absolute difference across historical summary numeric fields: 4.857226e-17
+All frozen output file hashes unchanged; point tau independently checked from pair counts.
+Evaluation records: 64 ; ranked ancestor features: 28
+Original-sample tau difference: 0.02199429596912861
+Mean of resampled tau differences: 0.00761552497931078
+Percentile 95% interval: -0.01099714798456430,  0.02749286996141076
+Conclusion: 0.022 is the original-sample difference; 0.008 is the bootstrap mean.
+They are different summaries of the same statistic, not discrepant runs or feature sets.
+The conditional evaluation-record interval includes zero; no general superiority is established.
+Fixed: fitted model, attributed values, graph, background, permutations, and intervention-effect reference.
+The bootstrap does not cover model fitting, graph discovery, truth Monte Carlo, or simulation-seed uncertainty.

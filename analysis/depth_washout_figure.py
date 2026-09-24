@@ -40,7 +40,7 @@ SAMPLE_SIZES = np.unique(np.round(np.logspace(np.log10(25), np.log10(4000), 18))
 REPLICATES = 400
 ALPHA_T = 1.96  # Frozen approximate 5% cutoff, not the finite-sample t critical value.
 
-INK, MUTE, PAPER = "#1a1814", "#6b6258", "#fbf7ef"
+INK, MUTE, PAPER = "#1a1814", "#6b6258", "#ffffff"
 DEPTH_COLORS = {1: "#00897b", 2: "#0077a8", 3: "#1c9ed3", 4: "#e07020", 5: "#c96018"}
 
 
@@ -118,6 +118,8 @@ def draw(curves: pd.DataFrame) -> plt.Figure:
     ticks = [1 / np.sqrt(n) for n in (4000, 1000, 250, 100, 50, 25)]
     right.set_xticks(ticks)
     right.set_xticklabels([f"n={n}" for n in (4000, 1000, 250, 100, 50, 25)])
+    # Separate the two closely spaced labels at the large-sample end.
+    right.get_xticklabels()[0].set_horizontalalignment("right")
     right.legend(frameon=False, fontsize=8.5, loc="lower left", title="node depth", title_fontsize=8.5)
     fig.text(
         0.005, 0.01,

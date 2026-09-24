@@ -18,7 +18,27 @@ Source locations and current development priorities for the Space SHAP project.
 | Private manuscript on the writing machine | manuscript/prism-upload/: main.tex, references.bib, figures/ and main.pdf |
 | Private writing export and correspondence | manuscript/causal-shap-prism.zip; manuscript/coauthor-review/correspondence.md |
 
-## Restart point — 18 September 2026
+## Restart point — 19 September 2026
+
+Next session: guide Andy through the actual canonical code and saved outputs,
+one stage at a time, pausing for questions. Start with the simulation design,
+assumed DAG and mechanisms, and the separately computed intervention-effect
+reference. Then walk through predictive fitting and the train/test split;
+ordinary SHAP backgrounds, scales and aggregation; supplied or discovered graph
+and review; causal SHAP variants and their targets, information inputs,
+interventions, weights and allocation; and final comparisons and uncertainty.
+Use manuscript Steps 0–6 and the existing crosswalk, distinguishing historical
+pipeline filenames from those stages. At each stage establish what the code
+actually does, what is assumed versus demonstrated, and whether the targets
+and comparisons align. Explain incrementally rather than deliver an orientation
+document or a long overview.
+
+Keep the methodological simulation scope: no clinical or astronaut-risk
+calibration, manuscript pivot or wholesale rewrite. VIM, stochastic interventions
+and possible heterogeneity measures are light discussion additions only. Carry
+forward the audit limitations below; targeted diagnostics are not a full
+benchmark rerun. Private sync and collaborator details remain in docs/STATUS.md
+and the existing coauthor notes. Do not put this orientation on Overleaf.
 
 The [Supplementary Information](docs/playbook/supplementary-information/main.pdf)
 follows the manuscript's methods: goal; data and predictive reference; optional
@@ -37,9 +57,13 @@ findings and editorial flags are in docs/STATUS.md and manuscript/coauthor-revie
 
 ## Current priorities
 
-1. Audit IDA edge-direction/weight consistency and the reported tau/interval
-   discrepancy; reconcile abstract claims with completed evidence. Preserve frozen
-   results until any corrective run is documented.
+1. Review the completed [numerical audit](docs/step06_results.md): IDA direction
+   and reversal weights are corrected, but total-effect path weights remain a
+   heuristic and the historical 0.714 score needs revalidation. The full-DAG tau
+   discrepancy is resolved as observed difference versus bootstrap mean. Reconcile
+   abstract claims with completed evidence and resolve the remaining intended
+   references with coauthors. The audit and figure corrections were synced on
+   19 September; check fresh remote changes before the next edit.
 2. Review the 14-node model adaptations against Robert's complete 53-node source
    graph using the edge crosswalk. The existing full-DAG results use the earlier
    51-node version. Step 6 rounds two and three remain scripted

@@ -31,23 +31,28 @@ This runs pdfLaTeX, BibTeX, then pdfLaTeX twice, and refreshes `main.pdf`.
 It does not regenerate `main.tex` from Markdown or overwrite diagram edits.
 The article source is authoritative. From the repository root,
 `python analysis/build_spine_guide.py` compiles the same document.
-For a separate Overleaf project, upload this folder's `main.tex`,
-`references.bib` and `figures/`, and select `main.tex`. In the shared manuscript
-project these files live under `supplementary-information/`. The root
-`supplement.tex` launcher contains:
+The local `main.tex` is a complete article, usable offline with this folder's
+bibliography and figures. In the shared Overleaf project, **edit the full article
+in root `supplement.tex`**. Its bibliography, figures and editable diagrams live
+in `supplementary-information/`; that folder has no second article source.
 
-```tex
-\def\SupplementRoot{supplementary-information/}
-\input{supplementary-information/main.tex}
+To prepare that layout from the local source:
+
+```text
+python build.py --export-overleaf
 ```
 
-Choose `supplement.tex` as the main document and open that launcher in the
-editor before compiling the supplement. To compile the manuscript, choose
-and open the root `main.tex`. Overleaf can compile an open standalone document
-in preference to the configured main file. Edit the source inside the
-supplement folder, not the launcher. Its bibliography and figures stay separate
-from the manuscript's files. Bring any collaborator edits back from Overleaf
-before replacing an uploaded version.
+This creates `.build/overleaf-supplement.zip` with the complete `supplement.tex`
+and supporting folder. The only source transformation is the support-file path;
+the generated ZIP is an export, not another editing copy. Downloaded Overleaf
+sources also compile offline: keep `supplement.tex` beside its supporting folder
+and run pdfLaTeX, BibTeX, then pdfLaTeX twice on `supplement`.
+
+In Overleaf, select **and open** `supplement.tex` before compiling the supplement.
+Restore and open root `main.tex` for the manuscript afterward. Merge fresh
+collaborator edits back into local `main.tex` before exporting again; the local
+support path is empty, whereas the Overleaf path is `supplementary-information/`.
+Neither a build nor an export overwrites manually edited text or diagrams.
 
 ## Refine the schematics
 

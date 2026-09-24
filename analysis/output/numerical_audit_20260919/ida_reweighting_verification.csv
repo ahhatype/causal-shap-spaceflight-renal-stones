@@ -1,0 +1,7 @@
+engine,arm,seed,T,M,maximum_absolute_difference
+xgboost,legacy,20260813,5,64,6.938893903907228e-18
+xgboost,direction_fixed_stale_reversal,20260813,5,64,1.734723475976807e-18
+xgboost,direction_and_reversal_fixed,20260813,5,64,3.469446951953614e-18
+random_forest,legacy,20260813,5,64,1.3877787807814457e-17
+random_forest,direction_fixed_stale_reversal,20260813,5,64,1.3877787807814457e-17
+random_forest,direction_and_reversal_fixed,20260813,5,64,5.421010862427522e-20
