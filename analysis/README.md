@@ -149,6 +149,56 @@ Graph-validation and source versioning are summarized in
 [`../docs/full_dag/PROVENANCE_AND_REFERENCES.md`](../docs/full_dag/PROVENANCE_AND_REFERENCES.md)
 and checked in under `output/dag_validation/`.
 
+## ConfoundingSHAP comparison
+
+`confoundingshap_comparison.py` adds a separate adjustment-bias pilot using the
+existing 51-node clean dataset, with thiazides as treatment and four reviewed
+pretreatment covariates. It enumerates 16 coalitions with shapiq 1.7.0 and a
+transparent cell-mean estimator; it does not reproduce the TabPFN estimator.
+Exact synthetic checks distinguish confounding, effect modification and
+instrument-related bias amplification. Five data splits measure split
+sensitivity, not independent simulation uncertainty.
+
+Use Python 3.12 or 3.13 in a separate environment with project dependencies:
+
+```bash
+python -m pip install -r analysis/requirements-confoundingshap.txt
+python analysis/confoundingshap_comparison.py
+python -m pytest python/tests/test_confoundingshap_comparison.py
+```
+
+Results are in `output/confoundingshap_pilot/`. The
+[technical note](../docs/technical/do-shapley.md#confoundingshap-attribution-of-adjustment-bias)
+explains targets, graph checks and results.
+
+`confoundingshap_tabpfn.py` runs the paired TabPFN comparison with the same five
+splits and all 16 adjustment sets. It uses the released shapiq S-learner with an
+explicit TabPFN-2.5 model factory and a fixed random seed. Both training and
+held-out standardization are recorded. Float32 inference evaluates all actual
+rows; state averages are computed afterward for compact storage. Outcome and CATE importance are
+conditional mean-absolute Shapley values; confounding attribution is signed.
+The model factory and held-out evaluation are documented adaptations, not an
+unmodified reproduction of the paper's benchmark.
+
+In an isolated Python environment, install GPU-enabled PyTorch for your hardware
+using the [official instructions](https://pytorch.org/get-started/locally/), then:
+
+```bash
+python -m pip install -r analysis/requirements-confoundingshap-tabpfn.txt
+python analysis/confoundingshap_tabpfn.py --device cuda
+python analysis/audit_confoundingshap_tabpfn.py --model-query-check
+```
+
+TabPFN-2.5 requires model-license acceptance and local authentication through
+[Prior Labs](https://docs.priorlabs.ai/models/accessing-model-weights).
+The script does local inference and expects authentication to be complete.
+CPU execution requires `--device cpu` and the environment variable
+`TABPFN_ALLOW_CPU_LARGE_DATASET=1`; the full run can be slow.
+Results and per-coalition prediction checkpoints are in
+`output/confoundingshap_tabpfn/`. Interrupted runs resume only when the recorded
+data, code, dependencies and device match. Historical results and the 14-node
+generator are unchanged; no LumaWarp detector outputs are evaluated.
+
 ## Important limitation
 
 These are simulation-design parameters, not NASA estimates. The structure and

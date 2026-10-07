@@ -1,0 +1,41 @@
+{
+  "paper": "https://arxiv.org/abs/2605.10533v1",
+  "date": "2026-09-30",
+  "input_path": "analysis/output/source_aligned_clean/renal_stone_source_aligned_clean_v3.csv",
+  "input_sha256": "8e8b3e8add1dc92e1da83ed49cfd37ad666d8f92e85f79683aa1c1cb94cbed64",
+  "edges_sha256": "e9bdd2f2837397261775d123e26a955eacca7484d6d39713041703dc2842748c",
+  "generator_sha256": "777ffce765d2e8ef90cfa8e87a59f05a1a9f91d18f713a10664bab98da67df9a",
+  "versions": {
+    "shapiq": "1.7.0",
+    "numpy": "2.2.6",
+    "pandas": "2.3.3",
+    "networkx": "3.6.1",
+    "scipy": "1.17.0"
+  },
+  "script_sha256": "6c53d02e8553946352e8d3aee2e951b6ade607d171260847c32b167b97cf0923",
+  "treatment": "thiazides",
+  "outcome": "nephrolithiasis",
+  "covariates": [
+    "medical_prevention_capability",
+    "bisphosphonates",
+    "k_plus_citrate",
+    "water_intake"
+  ],
+  "source": "Existing 51-node/75-edge source_aligned_clean_v3 simulation; not the 14-node working model or 53-node source",
+  "estimator": "Independent saturated binary-cell plug-in; shapiq exact SV; NOT upstream TabPFN ConfoundingXAI",
+  "scale": "Risk difference for renal outputs; continuous outcome units in synthetic oracle",
+  "normalization": "Signed -mean(residual bias); no absolute-value transformation; 16 exact coalitions",
+  "comparison": "Conditional SHAP of control-outcome prediction and estimated CATE; different estimands, not accuracy competitors",
+  "dgp_reference": "Evaluation-row average of paired counterfactual probabilities under the canonical generator; finite Monte Carlo ATE reference only, not a confounding-attribution oracle",
+  "uncertainty": "Five splits of one frozen dataset; ranges are split sensitivity, NOT confidence intervals or independent DGP replications",
+  "finite_sample_target": "Crude contrast estimated in training rows; adjusted contrasts standardized to held-out covariates. Plug-in discrepancy includes nuisance error and split-composition variation, not solely true confounding",
+  "validation": "Exact synthetic oracles, Shapley efficiency, independent factorial calculation, local/global averaging, graph d-separation, cell support",
+  "limitations": [
+    "No population oracle for renal confounding contributions; noisy estimated CATE may reflect estimation error",
+    "Full adjustment sufficiency comes from assumed graph, not scores",
+    "Historical intervention-effect ranking is a different target and not used as attribution truth",
+    "No LumaWarp provider or detector outputs evaluated",
+    "No continuous-calcium dichotomization or 14-node rerun",
+    "No successful upstream TabPFN estimator run; separate attempt blocked by model-license access before fitting"
+  ]
+}

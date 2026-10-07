@@ -1,0 +1,9 @@
+scenario,feature,confounding_signed,control_outcome_conditional_shap_mean_abs,cate_conditional_shap_mean_abs
+confounded_with_instrument,confounder_C,0.33200757575757583,0.5,0.0
+confounded_with_instrument,instrument_Z,-0.01950757575757587,2.7755575615628914e-17,0.0
+confounded_with_instrument,effect_modifier_H,-9.71445146547012e-17,2.7755575615628914e-17,0.5999999999999998
+confounded_with_instrument,outcome_only_P,1.3183898417423734e-16,0.3499999999999999,0.0
+randomized,confounder_C,-9.251858538542981e-18,0.5,0.0
+randomized,instrument_Z,-4.163336342344339e-17,2.7755575615628914e-17,0.0
+randomized,effect_modifier_H,-4.6259292692714864e-17,2.7755575615628914e-17,0.5999999999999998
+randomized,outcome_only_P,-1.5265566588595902e-16,0.3499999999999999,0.0

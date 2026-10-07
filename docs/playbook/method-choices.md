@@ -58,6 +58,16 @@ These need not agree. A DAG by itself does not provide the needed coefficients, 
 
 The full-DAG propagation prototype scores a fitted prediction model after propagating interventions with supplied simulation mechanisms. It also uses graph-respecting orders. It is not the same estimand or information setting as symmetric, outcome-based do-Shapley estimated from observations.
 
+**Adjustment-bias diagnosis.** [ConfoundingSHAP (Brockschmidt et al., 2026)](https://arxiv.org/abs/2605.10533v1)
+allocates changes in signed treatment-effect bias over subsets of eligible
+pretreatment covariates. It can inform Step 3 without a completely specified
+DAG, but still requires a sufficient full adjustment set and overlap. It does
+not certify graph roles or replace discovery. Step 4 must specify treatment,
+outcome, population and the bias game; Step 6 evaluates its own target, rather
+than agreement with individual intervention effects. Our
+[technical comparison and bounded pilot](../technical/do-shapley.md#confoundingshap-attribution-of-adjustment-bias)
+keep this distinct from do-Shapley, CATE explanations and the proposed detector.
+
 ## Step 5: allocation rules and causal information
 
 | Family | What is being computed | What must be fixed for a valid comparison |

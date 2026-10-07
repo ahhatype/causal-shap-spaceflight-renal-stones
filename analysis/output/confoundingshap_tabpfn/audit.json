@@ -1,0 +1,148 @@
+{
+  "status": "passed",
+  "model_query_check": {
+    "seed": 20260930,
+    "mask": 1,
+    "device": "cuda",
+    "absolute_tolerance": 1e-06,
+    "arms": {
+      "training": {
+        "1": {
+          "n_query_rows": 6000,
+          "checkpoint_refit_max_difference": 0.0,
+          "state_weighted_mean_minus_empirical_mean": -6.938893903907228e-18
+        },
+        "0": {
+          "n_query_rows": 6000,
+          "checkpoint_refit_max_difference": 0.0,
+          "state_weighted_mean_minus_empirical_mean": 0.0
+        }
+      },
+      "held_out": {
+        "1": {
+          "n_query_rows": 4000,
+          "checkpoint_refit_max_difference": 0.0,
+          "state_weighted_mean_minus_empirical_mean": -6.938893903907228e-18
+        },
+        "0": {
+          "n_query_rows": 4000,
+          "checkpoint_refit_max_difference": 0.0,
+          "state_weighted_mean_minus_empirical_mean": 0.0
+        }
+      }
+    },
+    "scope": "First coalition only; actual 6,000 training and 4,000 held-out rows, both arms."
+  },
+  "seeds": [
+    20260930,
+    20260931,
+    20260932,
+    20260933,
+    20260934
+  ],
+  "device": "cuda",
+  "support": [
+    {
+      "seed": 20260930,
+      "minimum_training_arm_cell": 49
+    },
+    {
+      "seed": 20260931,
+      "minimum_training_arm_cell": 53
+    },
+    {
+      "seed": 20260932,
+      "minimum_training_arm_cell": 38
+    },
+    {
+      "seed": 20260933,
+      "minimum_training_arm_cell": 48
+    },
+    {
+      "seed": 20260934,
+      "minimum_training_arm_cell": 45
+    }
+  ],
+  "prediction_ranges": [
+    {
+      "seed": 20260930,
+      "population": "training",
+      "minimum": 0.0063736457377672195,
+      "maximum": 0.09546606589693044
+    },
+    {
+      "seed": 20260930,
+      "population": "held_out",
+      "minimum": 0.0063736457377672195,
+      "maximum": 0.09546606589693044
+    },
+    {
+      "seed": 20260931,
+      "population": "training",
+      "minimum": 0.005144253373146057,
+      "maximum": 0.1
+    },
+    {
+      "seed": 20260931,
+      "population": "held_out",
+      "minimum": 0.005144253373146057,
+      "maximum": 0.1
+    },
+    {
+      "seed": 20260932,
+      "population": "training",
+      "minimum": 0.005060730502009392,
+      "maximum": 0.09645943685531085
+    },
+    {
+      "seed": 20260932,
+      "population": "held_out",
+      "minimum": 0.005060730502009392,
+      "maximum": 0.09645943685531085
+    },
+    {
+      "seed": 20260933,
+      "population": "training",
+      "minimum": 0.008423896506428719,
+      "maximum": 0.09789621318373072
+    },
+    {
+      "seed": 20260933,
+      "population": "held_out",
+      "minimum": 0.008423896506428719,
+      "maximum": 0.09789621318373072
+    },
+    {
+      "seed": 20260934,
+      "population": "training",
+      "minimum": 0.009776433929800987,
+      "maximum": 0.10491896502701166
+    },
+    {
+      "seed": 20260934,
+      "population": "held_out",
+      "minimum": 0.009776433929800987,
+      "maximum": 0.10491896502701166
+    }
+  ],
+  "warnings": [
+    "Identical covariate states have numerical prediction variation; conditional SHAP uses population-specific state means."
+  ],
+  "attribution_rows": 40,
+  "game_rows": 160,
+  "paired_rows": 20,
+  "baseline_csv_sha256": "6ee763e6fa39700304fa198f3322eca0646409e183a272790aa609def5a1fc01",
+  "maximum_within_state_prediction_spread": 3.434717655181885e-05,
+  "maximum_state_weighted_vs_raw_mean_error": 6.938893903907228e-18,
+  "reference_script_sha256": "6c53d02e8553946352e8d3aee2e951b6ade607d171260847c32b167b97cf0923",
+  "cell_parity": {
+    "seeds": [
+      20260930,
+      20260931,
+      20260932,
+      20260933,
+      20260934
+    ],
+    "maximum_absolute_difference": 0.0
+  }
+}

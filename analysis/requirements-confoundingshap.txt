@@ -1,0 +1,3 @@
+# Isolated optional comparison environment, Python >=3.12.
+# This pins the exact Shapley allocator. TabPFN is not part of this pilot.
+shapiq==1.7.0

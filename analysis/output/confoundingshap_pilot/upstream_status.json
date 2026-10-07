@@ -1,0 +1,19 @@
+{
+  "date": "2026-09-30",
+  "record_scope": "Historical first attempt before account setup; retained as provenance, not current access status.",
+  "subsequent_version_pinned_comparison": "../confoundingshap_tabpfn/metadata.json",
+  "implementation": "Unmodified shapiq GlobalConfoundingXAI with upstream TabPFN S-learner",
+  "source_commit": "827d695946ca0a36c92f41426cb8253a906f0699",
+  "source_url": "https://github.com/mmschlk/shapiq/blob/v1.7.0/src/shapiq_games/benchmark/causal_xai/base.py",
+  "versions": {"shapiq": "1.7.0", "tabpfn": "9.0.0", "torch": "2.11.0+cpu", "scikit-learn": "1.8.0"},
+  "dataset": "Package CurthVDS synthetic, setting ii, n=128, d=4, seed=20260930",
+  "status": "blocked_before_full_s_learner_fit",
+  "error_type": "TabPFNLicenseError",
+  "reason": "Pretrained model download requires license acceptance and account authorization",
+  "elapsed_seconds": 15.07,
+  "numerical_results": false,
+  "terms_accepted": false,
+  "model_weights_downloaded": false,
+  "model_version_caution": "Current package defaults to model 3.5; paper used 2.5. Select intended model explicitly for replication.",
+  "separate_reference_pilot": "The accompanying cell-mean results use shapiq ExactComputer, not this TabPFN estimator."
+}

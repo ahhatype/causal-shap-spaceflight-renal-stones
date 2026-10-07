@@ -1,0 +1,51 @@
+{
+  "provenance": {
+    "input_sha256": "8e8b3e8add1dc92e1da83ed49cfd37ad666d8f92e85f79683aa1c1cb94cbed64",
+    "reference_script_sha256": "6c53d02e8553946352e8d3aee2e951b6ade607d171260847c32b167b97cf0923",
+    "baseline_sha256": "6ee763e6fa39700304fa198f3322eca0646409e183a272790aa609def5a1fc01",
+    "script_sha256": "f1178da333e6684648bf8b6570ecf767e0880b23c887b9bb8172cd0a4ab62fac",
+    "upstream_source_sha256": "afd1f3312ea86e07775fb422e59fe457a2cad6cfad02edbeba3aaaa7b847ff94",
+    "model_version": "2.5",
+    "n_estimators": 1,
+    "versions": {
+      "shapiq": "1.7.0",
+      "tabpfn": "9.0.0",
+      "torch": "2.11.0+cu128",
+      "scikit-learn": "1.8.0",
+      "numpy": "2.2.6",
+      "pandas": "2.3.3"
+    },
+    "device": "cuda",
+    "inference_precision": "float32",
+    "prediction_query": "all actual rows, separate populations and arms",
+    "outcome_transform": "REGRESSION_Y_PREPROCESS_TRANSFORMS=(None,)"
+  },
+  "seeds": [
+    20260930,
+    20260931,
+    20260932,
+    20260933,
+    20260934
+  ],
+  "status": "complete",
+  "source": "51-node/75-edge clean NASA-topology simulation; frozen 10,000 rows",
+  "treatment": "thiazides",
+  "outcome": "nephrolithiasis",
+  "covariates": [
+    "medical_prevention_capability",
+    "bisphosphonates",
+    "k_plus_citrate",
+    "water_intake"
+  ],
+  "adaptation": "Scoped upstream model factory pins TabPFN 2.5 and random_state. Upstream S-learner fits all 6,000 training rows per nonempty coalition. Predict all actual training and held-out rows separately, then aggregate within each of 16 binary states. Explicit float32 inference; no query compression.",
+  "endpoint": "Full-set CATE anchor reuses the full S-learner, so full residual is zero by construction; upstream can have a nonzero endpoint with an independently estimated CATE anchor.",
+  "uncertainty": "Five splits of one frozen dataset, not confidence intervals or independent DGP replications.",
+  "finite_sample_target": "Training crude contrast minus evaluation-standardized adjusted contrast includes nuisance error and population-composition variation, not solely true confounding.",
+  "limitations": [
+    "No renal oracle for confounding allocation; DGP ATE reference only.",
+    "Conditional mean-absolute prediction/CATE SHAP have different targets from signed bias attribution.",
+    "No LumaWarp detector or 14-node comparison.",
+    "No full replication of the paper benchmark; one estimator, version-pinned adaptation."
+  ],
+  "elapsed_seconds_this_run": 257.0867994
+}

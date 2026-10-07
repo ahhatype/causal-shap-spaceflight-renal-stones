@@ -129,8 +129,180 @@ as a separate criterion. Match outcome scale, intervention values, player
 set, order weights and sampling budgets. The two-player oracle above is
 complete; a renal do-Shapley oracle or DML comparison has not been run.
 
+## ConfoundingSHAP: attribution of adjustment bias
+
+[Brockschmidt et al. (2026)](https://arxiv.org/abs/2605.10533v1) ask which measured
+covariates account for changes in a treatment-effect estimate as adjustment is
+expanded. Section 2, Table 1 and Supplement A distinguish explanations of
+treatment assignment, predicted outcomes, effect heterogeneity and confounding
+bias. They explicitly distinguish their bias game from causal, asymmetric and
+do-Shapley attribution.
+
+For binary treatment A, outcome Y and eligible pretreatment covariates X, define
+
+$$\delta_S(x_S)=E[Y\mid A=1,x_S]-E[Y\mid A=0,x_S],\qquad
+\tau_S(x_S)=E[\tau(X)\mid X_S=x_S].$$
+
+Both contrasts use the same information level. Residual bias is
+$b_S=\delta_S-\tau_S$. The local game is $v_x(S)=-b_S(x_S)$ and the signed
+global game is $v(S)=-E[b_S(X_S)]$. Under valid full adjustment, the credits sum
+to the crude-minus-adjusted ATE contrast. Each local explanation has this same
+total, although its allocation varies across profiles. Global signed credit
+equals average local signed credit; mean absolute local credit is different.
+
+The method needs consistency, overlap and a sufficient full adjustment set,
+even without a complete DAG. It cannot certify adjustment sufficiency or reveal
+unmeasured confounding. Zero credit can reflect cancellation. Nonzero credit can
+arise for proxies or instruments that amplify residual confounding. Scores do
+not automatically identify graph roles.
+
+### Relation to the proposed detector
+
+ConfoundingSHAP supplies a treatment-specific adjustment diagnostic for Step 3,
+with its game specified in Step 4 and robustness assessed in Step 6. Its output
+has outcome units, such as risk difference. LumaWarp's proposed detector supplies
+feature flags for graph review through a separate
+[public interface](../../python/src/causal_shap_renal/lumawarp_contract.py).
+Its depth, importance and complexity channels are standardized within groups;
+validation remains pending. ConfoundingSHAP belongs alongside these diagnostics,
+not in place of a detector channel or an edge weight. The provisional graph
+complexity index in `apps/causal_shap/complexity.py` is distinct from both.
+
+Randomized treatment can have zero ConfoundingSHAP despite strong predictors,
+effect heterogeneity or complex mechanisms. A simple system can have substantial
+confounding. A joint experiment should vary confounding, depth and mechanism
+complexity separately and assess each output against its own target. No LumaWarp
+comparison is reported here.
+
+### Bounded renal comparison
+
+The [comparison script](../../analysis/confoundingshap_comparison.py) uses the
+existing 10,000-record, **51-node/75-edge clean simulation**. Treatment is
+thiazides, outcome is nephrolithiasis, and the players are Medical Prevention
+Capability, bisphosphonates, potassium citrate and water intake. Graph checks
+confirm that the first alone blocks all backdoors, and adding the others
+preserves sufficiency. All are treatment nondescendants. The sibling treatments
+also affect the outcome; they are not pure proxies.
+
+All 16 coalitions use saturated binary-cell outcome means and shapiq 1.7.0's exact
+Shapley calculator, across five prespecified 6,000/4,000 training/evaluation
+splits. This is an independent plug-in implementation of the signed game,
+**not a replication of the authors' TabPFN estimator**. All training arm/covariate
+cells are populated (minimum across splits: 38). The crude contrast is estimated
+in training data; adjusted contrasts use the evaluation covariate distribution.
+Finite-split discrepancies include nuisance error and composition variation.
+
+| Covariate | Mean signed contribution, percentage points | Range across five splits |
+| --- | ---: | ---: |
+| Medical Prevention Capability | -0.413 | -0.530 to -0.327 |
+| Bisphosphonates | -0.086 | -0.102 to -0.073 |
+| Potassium citrate | -0.003 | -0.032 to +0.015 |
+| Water intake | -0.012 | -0.035 to +0.016 |
+
+The negative total means the crude estimate is more negative than the adjusted
+estimate. Medical Prevention Capability receives the largest absolute signed
+contribution in every split. These ranges describe split sensitivity, not
+confidence intervals or independent simulation replications. Adjusted risk
+differences range from -1.72 to -2.91 percentage points, versus -1.77 to -1.80
+for the finite-sample generating-model reference. Stable attribution ordering
+therefore does not establish accurate effect estimation.
+
+The reference reconstructs expected potential outcomes under the canonical
+mechanisms: thiazides changes the outcome logit through its only directed path
+by $-0.70(0.60)(0.60)=-0.252$. Paired probability differences averaged over each
+evaluation split supply an ATE diagnostic, not an oracle for confounding
+allocation. Outputs also show conditional SHAP for the fitted control-outcome
+model and CATE. Those mean-absolute summaries answer different questions; they
+are not accuracy competitors or the historical TreeSHAP benchmark.
+
+Two exact synthetic checks make the distinction concrete. Independent
+Bernoulli(1/2) variables C and Z, propensity $0.1+0.3C+0.3Z$, and outcome mean $C+\tau A$ give signed credits
+0.332008 for confounder C and **-0.019508 for instrument Z**. Adjusting for Z
+amplifies remaining bias before C enters. Adding independent effect-modifier and
+outcome-only variables separates CATE and outcome importance; randomizing
+treatment makes the bias game zero while those other signals remain. These are
+independently derived checks, not results reported by the paper or renal effects.
+
+The 14-node calcium example needs a separate treatment design. Thresholding
+observed continuous calcium does not define an intervention that sets calcium;
+its original instrument need not satisfy exclusion for the new indicator.
+Hydration's independence can imply zero **global signed** confounding credit in
+the clean generator without implying zero local absolute credit. Its positive
+calcium interaction changes the log-odds slope; risk-difference attenuation or
+large CATE importance should not be assumed before calculation.
+
+### Package and reproduction
+
+The completed TabPFN-2.5 comparison uses the same five 6,000/4,000 splits and
+all 16 coalitions. Mean held-out signed contributions are:
+
+| Covariate | Cell means, percentage points | TabPFN-2.5, percentage points |
+| --- | ---: | ---: |
+| Medical Prevention Capability | -0.413 | -0.472 |
+| Bisphosphonates | -0.086 | -0.403 |
+| Potassium citrate | -0.003 | -0.284 |
+| Water intake | -0.012 | -0.290 |
+
+The largest absolute contribution under TabPFN belongs to Medical Prevention
+Capability in two splits, bisphosphonates in two and water intake in one. Under
+cell means, Medical Prevention Capability leads in all five. This is an
+estimator-sensitivity result; there is no renal allocation oracle establishing
+which credit vector is more accurate.
+
+The average adjusted risk difference is -1.229 percentage points with TabPFN,
+-2.163 with cell means and -1.786 for the generating-model reference. Across the
+five splits, mean absolute ATE error is 0.615 versus 0.434 percentage points,
+respectively. TabPFN estimates range from -1.889 to -0.592 percentage points.
+These settings do not demonstrate improved effect estimation with TabPFN.
+The comparison varies the data split and model seed together; it does not
+separate their contributions or establish general estimator superiority.
+
+Outcome and CATE importance are also saved for both estimators. They describe
+conditional mean-absolute Shapley values of the population-specific,
+state-averaged fitted surfaces. Signed confounding credit has a different
+target and aggregation. Numerical variation between predictions for identical
+states is recorded by the audit; state weighting reproduces the actual-row
+population means. The full-model anchor is an estimate, not observed causal
+truth, so larger total allocated bias may reflect estimation error.
+
+The [released implementation](https://github.com/mmschlk/shapiq/blob/v1.7.0/src/shapiq_games/benchmark/causal_xai/base.py)
+provides `GlobalConfoundingXAI` and `LocalConfoundingXAI` in
+`shapiq_games.benchmark.causal_xai`. These hardcode TabPFN nuisance fits, without a
+sklearn backend. Version 1.7.0 needs Python 3.12 or later. Select the model
+version explicitly: the installed TabPFN 9.0.0 default
+is model 3.5, whereas the paper used 2.5. The
+[TabPFN comparison](../../analysis/confoundingshap_tabpfn.py) explicitly selects
+model 2.5 in the upstream S-learner, with one ensemble member and a fixed seed
+per split. It predicts all 6,000 training and 4,000 evaluation rows separately
+using float32 inference. It retains both the training-population signed game
+and a held-out standardization matched to the cell-mean reference. These are
+documented adaptations of the released estimator, not a reproduction of every
+experiment in the paper.
+
+Use an isolated environment with the project dependencies and
+`analysis/requirements-confoundingshap.txt`, then:
+
+```bash
+python analysis/confoundingshap_comparison.py
+python -m pytest python/tests/test_confoundingshap_comparison.py
+```
+
+[Outputs and metadata](../../analysis/output/confoundingshap_pilot/) preserve
+hashes, versions, seeds, coalition values and limitations. Checks cover Shapley
+efficiency, an independent factorial calculation, exact synthetic oracles and
+local/global averaging. [TabPFN outputs](../../analysis/output/confoundingshap_tabpfn/)
+also retain population-specific predictions and a paired comparison. The
+[audit](../../analysis/audit_confoundingshap_tabpfn.py) reconstructs these results,
+checks empirical standardization and optionally repeats a model fit. Repeated
+data generation and detector comparisons remain pending. In the upstream global signed game, the
+supplied mean CATE is an additive constant and cancels from all Shapley marginals.
+Here the anchor reuses the full fitted S-learner, so the full-set residual is
+zero by construction. With a separately estimated CATE anchor, the upstream
+finite-sample endpoint need not be zero. Neither endpoint verifies identification.
+
 ## References
 
 - Jung, Y., Kasiviswanathan, S., Tian, J., Janzing, D., Blöbaum, P., and Bareinboim, E. (2022). [On Measuring Causal Contributions via do-interventions](https://proceedings.mlr.press/v162/jung22a.html). *ICML*, PMLR 162:10476–10501.
 - Heskes, T., Sijben, E., Bucur, I. G., and Claassen, T. (2020). [Causal Shapley Values: Exploiting Causal Knowledge to Explain Individual Predictions of Complex Models](https://proceedings.neurips.cc/paper_files/paper/2020/hash/32e54441e6382a7fbacbbbaf3c450059-Abstract.html). *NeurIPS* 33:4778–4789.
 - [Technical BibTeX](../references/technical-companion.bib).
+- Brockschmidt, M., Thies, S. M. A. R., Schröder, M., Frauen, D., Melnychuk, V., Muschalik, M., Hüllermeier, E., and Feuerriegel, S. (2026). [ConfoundingSHAP: Quantifying confounding strength in causal inference](https://arxiv.org/abs/2605.10533v1). arXiv:2605.10533v1, preprint.
