@@ -6,7 +6,7 @@ pairings) from this run. See `docs/step03_simulation_review.md` for the underlyi
 simulated data. Every number below is computed directly from these two files, not
 asserted.
 
-**Run:** n = 1,000 · seed = 20260812 · 14-node DAG · generated 2026-08-14.
+**Run:** n = 1,000 · seed = 20260812 · 14-node DAG · generated 2026-08-31.
 
 This is a rerun of the original Step 4 baseline (11 nodes, 10 features) after adding
 three realistic mediators/confounders that deepen two pathways by one hop each, to see

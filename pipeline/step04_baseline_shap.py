@@ -3,7 +3,7 @@ See docs/methods and python/src/causal_shap_renal/attribution_baseline.py.
 
 Loads data/simulated/ output (written by pipeline/step03_simulate_data.R),
 runs the five explainer x model pairings, writes to results/attributions/.
-Run via `make step04` or `cd python && uv run python ../pipeline/step04_baseline_shap.py`.
+Run via `make step04`, or from `pipeline/` with the repository venv: `python step04_baseline_shap.py`.
 """
 
 from causal_shap_renal.attribution_baseline import run_baseline_shap

@@ -153,8 +153,10 @@ Keep these two design choices separate:
   intervention.
 
 The NASA-topology matched comparison is valuable precisely because ordering
-alone is statistically tied with ordinary SHAP, while the small structural
-prototype moves substantially closer to frozen total-effect truth.
+alone shows no detected difference from ordinary SHAP, while the small structural
+prototype, given known mechanisms and a different budget, reaches higher
+agreement with frozen total-effect truth: a feasibility result, not a
+demonstration of superiority.
 
 ### From attribution to intervenable recommendations
 
@@ -184,10 +186,11 @@ guarantee.
 #### Established in this repository
 
 - A zero-effect downstream proxy can dominate ordinary SHAP in a known toy SCM.
-- On the NASA-topology simulation, matched ordinary and DAG-ordering SHAP are
-  statistically tied.
-- The intervention-propagating prototype is substantially closer to frozen
-  total-effect truth.
+- On the NASA-topology simulation, matched ordinary and DAG-ordering SHAP show
+  no detected difference.
+- The intervention-propagating prototype, given known mechanisms and a different
+  budget, reaches higher agreement with frozen total-effect truth (feasibility,
+  not superiority).
 
 #### Still provisional
 
@@ -229,7 +232,7 @@ Can a causal attribution procedure rank upstream intervention targets more
 faithfully than predictive feature attribution when the data-generating DAG and
 total-effect truth are known?
 
-The primary worked example is a synthetic renal-stone risk system constructed
+This record's worked example is a synthetic renal-stone risk system constructed
 from NASA's published SA-07566 renal-stone DAG. The target is
 `Nephrolithiasis`; the feature set contains its 28 pre-outcome ancestors.
 

@@ -226,7 +226,8 @@ Three real patterns, not fabricated to make a point:
   The regression test verifies this example; directional correction does not
   solve this methodological limitation.
 - **Explained-sample sizes differ by method** (ASV ~200 rows, Ng et al. ~10 rows per
-  round/engine, Shapley Flow ~200 rows) - a tractability trade-off (see each module's
+  round/engine in the recorded runs; the current code default is `n_explain=30`, so a
+  rerun explains 30; Shapley Flow ~200 rows) - a tractability trade-off (see each module's
   own docstring), not a claim that these are equally precise estimates.
 - **M=64/T=150 Monte Carlo budgets** for Ng et al.'s method are LLM-authored
   tractability choices (M from the paper's own AUROC-saturation finding; T is not),
@@ -252,7 +253,7 @@ python analysis/audit_ida_attribution.py         # scientific Python environment
 make step02   # regenerate the DAG
 make step03   # regenerate the simulated data
 make step04   # regenerate ground truth + Step 4 baseline
-make step06   # run all 4 methods' 3-round drivers + the HITL scoring summary
+make step06   # run the three methods' 3-round drivers + the HITL scoring summary
 ```
 
 The original run record stated that `results/attributions/step06d_pc_ida_edges.parquet`'s `weight` column and every

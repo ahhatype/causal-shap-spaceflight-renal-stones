@@ -5,8 +5,9 @@
 # resolved from config/model_engines.yaml, rather than hardcoding a
 # specific model call inline. See docs/decisions/004-xgboost-primary-engine.md
 # for why XGBoost is the current default and why SuperLearner isn't used
-# here (Step 4's own KernelExplainer/PermutationExplainer + SuperLearner
-# pairing is untouched by this file).
+# here (Step 4's KernelExplainer/PermutationExplainer pairings explain
+# XGBoost as a black box, SuperLearner deferred per ADR 005; untouched by
+# this file).
 
 library(yaml)
 

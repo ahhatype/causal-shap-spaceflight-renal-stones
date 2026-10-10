@@ -114,7 +114,8 @@ later conditioning sets (Faltenbacher et al. 2025, preprint). The working
 subgraph already produced a live example: at n = 1,000 and alpha = 0.05, PC
 left `nephrolithiasis` with zero adjacent edges, so Ng et al.'s Causal SHAP
 returned all zeros in round 1 and reached the best rank agreement in the
-project (tau 0.714) once the outcome was reconnected (`docs/step06_results.md`).
+project (tau 0.714) once the outcome was reconnected; that historical score is not
+validated for the corrected implementation (`docs/step06_results.md`).
 Discovery quality is the whole game for that method.
 
 **The design question these raise.** E2 asks it directly, and it is the core
