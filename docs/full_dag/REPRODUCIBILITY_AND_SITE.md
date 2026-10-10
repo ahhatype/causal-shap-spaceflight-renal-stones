@@ -58,13 +58,17 @@ python -m causal_shap.build nasa-structural # the pre-frozen NASA structural pro
 ```
 
 Non-torch artifacts are reproducible across runs. The `validate` stage hashes
-`analysis/output/` against a committed baseline and fails on any substantive
-change. It canonicalizes text newlines to LF so Windows checkout conversion does
-not create a false failure; binary artifacts remain byte-for-byte checked.
-When a reviewed pipeline stage intentionally adds a new checked output—such as
-the Robert Reynolds DAG source artifacts—the same commit must add its SHA-256 to
-`apps/bundles/analysis_output_baseline_hashes.json`. This preserves the gate
-instead of exempting the new output directory.
+the git-tracked files under `analysis/output/` against a committed baseline and
+fails on any substantive change; local pilots that `.gitignore` keeps out of the
+record are not part of the gate, so a checkout with them present validates the
+same way CI does. It canonicalizes text newlines to LF so Windows checkout
+conversion does not create a false failure; binary artifacts remain
+byte-for-byte checked. When a reviewed pipeline stage intentionally adds a new
+checked output, such as the Robert Reynolds DAG source artifacts, the same
+commit must refresh `apps/bundles/analysis_output_baseline_hashes.json` with
+`python -m causal_shap.build freeze-baseline` (run from `apps/`; it prints the
+additions, removals and changes for review). This preserves the gate instead of
+exempting the new output directory.
 
 ### Companion site (Quarto)
 

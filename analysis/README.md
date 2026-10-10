@@ -99,7 +99,10 @@ are excluded from the public result record; see
 checked in until the full run passes in the pinned environment and receives
 scientific review. Any later addition of checked files under
 `analysis/output/` must update the frozen-output hash manifest in the same
-reviewed commit.
+reviewed commit: run `python -m causal_shap.build freeze-baseline` from `apps/`,
+review the additions it prints, and commit the refreshed manifest with the
+outputs. The gate covers the files git tracks under `analysis/output/`; local
+pilots kept out of the record by `.gitignore` do not count.
 
 ## Run
 

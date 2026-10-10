@@ -3,7 +3,9 @@
 Collapses the former numbered ``scripts/2x`` build scripts into one CLI. ``all``
 runs the safe, reproducible teaching pipeline in dependency order; it excludes
 the pre-frozen ``acic`` and ``nasa-structural`` bundles, matching the numbered
-20-29 flow, which never regenerated them.
+20-29 flow, which never regenerated them. ``freeze-baseline`` is never part of
+``all``: it rewrites the frozen-output manifest and belongs only in the reviewed
+commit that adds or revises a checked output.
 """
 
 from __future__ import annotations
@@ -11,7 +13,7 @@ from __future__ import annotations
 import argparse
 
 from . import stages
-from .validate import validate_bundles
+from .validate import validate_bundles, write_baseline
 
 # Hyphenated CLI stage name -> the function that runs it.
 STAGES = {
@@ -25,6 +27,7 @@ STAGES = {
     "acic": stages.acic,
     "nasa-structural": stages.nasa_structural,
     "validate": validate_bundles,
+    "freeze-baseline": write_baseline,
 }
 
 # The safe build order: the teaching pipeline plus the release gate.
