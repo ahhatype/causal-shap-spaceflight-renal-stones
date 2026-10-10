@@ -1,0 +1,210 @@
+\documentclass[10pt,letterpaper]{article}
+\usepackage[margin=0.9in]{geometry}
+\usepackage[T1]{fontenc}\usepackage[utf8]{inputenc}
+\usepackage{lmodern,microtype,amsmath,amssymb,booktabs,array,parskip,xcolor,tikz}
+\usetikzlibrary{arrows.meta,positioning}
+\usepackage[colorlinks=true,urlcolor=blue!55!black,linkcolor=blue!55!black,citecolor=blue!55!black]{hyperref}
+\setlength{\emergencystretch}{3em}
+\newcolumntype{L}[1]{>{\raggedright\arraybackslash}p{#1}}
+\newcolumntype{R}[1]{>{\raggedleft\arraybackslash}p{#1}}
+\newcommand{\E}{\mathbb{E}}
+\title{\bfseries ConfoundingSHAP on a three-variable DAG\\[4pt]\large A study guide with an exact answer key}
+\author{Space SHAP tactical working group\footnote{Aimee, Andy, Lauren} :)  \quad (stand-alone tutorial, outside the manuscript)}
+\date{8 October 2026}
+\begin{document}
+\maketitle
+
+\section*{What this kit contains}
+\begin{itemize}\setlength{\itemsep}{1pt}
+\item A data set, \texttt{data/toy\_confounded.csv}, drawn from a DAG with three binary covariates, one binary treatment and one outcome. Its answer key sits beside it as \texttt{toy\_confounded\_truth.json}. A second data set with randomized treatment, \texttt{toy\_randomized.csv}, has an answer key of zeros.
+\item A Python script, \texttt{run\_confoundingshap.py}, that prints three columns per covariate: the exact ConfoundingSHAP credit computed from the generating model, the same credit estimated from the data with cell means, and, optionally, the credit from the paper's own estimator (shapiq's released game with a TabPFN learner).
+\item A collider check, \texttt{collider\_check.py}, that adds a measured pretreatment collider to the DAG and shows what the method reports (section~\ref{sec:collider}).
+\item This guide: what the method answers, the arithmetic behind the answer key, how to set the tools up, and how to read the output.
+\end{itemize}
+The paper is Brockschmidt et al.\ (2026), ``ConfoundingSHAP: quantifying confounding strength in causal inference'', arXiv:2605.10533; it is shared separately. Nothing here is part of the Space SHAP study. The tutorial exists so that the method, its question and its answer key can be seen on something small before anyone decides whether it belongs in the paper.
+
+\section{What question ConfoundingSHAP answers}
+Shapley attribution gets asked four different questions, and they have four different answers.
+
+\begin{center}
+\begin{tabular}{@{}L{0.42\linewidth}L{0.33\linewidth}L{0.19\linewidth}@{}}
+\toprule Question & Game & Units\\\midrule
+Which features drive a model's predicted outcome? & standard SHAP and its causal variants & prediction scale\\
+Which features drive treatment assignment? & SHAP on a propensity model & probability of treatment\\
+Which features modify the treatment effect? & SHAP on an estimated CATE & effect scale\\
+Which measured covariates carry the confounding of one treatment-versus-outcome comparison? & \textbf{ConfoundingSHAP} & \textbf{bias, in outcome units}\\
+\bottomrule
+\end{tabular}
+\end{center}
+
+ConfoundingSHAP answers the last one. For a designated binary treatment $A$, an outcome $Y$ and a set of pretreatment covariates $X$ that is assumed sufficient for adjustment, it splits the gap between the crude treatment-outcome contrast and the fully adjusted effect among the covariates, by Shapley's rule over adjustment sets. A covariate's credit is the bias it removes, averaged over the orders in which covariates could be added to the adjustment set. The paper distinguishes this bias game from causal, asymmetric and do-Shapley attribution, which allocate predictions or effects rather than bias.
+
+\section{The game}
+Let $S$ be a subset of the covariates and $x_S$ a profile on $S$. Three quantities define the game:
+\begin{align*}
+\delta_S(x_S) &= \E[Y \mid A=1, X_S=x_S] - \E[Y \mid A=0, X_S=x_S] && \text{the contrast adjusted for $S$ only,}\\
+\tau_S(x_S) &= \E[\tau(X) \mid X_S = x_S] && \text{the fully adjusted effect, projected onto $S$,}\\
+b_S(x_S) &= \delta_S(x_S) - \tau_S(x_S) && \text{the residual confounding bias after adjusting for $S$.}
+\end{align*}
+Here $\tau(X)=\E[Y\mid A=1,X]-\E[Y\mid A=0,X]$ is the effect given the full covariate set, which equals the causal effect when the full set is sufficient. The local game at a profile $x$ is $v_x(S) = -b_S(x_S)$; the signed global game is its average, $v(S) = -\E[b_S(X_S)]$. Two values of the global game are fixed by construction:
+\[
+v(\varnothing) = -(\text{crude contrast} - \text{ATE}), \qquad v(\text{all covariates}) = 0,
+\]
+so the Shapley credits sum to $v(\text{all}) - v(\varnothing) = \text{crude contrast} - \text{ATE}$: the credits share out the crude-minus-adjusted gap. The empty-coalition value is minus the whole bias; each covariate's credit is the bias it accounts for.
+
+Reading a credit. A positive credit means that adding the covariate to the adjustment set moves the contrast toward the adjusted effect, averaged over orders. A negative credit means that adding it moves the contrast away: adjusting for the variable amplifies the bias that other covariates still carry. Zero means that adding it changes nothing on average, which can be because it carries no confounding or because its effects cancel across orders and profiles. The paper also defines absolute and squared versions of the game, and local games for one profile; this guide uses the signed global game, which is the one whose credits sum to the gap.
+
+What the method needs. Consistency; overlap (every covariate profile has treated and untreated units); and a full covariate set that is sufficient, with no descendant of the treatment among the covariates. It does not need a DAG. It cannot certify that the set is sufficient and cannot see unmeasured confounding: if a confounder is missing from $X$, the credits still sum to the crude-minus-``adjusted'' gap, but the adjusted effect is not the causal effect.
+
+\newpage
+\section{The toy DAG and its answer key}
+\begin{center}
+\begin{tikzpicture}[node distance=14mm and 22mm, every node/.style={draw, circle, minimum size=8mm, inner sep=1pt}, >={Latex[length=2mm]}]
+\node (C) {$C$};
+\node (A) [below left=of C] {$A$};
+\node (Y) [below right=of C] {$Y$};
+\node (Z) [left=of A] {$Z$};
+\node (P) [right=of Y] {$P$};
+\draw[->] (C) -- (A); \draw[->] (C) -- (Y); \draw[->] (Z) -- (A); \draw[->] (P) -- (Y); \draw[->] (A) -- (Y);
+\end{tikzpicture}
+\end{center}
+$C$ is a confounder (it causes both the treatment and the outcome), $Z$ affects the treatment only (an instrument-like variable), and $P$ affects the outcome only (a prognostic variable). The generating model:
+\begin{align*}
+C, Z, P &\sim \text{independent Bernoulli}(1/2),\\
+A \mid C, Z &\sim \text{Bernoulli}(0.1 + 0.3C + 0.3Z),\\
+\E[Y \mid A=0, X] &= C + 0.7P, \qquad \tau(X) = 0.5 \text{ for every unit},\\
+Y &= C + 0.7P + 0.5A + \varepsilon, \quad \varepsilon \sim \mathcal{N}(0, 0.5^2).
+\end{align*}
+The treatment effect is constant, so there is no effect modification and the ATE is 0.5.
+
+\textbf{The crude contrast, by hand.} $P(A=1) = 0.1 + 0.15 + 0.15 = 0.4$. Among the treated, $P(C=1 \mid A=1) = 0.55 \times 0.5 / 0.4 = 0.6875$; among the untreated, $P(C=1 \mid A=0) = 0.45 \times 0.5 / 0.6 = 0.375$. $P$ is independent of $A$, so it cancels. The crude contrast is $0.5 + (0.6875 - 0.375) = 0.8125$, and the bias is $0.3125$.
+
+\textbf{The eight coalition values.} Computed exactly by \texttt{confounding\_game.py} from the population probabilities (no sampling):
+\begin{center}
+\begin{tabular}{@{}lrl@{}}
+\toprule $S$ & $v(S)$ & why\\\midrule
+$\varnothing$ & $-0.3125$ & minus the whole bias\\
+$\{C\}$ & $0$ & $C$ alone blocks the only backdoor path\\
+$\{Z\}$ & $-0.3515$ & adjusting for $Z$ alone makes the bias larger\\
+$\{C,Z\}$ & $0$ & \\
+$\{P\}$ & $-0.3125$ & $P$ is independent of $A$ and $C$, so nothing changes\\
+$\{C,P\}$ & $0$ & \\
+$\{Z,P\}$ & $-0.3515$ & \\
+$\{C,Z,P\}$ & $0$ & the full set is sufficient\\
+\bottomrule
+\end{tabular}
+\end{center}
+Why $v(\{Z\})$ is below $v(\varnothing)$: within $Z=0$, the treated are 80\% $C=1$ against 40\% among the untreated (bias 0.40); within $Z=1$, 63.6\% against 33.3\% (bias 0.303); the average, 0.3515, exceeds the crude bias of 0.3125 because conditioning on the treatment-only variable sharpens the association between $A$ and $C$. This is bias amplification, the reason the paper warns that instruments and proxies can receive nonzero credit.
+
+\textbf{The Shapley credits.} With three players each marginal contribution gets weight $1/3$ when the player enters first or last and $1/6$ when it enters second.
+\begin{align*}
+\phi_C &= \tfrac13(0.3125) + \tfrac16(0.3515) + \tfrac16(0.3125) + \tfrac13(0.3515) = 1753/5280 = 0.332008,\\
+\phi_Z &= \tfrac13(-0.0390) + \tfrac16(0) + \tfrac16(-0.0390) + \tfrac13(0) = -103/5280 = -0.019508,\\
+\phi_P &= 0 \quad\text{(every marginal contribution of $P$ is zero: a null player)}.
+\end{align*}
+They sum to $1650/5280 = 0.3125$, the crude-minus-ATE gap. The answer key, then: the confounder carries the bias; the treatment-only variable gets a small negative credit; the outcome-only variable gets exactly zero. In the randomized variant ($A \sim \text{Bernoulli}(0.4)$) every coalition value is zero and so is every credit, although $C$ and $P$ still predict the outcome strongly: prediction importance is a different question.
+
+\newpage
+\section{The data, and what the plug-in finds}
+\texttt{make\_data.py} draws $n = 4{,}000$ records with seed 20261008 (columns \texttt{C, Z, P, A, Y}); the smallest treatment-by-profile cell holds 41 records, so every coalition's cell means exist. \texttt{run\_confoundingshap.py} estimates the game from the sample with saturated cell means (every covariate is binary, so no model is needed): $\delta_S$ from mean outcomes by arm and profile on $S$, $\hat\tau$ from the full-profile contrast, $\tau_S$ as its empirical projection. The exact and estimated credits:
+\begin{center}
+\begin{tabular}{@{}llrr@{}}
+\toprule Covariate & Role & Exact & Plug-in, $n=4{,}000$\\\midrule
+$C$ & confounder & $0.33201$ & $0.35776$\\
+$Z$ & treatment-only & $-0.01951$ & $-0.02913$\\
+$P$ & outcome-only & $0.00000$ & $0.00816$\\
+\midrule Sum & crude $-$ adjusted & $0.31250$ & $0.33679$\\
+& crude contrast & $0.81250$ & $0.83617$\\
+& adjusted ATE & $0.50000$ & $0.49938$\\
+\bottomrule
+\end{tabular}
+\end{center}
+The plug-in differences are sampling error in the cell means; the ordering and the signs reproduce. On the randomized data the plug-in credits are $0.030$, $0.000$ and $0.012$ against an exact key of zeros, which is what a crude-minus-adjusted gap of $0.04$ in a sample of this size looks like.
+
+\textbf{The paper's estimator.} With \texttt{-{}-tabpfn} the script runs shapiq's released game, which fits one TabPFN regression per coalition and one for $\hat\tau$. On the first 1,500 rows, on a CPU (56 seconds, model 2.5), beside the plug-in on the same 1,500 rows:
+\begin{center}
+\begin{tabular}{@{}llrrr@{}}
+\toprule Covariate & Role & Exact & Plug-in, $n=1{,}500$ & TabPFN-2.5, $n=1{,}500$\\\midrule
+$C$ & confounder & $0.33201$ & $0.36118$ & $0.33375$\\
+$Z$ & treatment-only & $-0.01951$ & $0.00228$ & $-0.00950$\\
+$P$ & outcome-only & $0.00000$ & $0.00196$ & $-0.00543$\\
+\midrule Sum & crude $-$ adjusted & $0.31250$ & $0.36543$ & $0.31883$\\
+& crude contrast & $0.81250$ & $0.77654$ & $0.77654$\\
+& adjusted ATE & $0.50000$ & $0.41111$ & $0.45771$\\
+\bottomrule
+\end{tabular}
+\end{center}
+At 1,500 rows the smallest treatment-by-profile cell holds 11 records, so the cell-mean plug-in is noisy (its adjusted effect is 0.41 against a true 0.5, and $Z$'s sign flips); TabPFN, which smooths across cells, lands closer to the key on the confounder and on the total. Both agree with the key on the one thing that matters for the question: $C$ carries the bias and the other two carry none worth naming. This is the same lesson as the renal pilot in the hub: the ordering is the robust part, the magnitudes move with the estimator and the sample.
+
+\newpage
+\section{Setting up}
+\textbf{Core (exact key and plug-in).} Python 3.12. In the tutorial folder:
+\begin{verbatim}
+python -m venv .venv
+.venv\Scripts\python.exe -m pip install -r requirements.txt
+.venv\Scripts\python.exe make_data.py
+.venv\Scripts\python.exe run_confoundingshap.py
+\end{verbatim}
+\texttt{requirements.txt} pins \texttt{shapiq==1.7.0}: that version carries the released ConfoundingXAI games in \texttt{shapiq\_games.benchmark.causal\_xai}, which later versions mark as deprecated. shapiq is used for its exact Shapley computer and, with \texttt{-{}-tabpfn}, for the paper's game; the plug-in column needs only numpy and pandas.
+
+\textbf{The paper's estimator (optional, \texttt{-{}-tabpfn}).} The released game fits a TabPFN regression for every coalition (an S-learner of $Y$ on $(X_S, A)$) and computes $v(S) = \text{mean}(\hat\tau) - \text{mean}(m_S(1) - m_S(0))$. Steps:
+\begin{enumerate}\setlength{\itemsep}{1pt}
+\item Install PyTorch for your hardware first, following \url{https://pytorch.org/get-started/locally/} (a CUDA build if you have an NVIDIA GPU; CPU otherwise).
+\item \texttt{pip install tabpfn==9.1.0} into the same environment.
+\item Model weights. TabPFN-2.5, the model the paper used, is gated: create a Hugging Face account, accept the TabPFN-2.5 licence on the Prior Labs model page, create a read token, and log in locally with \texttt{hf auth login} (older installs: \texttt{huggingface-cli login}). The current steps are at \url{https://docs.priorlabs.ai/models/accessing-model-weights}. The first run downloads the weights into the Hugging Face cache. The script selects model 2.5 explicitly (tabpfn 9.x defaults to model 3.5) and says in its output if the installed package could not select a version.
+\item Run \texttt{run\_confoundingshap.py -{}-tabpfn -{}-device cuda}, or on CPU \texttt{-{}-device cpu -{}-n-rows 1500}. Nine TabPFN fits are needed (one per coalition plus one for $\hat\tau$); on a GPU the whole run takes under a minute, on CPU several minutes with 1,500 rows.
+\end{enumerate}
+The script sets three TabPFN environment settings if they are absent (no browser prompts, no telemetry, and on CPU the override that allows more than 1,000 rows) and reads none.
+
+\section{Running and reading the output}
+The script prints, for the chosen data set, one line per covariate with the exact, plug-in and (if requested) TabPFN credits, the sums, the crude contrast and the adjusted effect in each column, then the eight coalition values. Things to check on every run:
+\begin{itemize}\setlength{\itemsep}{1pt}
+\item The three credits in each column sum to that column's crude-minus-adjusted gap (Shapley efficiency). The script asserts this for the exact and plug-in columns.
+\item $v(\text{all})$ is zero in every column by construction, because $\hat\tau$ is the full-adjustment contrast of the same estimator; this is bookkeeping, not evidence that the set is sufficient.
+\item The exact column is the answer key. Plug-in differences are sampling error of cell means. TabPFN differences add the learner's own error: the renal pilot in the hub found that TabPFN and cell means disagreed on which covariate led, so expect the ordering to be the robust part and the magnitudes to move.
+\item On the randomized data every exact credit is zero while $C$ and $P$ remain strong outcome predictors: a strong predictor is not a confounder.
+\end{itemize}
+Outputs go to \texttt{outputs/<data>\_credits.csv} and \texttt{<data>\_results.json}.
+
+\newpage
+\section{Pitfalls, and what the method is not}
+\begin{itemize}\setlength{\itemsep}{1pt}
+\item A zero credit is not proof of innocence: it can be sufficiency or cancellation. A negative credit is not protection: it is amplification of bias that another variable still carries.
+\item The method cannot certify an adjustment set or detect an unmeasured confounder. With a confounder missing from $X$, the credits still sum to the gap between the crude estimate and a wrong adjusted estimate.
+\item A collider in $X$ is the mirror image, and the method cannot see it either (section~\ref{sec:collider}).
+\item It needs a designated treatment and outcome, pretreatment covariates only, and overlap. It is a diagnostic for ``which variables do I adjust for'' once a treatment contrast is chosen; it does not rank causes of an outcome, which is the question the Space SHAP paper asks of attribution methods.
+\item Credits are in outcome units (here, the scale of $Y$; for a binary outcome, a risk difference). They are not probabilities, importances or edge weights.
+\item Estimator sensitivity is real. The same game under two learners gave different leading covariates on the renal simulation; report the estimator with the credits.
+\item In the Space SHAP study the current decision is that ConfoundingSHAP appears in the Discussion only, as a diagnostic at the adjustment step of the playbook, with the group (Igor and Stefan) still to confirm. Aimee's rerun added the simulation edges and nonzero historical uptake that such an analysis would need, so the door is open; this tutorial is the place to understand the method before deciding.
+\end{itemize}
+
+\section{Collider bias: what the method reports and what the paper says}
+\label{sec:collider}
+The paper assumes its way past this. Its setting (section 3, page 4) takes $X$ to be ``observed pre-treatment covariates'' and assumes that ``the full covariate set $X$ is the valid adjustment set''; the reference effect $\tau(X)$ is defined under that assumption (equation 3), and the full coalition is pinned at $v(\text{all}) = 0$ by construction (section 4, page 6). The words collider, M-bias, mediator, descendant and post-treatment do not occur anywhere in the 32 pages. Every synthetic benchmark draws its covariates independently (Supplement H, equation 49), so no collider structure is ever tested; the SUPPORT application (page 9) takes its clinical variables as confounders by assumption. The closest the paper comes is Supplement J (page 32): attributions are ``conditional on the measured variables'', and the method is ``complementary to sensitivity analysis, causal diagrams, domain knowledge, and robustness checks''; and Supplement K: the credits ``should not be read as automatically certifying that an adjustment set is sufficient''.
+
+So the answer is yes, it is vulnerable, in the same way and for the same reason as to an unmeasured confounder: whatever is in $X$ defines the reference, and the credits only share out the distance from the crude contrast to that reference. A pretreatment collider passed in with the covariates makes the reference wrong, and nothing in the output says so. \texttt{collider\_check.py} shows this on the toy DAG with $Z$ and $P$ made latent ($U_1 \to A$, $U_2 \to Y$) and a measured common effect $K$ of the two, $P(K=1 \mid U_1, U_2) = 0.1 + 0.4(U_1 + U_2)$. The valid adjustment set is $\{C\}$; conditioning on $K$ opens $A \leftarrow U_1 \to K \leftarrow U_2 \to Y$. Exact values on the population:
+\begin{center}
+\begin{tabular}{@{}lrr@{}}
+\toprule & $X = \{C, K\}$ & $X = \{C\}$\\\midrule
+credit $C$, confounder & $0.31782$ & $0.31250$\\
+credit $K$, collider & $0.03537$ & not in $X$\\
+sum $=$ crude $-$ reference & $0.35319$ & $0.31250$\\
+crude contrast & $0.81250$ & $0.81250$\\
+reference (the ``adjusted ATE'') & $0.45931$ & $0.50000$\\
+true ATE & $0.50000$ & $0.50000$\\
+\bottomrule
+\end{tabular}
+\end{center}
+Adjusting for $C$ alone gives $0.500$; adjusting for $C$ and $K$ gives $0.459$, and the method calls the second number the truth. $K$ has no effect on the treatment or the outcome, yet it earns a positive credit, the same sign as the confounder's, because adding it moves the estimate toward the biased reference. Efficiency holds, $v(\text{all})$ is zero, and the plug-in on 4,000 records ($0.338$ for $C$, $0.042$ for $K$) agrees. The paper's TabPFN estimator regresses on whatever columns it is handed, so it inherits the same reference. A mediator or any other descendant of the treatment does the same thing through a different path, which is why the setting insists on pretreatment covariates; that is a condition the analyst supplies, not one the method checks.
+
+What distinguishes a collider from a confounder in the output: nothing. The sign of a credit is the direction of the bias removed if the variable is a confounder, and the direction of the bias induced, reversed, if it is a collider; a negative credit already has two readings (a negatively confounding variable, or amplification of bias that another variable carries, as $Z$ in the toy), and a collider adds a third to either sign. The only defence is the one the paper names in passing: the DAG. In the playbook this is the reason ConfoundingSHAP sits after the adjustment set has been chosen from the graph, not before; it tells you which of the chosen variables is doing the work, not whether the choice was right.
+
+\section*{References}
+\begin{itemize}\setlength{\itemsep}{1pt}
+\item Brockschmidt M, Thies SMAR, Schr\"oder M, Frauen D, Melnychuk V, Muschalik M, H\"ullermeier E, Feuerriegel S. ConfoundingSHAP: quantifying confounding strength in causal inference. arXiv:2605.10533, 2026.
+\item Muschalik M, Baniecki H, Fumagalli F, Hammer B, H\"ullermeier E. shapiq: Shapley interactions for machine learning. NeurIPS 2024 (Datasets and Benchmarks). Version 1.7.0 ships the released ConfoundingXAI games.
+\item Hollmann N, M\"uller S, Purucker L, Krishnakumar A, K\"orfer M, Hoo SB, Schirrmeister RT, Hutter F. Accurate predictions on small data with a tabular foundation model. Nature 637, 319--326, 2025. TabPFN-2.5: Prior Labs model card and licence, 2025.
+\item VanderWeele TJ, Shpitser I. On the definition of a confounder. Annals of Statistics 41(1), 196--220, 2013.
+\item Hern\'an MA, Robins JM. Causal Inference: What If. Chapman and Hall/CRC, 2020. Chapters 7 and 15 on confounding and adjustment.
+\end{itemize}
+\end{document}

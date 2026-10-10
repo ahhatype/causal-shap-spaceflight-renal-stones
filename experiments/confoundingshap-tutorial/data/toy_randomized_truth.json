@@ -1,0 +1,42 @@
+{
+ "model": {
+  "covariates": {
+   "C": "confounder (C -> A and C -> Y)",
+   "Z": "treatment-only (Z -> A)",
+   "P": "outcome-only (P -> Y)"
+  },
+  "treatment": "A",
+  "outcome": "Y",
+  "covariate_distribution": "C, Z, P independent Bernoulli(1/2)",
+  "propensity": "0.4",
+  "outcome_mean_untreated": "C + 0.7 P",
+  "treatment_effect": "0.5 for every unit",
+  "noise": "Normal(0, 0.5^2)"
+ },
+ "sample": {
+  "n": 4000,
+  "seed": 20261008,
+  "randomized": true
+ },
+ "exact": {
+  "crude_contrast": 0.5,
+  "ate": 0.5,
+  "crude_minus_ate": 0.0,
+  "global_game": {
+   "{}": 0.0,
+   "{C}": 5.551115123125783e-17,
+   "{Z}": 0.0,
+   "{C,Z}": 5.551115123125783e-17,
+   "{P}": 0.0,
+   "{C,P}": -5.551115123125783e-17,
+   "{Z,P}": 0.0,
+   "{C,Z,P}": -5.551115123125783e-17
+  },
+  "shapley_credits": {
+   "C": 3.0814879110195774e-33,
+   "Z": 0.0,
+   "P": -5.551115123125783e-17
+  }
+ },
+ "reading": "The credits sum to the crude-minus-ATE gap. Z's credit is negative: adjusting for the treatment-only variable first amplifies the bias that C still carries. P's credit is exactly zero."
+}

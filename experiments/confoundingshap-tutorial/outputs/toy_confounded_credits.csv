@@ -1,0 +1,4 @@
+covariate,role,exact,plug-in
+C,confounder (C -> A and C -> Y),0.33200757575757567,0.3577570866178106
+Z,treatment-only (Z -> A),-0.01950757575757592,-0.02913131286377409
+P,outcome-only (P -> Y),9.25185853854297e-17,0.008161466187618767
