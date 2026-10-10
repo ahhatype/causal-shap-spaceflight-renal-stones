@@ -6,6 +6,10 @@ share Steps 0–6. Refine the [LaTeX source](supplementary-information/main.tex)
 [editable schematics](supplementary-information/diagrams/README.md), using the
 [build instructions](supplementary-information/README.md).
 
+The [playbook schematic](schematic/README.md) holds the LaTeX sources of the
+Discussion flowchart (version 1.1, October 2026), its earlier full rewrite and
+the bibliography that compiles both.
+
 The [evidence map](central-workflow.md) records results and remaining work;
 [method choices](method-choices.md) discusses alternatives. Study procedures
 remain in the main manuscript; the supplement explains analytical choices

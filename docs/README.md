@@ -19,6 +19,7 @@ the examples and research code.
 | [`references/claims-to-citations.md`](references/claims-to-citations.md) | Verified citations for the reframing's claims, with what each supports and what is unsupported |
 | [`lumawarp/README.md`](lumawarp/README.md) | Placeholder outline for the expanded LumaWarp detector treatment and the dichromatic sensitivity filter |
 | [`playbook/README.md`](playbook/README.md) | Shared analytical workflow and implementation mappings; graph sourcing is described in the [DAG harvest protocol](playbook/dag-harvest-protocol.md) |
+| [`playbook/schematic/README.md`](playbook/schematic/README.md) | LaTeX sources of the Discussion playbook flowchart (version 1.1) and its bibliography |
 | [`references/manuscript-references.md`](references/manuscript-references.md) | Venue, NASA DAG-program references, and the epidemiology framing citations |
 
 ## The working subgraph (14 nodes; `config/`, `pipeline/`, `r/`, `python/`)
