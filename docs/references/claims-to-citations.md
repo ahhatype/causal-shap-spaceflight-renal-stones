@@ -124,6 +124,19 @@ No paper proves a general proximity bias. Heskes et al. and Wang et al. are the 
 
 Nothing was found on two-channel or "dichromatic" detection inside causal discovery. Cite the screening and knockoff analogs only; present the filter as new.
 
+## Claim 8. Clinical SHAP practice reads attributions as risk factors, under-reports methods and rarely checks stability
+
+Added 2026-10-06; each entry verified against the publisher or arXiv page.
+
+- Carriero, A., de Hond, A., Idema, D., Moons, K.G.M., van Smeden, M. (2026). Shapley value explanations for clinical prediction models: a scoping review and guide. *npj Digital Medicine*, article in press, published online 3 October 2026. <https://doi.org/10.1038/s41746-026-03324-8>
+  Random sample of 100 clinical SHAP papers (PubMed, July 2023 to July 2024). 77% used SHAP to name "key predictors", "risk factors" or "determinants"; 30% cited clinical decision support or individualized treatment; none used an explicitly causal model, disclosed an assumed causal graph or assessed causal assumptions. 91% did not report the algorithm, 97% did not report the reference population, and none assessed the stability of the explanations. Box 3 notes that causal Shapley values need a specified causal graph, for which information is "typically insufficient" in most applications. Table 4 lists reporting items: algorithm, reference population size and source, explained population, marginal or conditional type, and code. Use for the practice gap in the Introduction and as a reporting checklist in Methods. Volume and article number not yet assigned; update at proof.
+- Carriero, A., de Hond, A., Cappers, B., Paulovich, F., Abeln, S., Moons, K.G.M., van Smeden, M. (2025). Explainable AI in healthcare: to explain, to predict, or to describe? *Diagnostic and Prognostic Research* 9:29. <https://doi.org/10.1186/s41512-025-00213-8>
+  The same group's account of distinct XAI purposes. Pairs with Shmueli (2010) and Hernán, Hsu and Healy (2019) under Claim 1.
+- Chen, H., Covert, I.C., Lundberg, S.M., Lee, S.-I. (2023). Algorithms to estimate Shapley value feature attributions. *Nature Machine Intelligence* 5:590-601. <https://doi.org/10.1038/s42256-023-00657-x>
+  Organizes 24 estimation algorithms by how absent features are handled (baseline, marginal, conditional) and how values are estimated. Cite where Methods name each estimator and its background distribution.
+- Gan, L., Zikry, T.M., Allen, G.I. (2025). Are machine learning interpretations reliable? A stability study on global interpretations. arXiv:2505.15728. <https://arxiv.org/abs/2505.15728> Preprint.
+  Popular interpretation methods are often unstable, interpretations are less stable than the predictions they explain, and prediction accuracy does not predict interpretation stability. Supports reporting attribution metrics over repeated replicates with Monte Carlo standard errors.
+
 ## Weak or missing support
 
 1. Geometric attenuation with depth: derived, not cited (Claim 2).
@@ -134,5 +147,5 @@ Nothing was found on two-channel or "dichromatic" detection inside causal discov
 6. General proximity bias of SHAP: no proof in the literature; our own evidence (Claim 5).
 7. Ng et al. (2025) IEEE DOI not retrieved.
 8. Two-channel detection: no literature (Claim 7).
-9. Averin et al. (2026) and Faltenbacher et al. (2025) are preprints.
+9. Averin et al. (2026), Faltenbacher et al. (2025) and Gan et al. (2025) are preprints.
 10. "Goodenow et al." was corrected to "Goodenow-Messman et al." in `config/dag_spec.yaml` and the methods draft on 2026-09-03; check the paper's reference list too.
