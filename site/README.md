@@ -1,7 +1,7 @@
 # Archived Pages presentation
 
 Pages is retired under [ADR 010](../docs/decisions/010-repository-companion.md).
-The [repository README](../README.md), [reproducibility guide](../REPRODUCIBILITY.md)
+The [repository README](../README.md), [reproducibility guide](../docs/REPRODUCIBILITY.md)
 and [teaching companion](../docs/classroom/README.md) are the current entry points.
 
 Keep this directory: index.qmd preserves the latest reviewed presentation;

@@ -1,7 +1,7 @@
 # Documentation map
 
 Start with the [central workflow](playbook/central-workflow.md) for the
-study's argument or the [reproducibility guide](../REPRODUCIBILITY.md) to run
+study's argument or the [reproducibility guide](REPRODUCIBILITY.md) to run
 the examples and research code.
 
 ## The argument
@@ -13,7 +13,7 @@ the examples and research code.
 | [`playbook/protocol.md`](playbook/protocol.md) | Legacy implementation IDs, current-step crosswalk and status |
 | [`playbook/central-workflow.md`](playbook/central-workflow.md) | Central workflow, exact classroom calculation, simulation mapping and limits |
 | [`classroom/README.md`](classroom/README.md) | Educator guide, worksheet, interactive lab and Python examples |
-| [`../ORIENTATION.md`](../ORIENTATION.md) | Project orientation: the premise, workflow, code, results and next steps |
+| [`../experiments/README.md`](../experiments/README.md) | Experiments workspace: self-contained team experiments outside the frozen records, starting with the ConfoundingSHAP tutorial |
 | [`framing/prediction-vs-intervention.md`](framing/prediction-vs-intervention.md) | Historical framing proposal and planned experiments |
 | [`notes/2026-09-01-whiteboard-transcription.md`](notes/2026-09-01-whiteboard-transcription.md) | Transcription of the 1 September 2026 notes the memo is built from |
 | [`references/claims-to-citations.md`](references/claims-to-citations.md) | Verified citations for the reframing's claims, with what each supports and what is unsupported |
@@ -45,7 +45,7 @@ the examples and research code.
 
 ## Technical and reproducibility companion
 
-- [Reproduction routes and commands](../REPRODUCIBILITY.md).
+- [Reproduction routes and commands](REPRODUCIBILITY.md).
 - [Do-Shapley math tutorial and benchmark targets](technical/do-shapley.md).
 - [Selection mechanisms, population targets and exact stress test](technical/selection-mechanism.md).
 - [Path length, causal credit, response shape and splines](technical/path-length-and-response-shape.md).
@@ -63,5 +63,6 @@ the examples and research code.
 | [006](decisions/006-shapr-heskes-blocked.md) | shapr's Heskes path blocked |
 | [007](decisions/007-target-dags-consolidation.md) | causal-shap-target-dags consolidated into this hub |
 | [008](decisions/008-lumawarp-detector-placeholders.md) | LumaWarp detector placeholders live here; runtime and bridge stay external |
-| [010](decisions/010-repository-companion.md) | Repository consolidation and presentation archive |
 | [009](decisions/009-single-home.md) | One home for the project, including the manuscript; Box is exchange only |
+| [010](decisions/010-repository-companion.md) | Repository consolidation and presentation archive |
+| [011](decisions/011-archive-target-dags-and-experiments.md) | causal-shap-target-dags archived; experiments workspace; root entry points consolidated |

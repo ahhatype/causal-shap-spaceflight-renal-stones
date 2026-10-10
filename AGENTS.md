@@ -3,7 +3,10 @@
 This is the hub for the Space SHAP paper. It carries two lines of work
 (ADR 007): the 14-node working subgraph (`config/`, `pipeline/`, `r/`,
 `python/`) and the full 51-node source DAG ported from
-causal-shap-target-dags (`analysis/`, `apps/`, `docs/full_dag/`).
+causal-shap-target-dags (`analysis/`, `apps/`, `docs/full_dag/`); that
+repository was archived on 2026-10-10 (ADR 011). Exploratory team work goes
+under `experiments/`, one self-contained folder per experiment with its own
+README; nothing there is a frozen result.
 
 ## Publishing convention
 
@@ -18,9 +21,8 @@ causal-shap-target-dags (`analysis/`, `apps/`, `docs/full_dag/`).
 
 - This repository is the master for the manuscript, reproducibility and
   teaching companions. Pages is retired; do not deploy or re-enable it.
-- Keep `site/` as a source archive. The root `index.html` redirects to this
-  GitHub repository. Current reader entry points are README.md,
-  REPRODUCIBILITY.md and docs/playbook/README.md. The existing classroom
+- Keep `site/` as a source archive. Current reader entry points are README.md,
+  docs/REPRODUCIBILITY.md and docs/playbook/README.md. The existing classroom
   materials remain available; educator-companion development is paused.
 - Keep reader entry points focused on the study and how to use its materials.
   Hosting history, manuscript handoffs and maintenance instructions belong in
@@ -55,7 +57,11 @@ causal-shap-target-dags (`analysis/`, `apps/`, `docs/full_dag/`).
 ## Private files that live here but are ignored
 
 `docs/methods/` (the pre-LaTeX snapshot, superseded by `manuscript/`) and
-`docs/STATUS.md` are gitignored on purpose; do not force-add them. The
+`docs/STATUS.md` are gitignored on purpose; do not force-add them. The private
+LumaWarp bridge, its local provider, the per-node flag seam and their tests, the
+format guide, the HAPrI and LumaWarp result bundles and the August working paper,
+all ported from the archived repository (ADR 011), live here only as ignored or
+locally excluded files; do not force-add them either. The
 manuscript source is `manuscript/prism-upload/`, gitignored for now (ADR 009);
 never force-add it, and never machine-rewrite its human-written introduction,
 which is embedded between labeled comments in `main.tex`. Use
@@ -82,9 +88,10 @@ orientation folder or upload an orientation document to Overleaf.
   LaTeX article format. Do not regenerate or overwrite manual source/diagram
   edits during a normal build. analysis/build_spine_guide.py compiles
   docs/playbook/supplementary-information/main.pdf.
-- Read ORIENTATION.md for the shared restart priorities. On the writing machine,
-  read the latest handoff at the top of ignored docs/STATUS.md before manuscript
-  work. Private sync records and editorial flags remain in coauthor-review/.
+- The README's repository map locates the source files; restart priorities
+  live at the top of ignored docs/STATUS.md. On the writing machine, read the
+  latest handoff there before manuscript work. Private sync records and
+  editorial flags remain in coauthor-review/.
 - Read manuscript/coauthor-review/overleaf-sync.json for the last verified
   Overleaf baseline. Fetch current remote edits before each sync; never assume
   continuing equality. Educator development and Pages deployment remain paused/retired.

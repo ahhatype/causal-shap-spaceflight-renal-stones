@@ -4,14 +4,14 @@
 
 | Task | Start here | Requirements |
 | --- | --- | --- |
-| Work the exact causal-credit example | [Worksheet](docs/classroom/worksheet.md), [answer key](docs/classroom/educator-guide.md), [lab](docs/classroom/README.md) | Browser or Python standard library |
-| Compare prediction credit, do-Shapley and individual effects | [Math tutorial](docs/technical/do-shapley.md); `python docs/classroom/lab.py --oracle` | Python standard library for the exact oracle |
-| Understand path length and the equations | [Technical note](docs/technical/path-length-and-response-shape.md) and [BibTeX](docs/references/technical-companion.bib) | GitHub math rendering |
+| Work the exact causal-credit example | [Worksheet](classroom/worksheet.md), [answer key](classroom/educator-guide.md), [lab](classroom/README.md) | Browser or Python standard library |
+| Compare prediction credit, do-Shapley and individual effects | [Math tutorial](technical/do-shapley.md); `python docs/classroom/lab.py --oracle` | Python standard library for the exact oracle |
+| Understand path length and the equations | [Technical note](technical/path-length-and-response-shape.md) and [BibTeX](references/technical-companion.bib) | GitHub math rendering |
 | Verify the recorded depth experiment | `python analysis/depth_washout_figure.py --verify-recorded` | Repository Python environment |
-| Inspect working-subgraph results | [Step 4](docs/step04_results.md), [scripted Step 6](docs/step06_results.md) | No installation to read |
-| Inspect full-DAG results | [Research record](docs/full_dag/RESEARCH_RECORD.md) | No installation to read |
+| Inspect working-subgraph results | [Step 4](step04_results.md), [scripted Step 6](step06_results.md) | No installation to read |
+| Inspect full-DAG results | [Research record](full_dag/RESEARCH_RECORD.md) | No installation to read |
 | Validate frozen bundles | `python -m causal_shap.build validate` from `apps/` | Repository Python environment |
-| Rerun the renal pipelines | [Build guide](docs/full_dag/REPRODUCIBILITY_AND_SITE.md), [Makefile](Makefile) | Python 3.11–3.13, R/renv and recorded dependencies |
+| Rerun the renal pipelines | [Build guide](full_dag/REPRODUCIBILITY_AND_SITE.md), [Makefile](../Makefile) | Python 3.11–3.13, R/renv and recorded dependencies |
 
 ```bash
 python docs/classroom/lab.py --check
@@ -21,7 +21,7 @@ python analysis/package_classroom.py
 The second command creates `dist/causal-shap-classroom.zip`. Extract it and
 open `index.html` for the interactive lesson.
 
-For research, create the Python environment using the [quickstart](README.md#quickstart).
+For research, create the Python environment using the [quickstart](../README.md#quickstart).
 R dependencies are managed by `renv` for the working subgraph and by
 `analysis/install_dependencies.R` for the full DAG. Common commands:
 
@@ -34,7 +34,7 @@ make workbench                  # M1–M5 Workbench, localhost:8001
 make ladder                     # six-rung teaching app, localhost:8000
 ```
 
-The [build guide](docs/full_dag/REPRODUCIBILITY_AND_SITE.md) gives full-DAG
+The [build guide](full_dag/REPRODUCIBILITY_AND_SITE.md) gives full-DAG
 reproduction commands. A pipeline rerun may regenerate outputs; the
 validation and depth-check commands check existing records.
 
@@ -48,7 +48,7 @@ oracle is complete; a renal do-Shapley oracle and DML comparison remain pending.
 - The 14-node working graph is scoped and augmented, with separate
   coefficients from the earlier 51-node source graph. The complete supplied
   graph has 53 nodes; the working model is not its induced subgraph. See the
-  [edge crosswalk](docs/technical/graph-provenance.md) for retained, collapsed
+  [edge crosswalk](technical/graph-provenance.md) for retained, collapsed
   and study-adapted relationships.
 - Working-subgraph data use n=1,000, seed 20260812. Full-DAG clean-v3 uses
   n=10,000, generation seed 20260710. Keep their scores separate.
@@ -61,4 +61,4 @@ oracle is complete; a renal do-Shapley oracle and DML comparison remain pending.
   failures, undefined score and null comparison remain in the records.
 - Detector/filter results, broader discovery comparisons, nonlinear
   robustness and action evaluation remain incomplete. See the
-  [workflow evidence map](docs/playbook/central-workflow.md).
+  [workflow evidence map](playbook/central-workflow.md).

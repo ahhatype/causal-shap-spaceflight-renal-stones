@@ -1,7 +1,7 @@
 # Causal SHAP: a benchmark using a spaceflight risk graph
 
 [![Python tests](https://github.com/ahhatype/causal-shap-spaceflight-renal-stones/actions/workflows/python-tests.yml/badge.svg)](https://github.com/ahhatype/causal-shap-spaceflight-renal-stones/actions/workflows/python-tests.yml)
-[Supplementary Information](docs/playbook/supplementary-information/main.pdf) · [Reproducibility guide](REPRODUCIBILITY.md) · [Technical notes](docs/technical/path-length-and-response-shape.md)
+[Supplementary Information](docs/playbook/supplementary-information/main.pdf) · [Reproducibility guide](docs/REPRODUCIBILITY.md) · [Technical notes](docs/technical/path-length-and-response-shape.md)
 
 A prediction ranking explains a fitted model. To assess what would happen
 after changing a variable, we also need assumptions about the causal
@@ -113,7 +113,7 @@ py -3.13 -m venv .venv
 ```
 
 On macOS or Linux use `python3.13` and `.venv/bin/python`.
-The [reproducibility guide](REPRODUCIBILITY.md) covers the R pipelines,
+The [reproducibility guide](docs/REPRODUCIBILITY.md) covers the R pipelines,
 frozen-output validation, depth experiment and downloadable teaching kit.
 The [research apps](apps/README.md) provide interactive exploration.
 
@@ -121,10 +121,52 @@ The [research apps](apps/README.md) provide interactive exploration.
 
 The [Implementation crosswalk](docs/playbook/protocol.md) lists implementation paths
 and completion status. The [documentation index](docs/README.md) covers
-methods, results, references and provenance; [contributor orientation](ORIENTATION.md)
-locates the source files and development priorities.
+methods, results, references and provenance; the [repository map](#repository-map)
+below locates the source files.
+
+## Experiments
+
+Exploratory and team work that is not part of the frozen result records lives
+under [`experiments/`](experiments/README.md), one folder per experiment with
+its own README. The first entry is the stand-alone
+[ConfoundingSHAP tutorial](experiments/confoundingshap-tutorial/README.md).
+Earlier pilots that already live under `analysis/` are indexed there as well.
+
+## Repository map
+
+```
+config/           DAG spec, edge coefficients, model engines, pipeline status (YAML)
+pipeline/         Numbered driver scripts for the 14-node working subgraph, one per step
+r/                R package for the working subgraph (renv): DAG utilities,
+                  simcausal helpers, ground truth, pcalg and shapr wrappers
+python/src/       causal_shap_renal: attribution methods, discovery wrappers,
+                  evaluation, the file interchange contract, the LumaWarp contract
+python/tests/     pytest suite for causal_shap_renal
+data/             frozen_truth (committed); raw, interim and simulated are regenerated
+results/          attributions, discovery, evaluation, figures; detector/ (gitignored)
+analysis/         R pipeline on the full 51-node source DAG, its frozen result record
+                  under analysis/output/, and the ConfoundingSHAP pilots
+apps/             causal_shap library (teaching DAGs, discovery, structural value
+                  function, validation, M1-M5, action selection, figures); the guided
+                  hub, the M1-M5 Workbench and the six-rung ladder app; frozen bundles; tests
+experiments/      Team sandbox: self-contained experiments outside the frozen records
+references/       NASA SA-07566 DAGitty text; Robert Reynolds's 2026-07-13 files
+dag-candidates/   Core-graph node and edge CSVs, harvest notes, provisional edge lists
+docs/             Playbook, technical notes, classroom, references, decisions (ADRs),
+                  step results, full-DAG record, reproducibility guide. Index: docs/README.md
+site/             Archived presentations and assets (ADR 010); not deployed
+manuscript/       Private article source and coauthor review notes (gitignored, ADR 009)
+```
+
+## Related repositories
+
+| Repository | Role |
+| --- | --- |
+| [ahhatype/causal-dag-eval-pipeline](https://github.com/ahhatype/causal-dag-eval-pipeline) | The manuscript's central experiment: replicated simcausal data from the adapted SA-07566 graph, shape validation and attribution validation. Being prepared as the public-facing version shared with the manuscript. |
+| This repository | Team workspace and sandbox: the earlier lines of work, frozen records, apps, teaching materials and experiments. |
+| [andystats/causal-shap-target-dags](https://github.com/andystats/causal-shap-target-dags) | Archived on 2026-10-10. Its tracked content was ported here in September 2026 ([ADR 007](docs/decisions/007-target-dags-consolidation.md)); the retirement is recorded in [ADR 011](docs/decisions/011-archive-target-dags-and-experiments.md). |
 
 ## License
 
-[GPL-3.0-or-later](LICENSE). See [third-party notices](THIRD_PARTY_NOTICES.md)
-for code provenance. External source material retains its original terms.
+[GPL-3.0-or-later](LICENSE). See [code provenance and notices](docs/provenance.md#code-provenance-and-third-party-notices)
+for the origin of the ported code. External source material retains its original terms.

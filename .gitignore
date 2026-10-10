@@ -62,8 +62,6 @@ site/.quarto/
 site/resources/causal-shap-classroom.zip
 .pytest_cache/
 Thumbs.db
-/build/
-/dist/
 .scratch/
 
 # Local launcher configuration (detector paths, provider env) is machine-specific.
@@ -117,3 +115,6 @@ dist/
 
 # Local reading copy; cite the publisher link in the bibliography.
 /references/jung22a.pdf
+
+# Third-party PDF read by the ConfoundingSHAP tutorial; cite the arXiv record instead.
+experiments/confoundingshap-tutorial/ConfoundingSHAP paper.pdf
